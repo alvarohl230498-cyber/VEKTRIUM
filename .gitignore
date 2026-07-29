@@ -1,0 +1,43 @@
+# Dependencias
+node_modules/
+.pnpm-store/
+
+# Build
+.next/
+out/
+dist/
+build/
+
+# Entorno — nunca commitear valores reales
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Supabase
+supabase/.temp/
+supabase/.branches/
+
+# Superpowers — mockups de brainstorming
+.superpowers/
+
+# Testing
+coverage/
+playwright-report/
+test-results/
+/blob-report/
+.playwright/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Backups locales de la base
+backups/
+*.dump
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
