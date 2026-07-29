@@ -168,7 +168,8 @@ Cuando existan credenciales, `GoogleProvider` implementa la misma interfaz. Ning
 
 ## 5. Modelo de datos
 
-14 tablas para SP-0 + SP-1. El prompt lista 31; las otras 17 llegan con sus sub-proyectos.
+El prompt lista 32 entidades. Este diseño implementa **13**, sustituye **3** por otra solución y
+difiere **16** a sub-proyectos posteriores.
 
 ### SP-0 — Identidad, acceso y trazabilidad
 
@@ -183,7 +184,7 @@ Cuando existan credenciales, `GoogleProvider` implementa la misma interfaz. Ning
 
 | Tabla | Columnas relevantes | Notas |
 |---|---|---|
-| `clients` | `legal_name`, `trade_name`, `ruc`, `industry`, `size`, `city`, `country`, `source`, `confidentiality`, `archived_at`, `deleted_at` | RUC opcional |
+| `clients` | `legal_name`, `trade_name`, `ruc`, `industry`, `size`, `city`, `country`, `source`, `confidentiality`, `archived_at`, `deleted_at` | RUC opcional. `confidentiality` ∈ {`publico`, `interno`, `confidencial`} |
 | `contacts` | `client_id`, `full_name`, `position`, `area`, `email`, `phone`, `preferred_channel`, `consent_at`, `last_interaction_at` | |
 | `opportunities` | `client_id`, `title`, `status`, `loss_reason`, `loss_notes`, `recontact_at`, `expected_amount`, `owner_id` | **Nunca se elimina.** Regla 7 del prompt |
 
@@ -234,11 +235,19 @@ la sección 21 del prompt.
 
 Las tareas canceladas se excluyen del denominador.
 
-### Tablas explícitamente diferidas
+### Tablas sustituidas por otra solución (3)
 
-`milestones`, `task_dependencies`, `task_checklists`, `meeting_minutes`, `requirements`,
-`change_requests`, `risks`, `deliverables`, `files`, `comments`, `notifications`, `saved_views`,
-`project_templates`, `tags`, `opportunity_activities`, `calendar_sync_state`, `permissions`.
+| Tabla del prompt | Sustituida por | Motivo |
+|---|---|---|
+| `roles` | Enum `users.role` + `project_members.role` | 5 roles fijos, verificados en compilación |
+| `permissions` | Matriz tipada en `domain/permissions.ts` | Sin JOIN por verificación; exhaustividad garantizada |
+| `oauth_accounts` | Supabase Auth (identidad) + `calendar_connections` (calendario) | Los dos usos están desacoplados por diseño |
+
+### Tablas diferidas a sub-proyectos posteriores (16)
+
+`opportunity_activities`, `milestones`, `task_dependencies`, `task_checklists`, `meeting_minutes`,
+`requirements`, `change_requests`, `risks`, `deliverables`, `files`, `comments`, `notifications`,
+`calendar_sync_state`, `saved_views`, `project_templates`, `tags`.
 
 ---
 
@@ -267,10 +276,11 @@ sea `COLLABORATOR` en el proyecto que le concierne, sin duplicar usuarios.
 
 | Acción | FOUNDER_ADMIN | PROJECT_MANAGER | COLLABORATOR | CLIENT | VIEWER |
 |---|---|---|---|---|---|
-| `client.read` | ✅ | ✅ | ✅ | solo el propio | ✅ |
+| `client.read` | ✅ | ✅ | si es miembro | solo el propio | si es miembro |
 | `client.create` / `update` | ✅ | ✅ | ❌ | ❌ | ❌ |
-| `contact.*` | ✅ | ✅ | ❌ | ❌ | lectura |
-| `opportunity.read` | ✅ | ✅ | ❌ | ❌ | ✅ |
+| `contact.read` | ✅ | ✅ | si es miembro | solo el propio | si es miembro |
+| `contact.create` / `update` | ✅ | ✅ | ❌ | ❌ | ❌ |
+| `opportunity.read` | ✅ | ✅ | ❌ | ❌ | ❌ |
 | `opportunity.create` / `update` | ✅ | ✅ | ❌ | ❌ | ❌ |
 | `project.read` | ✅ | si es miembro | si es miembro | si es miembro | si es miembro |
 | `project.create` | ✅ | ✅ | ❌ | ❌ | ❌ |
@@ -285,8 +295,15 @@ sea `COLLABORATOR` en el proyecto que le concierne, sin duplicar usuarios.
 | `audit.read` | ✅ | propio proyecto | ❌ | ❌ | ❌ |
 | `user.manage` | ✅ | ❌ | ❌ | ❌ | ❌ |
 
-El rol `CLIENT` nunca ve montos económicos, motivos de pérdida ni notas internas. Esto se aplica
-tanto en RLS como en la capa de repositorios, mediante proyecciones distintas.
+**«Si es miembro»** significa: existe fila en `project_members` para ese usuario en un proyecto
+asociado a ese cliente. Ningún rol distinto de `FOUNDER_ADMIN` y `PROJECT_MANAGER` ve datos de
+clientes con los que no tiene relación de proyecto.
+
+**Diferencia entre `CLIENT` y `VIEWER`,** que de otro modo se confundirían: ambos son de solo
+lectura y ambos están limitados a proyectos donde figuran como miembros. La diferencia está en el
+campo visible — `CLIENT` **nunca** ve montos económicos, motivos de pérdida ni notas internas;
+`VIEWER` sí los ve, pero no puede modificar nada. Se implementa con proyecciones distintas en la
+capa de repositorios, además de en RLS.
 
 ### RLS y el riesgo de la clave de servicio
 
@@ -375,7 +392,7 @@ cualquier métrica.
 |---|---|---|
 | Archivar | `archived_at` — sale de vistas operativas, conserva todo | PROJECT_MANAGER miembro |
 | Marcar no aceptado | `status` de la oportunidad + `loss_reason` obligatorio | PROJECT_MANAGER |
-| Mover a papelera | `deleted_at`, retención configurable, restaurable | PROJECT_MANAGER miembro |
+| Mover a papelera | `deleted_at`, retención **30 días por defecto** (`TRASH_RETENTION_DAYS`), restaurable | PROJECT_MANAGER miembro |
 | Eliminar permanentemente | `DELETE` real, exige escribir el nombre del proyecto, muestra qué se pierde | Solo FOUNDER_ADMIN |
 
 La eliminación permanente deja registro en `audit_logs` aunque el proyecto desaparezca.
@@ -518,10 +535,12 @@ Resumen de todo lo que se aparta del documento original, con su justificación:
 | 1 | Tablas `roles` y `permissions` | Enum + matriz tipada en código | 5 roles fijos; verificación en compilación; sin JOIN por permiso |
 | 2 | Secuencia horizontal de 15 pasos (§39) | Vertical primero | Contradice la instrucción final del propio prompt; la vertical manda |
 | 3 | Wizard de 6 pasos | 3 pasos en SP-1 | Los otros 3 escriben en tablas inexistentes |
-| 4 | 31 tablas | 14 en SP-0+SP-1 | El resto llega con sus sub-proyectos |
+| 4 | 32 entidades | 13 implementadas, 3 sustituidas, 16 diferidas | El resto llega con sus sub-proyectos |
 | 5 | Colas de trabajos (§33) | Cron | Volumen no lo justifica |
-| 6 | Despliegue en Vercel implícito | Cloudflare | Hobby de Vercel prohíbe uso comercial |
-| 7 | Drag & drop en Planner | Lista con selector en móvil | Usabilidad real en pantalla pequeña |
+| 6 | Drag & drop en Planner | Lista con selector en móvil | Usabilidad real en pantalla pequeña |
+
+La elección de Cloudflare sobre Vercel **no** es una desviación: la sección 33 del prompt admite
+ambos explícitamente. El motivo de la elección está en la sección 3 de este documento.
 
 ---
 
