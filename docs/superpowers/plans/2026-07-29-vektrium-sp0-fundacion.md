@@ -12,6 +12,18 @@
 
 ---
 
+## Notas de entorno verificadas durante la ejecución
+
+- **Activación de Node en cada comando.** El estado de la shell no persiste entre invocaciones:
+  `cd "<repo>" && source scripts/use-node.sh && <comando>`. Sin eso se cae a Node 18 en silencio.
+- **`pnpm exec vitest` y `pnpm vitest` fallan en Git Bash** en este equipo
+  (`"vitest" no se reconoce`). Funcionan `pnpm test` y `./node_modules/.bin/vitest`. Todos los
+  pasos de este plan usan la segunda forma.
+- **Versiones reales instaladas:** Next 16.2.12 · React 19.2.4 · Tailwind 4 · Vitest 4.1.10 ·
+  pnpm 10.18.3 · Node 22.23.2 vía fnm.
+- **Tailwind 4 configura el tema con `@theme` en CSS**, no con `tailwind.config.js`. Verificado:
+  el bloque `@theme` produce `vk-cobalt:#3b6ef5` en el CSS compilado.
+
 ## Prerrequisitos manuales (bloquean la Tarea 1)
 
 Estos dos pasos los hace una persona, no un agente:
@@ -269,7 +281,7 @@ describe('infraestructura de pruebas', () => {
 
 - [ ] **Step 3: Ejecutar el test y verificar que falla**
 
-Run: `pnpm vitest run tests/unit/smoke.test.ts`
+Run: `./node_modules/.bin/vitest run tests/unit/smoke.test.ts`
 Expected: FAIL — `Failed to resolve import "@/domain/roles"`.
 
 - [ ] **Step 4: Crear la configuración y el módulo mínimo**
@@ -308,7 +320,7 @@ export type Role = (typeof ROLES)[number]
 
 - [ ] **Step 5: Ejecutar el test y verificar que pasa**
 
-Run: `pnpm vitest run tests/unit/smoke.test.ts`
+Run: `./node_modules/.bin/vitest run tests/unit/smoke.test.ts`
 Expected: PASS, 1 test.
 
 - [ ] **Step 6: Añadir los scripts de npm**
@@ -421,7 +433,7 @@ describe('can()', () => {
 
 - [ ] **Step 2: Ejecutar el test y verificar que falla**
 
-Run: `pnpm vitest run tests/unit/permissions.test.ts`
+Run: `./node_modules/.bin/vitest run tests/unit/permissions.test.ts`
 Expected: FAIL — `Failed to resolve import "@/domain/permissions"`.
 
 - [ ] **Step 3: Añadir el orden de scopes a `roles.ts`**
@@ -548,7 +560,7 @@ export function can({ globalRole, projectRole, action }: CanInput): Scope {
 
 - [ ] **Step 5: Ejecutar el test y verificar que pasa**
 
-Run: `pnpm vitest run tests/unit/permissions.test.ts`
+Run: `./node_modules/.bin/vitest run tests/unit/permissions.test.ts`
 Expected: PASS, 10 tests.
 
 - [ ] **Step 6: Commit**
@@ -616,7 +628,7 @@ describe('calculateProgress()', () => {
 
 - [ ] **Step 2: Ejecutar el test y verificar que falla**
 
-Run: `pnpm vitest run tests/unit/progress.test.ts`
+Run: `./node_modules/.bin/vitest run tests/unit/progress.test.ts`
 Expected: FAIL — `Failed to resolve import "@/domain/progress"`.
 
 - [ ] **Step 3: Implementar**
@@ -666,7 +678,7 @@ export function calculateProgress(tasks: readonly ProgressTask[]): number {
 
 - [ ] **Step 4: Ejecutar el test y verificar que pasa**
 
-Run: `pnpm vitest run tests/unit/progress.test.ts`
+Run: `./node_modules/.bin/vitest run tests/unit/progress.test.ts`
 Expected: PASS, 8 tests.
 
 - [ ] **Step 5: Commit**
@@ -727,7 +739,7 @@ describe('plantilla de fases VEKTRIUM', () => {
 
 - [ ] **Step 2: Ejecutar el test y verificar que falla**
 
-Run: `pnpm vitest run tests/unit/phases.test.ts`
+Run: `./node_modules/.bin/vitest run tests/unit/phases.test.ts`
 Expected: FAIL — `Failed to resolve import "@/domain/phases"`.
 
 - [ ] **Step 3: Implementar**
@@ -766,7 +778,7 @@ export function buildPhasesForProject(projectId: string): ProjectPhaseDraft[] {
 
 - [ ] **Step 4: Ejecutar el test y verificar que pasa**
 
-Run: `pnpm vitest run tests/unit/phases.test.ts`
+Run: `./node_modules/.bin/vitest run tests/unit/phases.test.ts`
 Expected: PASS, 6 tests.
 
 - [ ] **Step 5: Commit**
@@ -848,7 +860,7 @@ describe('transitionTask()', () => {
 
 - [ ] **Step 2: Ejecutar el test y verificar que falla**
 
-Run: `pnpm vitest run tests/unit/state-machines.test.ts`
+Run: `./node_modules/.bin/vitest run tests/unit/state-machines.test.ts`
 Expected: FAIL — `Failed to resolve import "@/domain/state-machines"`.
 
 - [ ] **Step 3: Crear el tipo `Result`**
@@ -966,7 +978,7 @@ export function transitionTask(
 
 - [ ] **Step 5: Ejecutar el test y verificar que pasa**
 
-Run: `pnpm vitest run tests/unit/state-machines.test.ts`
+Run: `./node_modules/.bin/vitest run tests/unit/state-machines.test.ts`
 Expected: PASS, 9 tests.
 
 - [ ] **Step 6: Commit**
@@ -1495,7 +1507,7 @@ describe('frontera de la clave de servicio', () => {
 
 - [ ] **Step 2: Ejecutar el test y verificar que falla**
 
-Run: `pnpm vitest run tests/structure/imports.test.ts`
+Run: `./node_modules/.bin/vitest run tests/structure/imports.test.ts`
 Expected: PASS con 2 tests — y eso es correcto en este punto. El test aún no puede fallar porque
 `src/db/admin` no existe, así que no hay nada que importar mal. **La verificación real de que este
 test funciona es el Step 6**, donde se introduce una violación deliberada y se comprueba que la
@@ -1566,7 +1578,7 @@ Añadir al array de configuración en `eslint.config.mjs`:
 
 - [ ] **Step 5: Ejecutar los tests y el lint para verificar que pasan**
 
-Run: `pnpm vitest run tests/structure/imports.test.ts && pnpm lint`
+Run: `./node_modules/.bin/vitest run tests/structure/imports.test.ts && pnpm lint`
 Expected: PASS, 2 tests. Lint sin errores.
 
 - [ ] **Step 6: Verificar que la regla detecta una violación real**
@@ -1576,7 +1588,7 @@ Añadir temporalmente a `src/app/page.tsx` la línea `import { adminDb } from '@
 Run: `pnpm lint`
 Expected: ERROR con el mensaje "src/db/admin usa la clave service_role y omite RLS".
 
-Run: `pnpm vitest run tests/structure/imports.test.ts`
+Run: `./node_modules/.bin/vitest run tests/structure/imports.test.ts`
 Expected: FAIL en el primer test, listando `src/app/page.tsx`.
 
 **Eliminar la línea antes de continuar** y volver a ejecutar ambos comandos para confirmar que
