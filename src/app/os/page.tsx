@@ -1,3 +1,13 @@
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'VEKTRIUM OS',
+  robots: {
+    index: false,
+    follow: false,
+  },
+}
+
 const metrics = [
   ['08', 'Proyectos activos'],
   ['14', 'Oportunidades abiertas'],
