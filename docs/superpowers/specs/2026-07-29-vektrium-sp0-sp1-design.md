@@ -287,7 +287,8 @@ sea `COLLABORATOR` en el proyecto que le concierne, sin duplicar usuarios.
 | `project.update` | ✅ | si es miembro | ❌ | ❌ | ❌ |
 | `project.archive` / `trash` | ✅ | si es miembro | ❌ | ❌ | ❌ |
 | `project.purge` | ✅ | ❌ | ❌ | ❌ | ❌ |
-| `phase.*` | ✅ | si es miembro | ❌ | ❌ | ❌ |
+| `phase.read` | ✅ | si es miembro | si es miembro | si es miembro | si es miembro |
+| `phase.create` / `update` / `delete` | ✅ | si es miembro | ❌ | ❌ | ❌ |
 | `task.read` | ✅ | si es miembro | si es miembro | si es miembro | si es miembro |
 | `task.create` / `update` | ✅ | si es miembro | si es asignado | ❌ | ❌ |
 | `meeting.read` | ✅ | si es miembro | si es miembro | si es asistente | si es miembro |
