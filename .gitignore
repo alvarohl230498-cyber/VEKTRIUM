@@ -7,6 +7,14 @@ node_modules/
 out/
 dist/
 build/
+next-env.d.ts
+*.tsbuildinfo
+
+# Vercel
+.vercel
+
+# Certificados locales
+*.pem
 
 # Entorno — nunca commitear valores reales
 .env
