@@ -37,7 +37,7 @@ const CLIENT: Record<Action, Scope> = {
   'project.read': 'member',
   'phase.read': 'member',
   'task.read': 'member',
-  'meeting.read': 'member',
+  'meeting.read': 'assignee',
 }
 
 const COLLABORATOR: Record<Action, Scope> = {

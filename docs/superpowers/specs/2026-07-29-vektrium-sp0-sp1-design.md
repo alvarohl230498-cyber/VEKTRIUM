@@ -524,6 +524,24 @@ Registrada conscientemente, no olvidada:
 | Sin cola offline | Complejidad desproporcionada y riesgo de corrupción | Probablemente nunca |
 | `progress_cached` denormalizado | Evita recalcular en listados | Se revisa si aparece deriva |
 | Búsqueda por nombre y código, no full-text | Suficiente en SP-1 | SP-7, búsqueda global |
+| `meetings` sin marca `is_internal` | Ver más abajo | SP-1, al construir el módulo de reuniones |
+
+### Carencia conocida: reuniones internas visibles para un cliente elevado
+
+Detectada al implementar la matriz de permisos. `CLIENT` tiene `meeting.read` con alcance
+`assignee` — solo las reuniones donde figura como asistente. Pero si a esa persona se le asigna
+explícitamente un rol de proyecto (`COLLABORATOR`, por ejemplo), la elevación documentada en la
+sección 6 le concede alcance `member`, y pasa a ver **todas** las reuniones del proyecto,
+incluidas las internas donde se habla de él sin invitarlo.
+
+**Esto no se corrige en la matriz de permisos.** Bloquear la elevación rompería el caso de uso que
+justifica los dos niveles de rol: que un cliente pueda colaborar en un proyecto concreto sin
+duplicar su usuario.
+
+La solución correcta es a nivel de dato: una columna `meetings.is_internal` que excluya esas
+reuniones de cualquier alcance que no sea `all` o asistencia explícita. Se implementa al construir
+el módulo de reuniones en SP-1. Hasta entonces, **no asignar roles de proyecto a usuarios con rol
+global `CLIENT`.**
 
 ---
 

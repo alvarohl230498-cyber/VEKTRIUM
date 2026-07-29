@@ -66,4 +66,26 @@ describe('can()', () => {
       }
     }
   })
+
+  it('CLIENT sin rol de proyecto solo lee reuniones donde es asistente', () => {
+    expect(can({ globalRole: 'CLIENT', action: 'meeting.read' })).toBe('assignee')
+  })
+
+  it('un CLIENT ascendido a COLLABORATOR en un proyecto si eleva su alcance', () => {
+    // La elevacion por rol de proyecto es deliberada: anadir a un cliente como
+    // colaborador de un proyecto le concede visibilidad de colaborador ahi.
+    // Que un cliente no vea reuniones internas NO se resuelve en esta matriz;
+    // requiere una marca is_internal en la reunion, aun inexistente.
+    expect(
+      can({ globalRole: 'CLIENT', projectRole: 'COLLABORATOR', action: 'meeting.read' }),
+    ).toBe('member')
+  })
+
+  it('phase.read es member para todos los roles con membresia de proyecto', () => {
+    const membershipRoles: readonly string[] = ['VIEWER', 'CLIENT', 'COLLABORATOR', 'PROJECT_MANAGER']
+    for (const role of ROLES) {
+      if (!membershipRoles.includes(role)) continue
+      expect(can({ globalRole: role, action: 'phase.read' })).toBe('member')
+    }
+  })
 })
