@@ -6,8 +6,14 @@ const manrope = Manrope({ subsets: ['latin'], variable: '--font-manrope', displa
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('http://localhost:3000'),
   title: 'VEKTRIUM',
   description: 'Automatización, Datos y Productos Digitales',
+  openGraph: {
+    title: 'VEKTRIUM',
+    description: 'Automatización, Datos y Productos Digitales',
+    images: ['/hero-vektrium.png'],
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
