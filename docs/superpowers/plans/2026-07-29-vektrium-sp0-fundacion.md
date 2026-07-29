@@ -87,11 +87,29 @@ Expected: `v22.x.x`. Si imprime v18 o v20, **detenerse** — el prerrequisito no
 - [ ] **Step 2: Crear el proyecto Next.js**
 
 ```bash
-pnpm dlx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --no-turbopack --use-pnpm
+pnpm dlx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --use-pnpm
 ```
 
 Responder `No` si pregunta por sobrescribir archivos existentes distintos de los generados
 (`.gitignore` y `docs/` ya existen y deben conservarse).
+
+**Correcciones verificadas durante la ejecución (2026-07-29):**
+
+- **`--no-turbopack` no existe** en el CLI actual de `create-next-app`. Comprobado con `--help`:
+  el único conmutador de bundler es `--rspack`. Para evitar Turbopack se añade `--webpack` a los
+  scripts `dev` y `build` de `package.json`.
+- **Turbopack falla en este equipo** con `El sistema no puede encontrar la ruta especificada`
+  (OS error 3) al lanzar sus procesos agrupados, por la ruta del proyecto con espacios. De ahí que
+  `--webpack` no sea preferencia sino necesidad.
+- **`@latest` resuelve a Next.js 16.2.12 con React 19.2.4**, no a Next 15. Se acepta: es la versión
+  vigente y compila. **La Tarea 12 debe verificarse contra las APIs de Next 16** antes de darse por
+  buena, no asumir las de 15.
+- **El nombre del directorio rompe las reglas de npm** (espacios y mayúsculas). `create-next-app`
+  se ejecuta en un subdirectorio temporal y los archivos se mueven arriba. Tras moverlos hay que
+  borrar `node_modules` y reinstalar: las junctions de pnpm en Windows guardan rutas absolutas.
+- **`pnpm build` corre bajo Node 18 en silencio** salvo que `scripts/use-node.sh` exporte también
+  el directorio real de fnm a la variable nativa `Path` de Windows. pnpm lanza los scripts vía
+  `cmd.exe`, que no resuelve ejecutables a través del symlink «multishell» de fnm.
 
 - [ ] **Step 3: Endurecer la configuración de TypeScript**
 
