@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect, useId, useRef, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { useActionState } from 'react'
 import type { Client, Contact, Project, User } from '@/data'
 import { MEETING_TYPES } from '@/data/types'
 import { DURATION_PRESETS_MINUTES, MEETING_TYPE_LABELS, formatLimaTime } from '@/lib/agenda'
-import { initialMeetingActionState } from './action-state'
+import { initialMeetingActionState, type MeetingActionState } from './action-state'
 import { createMeetingAction } from './actions'
 
 function FieldError({ message }: { message: string | undefined }) {
@@ -15,6 +15,18 @@ function FieldError({ message }: { message: string | undefined }) {
       {message}
     </p>
   )
+}
+
+/** Lee un campo de texto de `values`, o '' si no vino en el ultimo envio. */
+function fieldValue(values: MeetingActionState['values'], key: string): string {
+  const value = values[key]
+  return typeof value === 'string' ? value : ''
+}
+
+/** true si `key` (ej. "user:abc") estaba marcado en el ultimo envio de attendeeKeys. */
+function isAttendeeChecked(values: MeetingActionState['values'], key: string): boolean {
+  const value = values.attendeeKeys
+  return Array.isArray(value) && value.includes(key)
 }
 
 export function NewMeetingForm({
@@ -31,20 +43,23 @@ export function NewMeetingForm({
   requestId: string
 }) {
   const [state, formAction, pending] = useActionState(createMeetingAction, initialMeetingActionState)
-  const formRef = useRef<HTMLFormElement>(null)
-  const [clientId, setClientId] = useState(clients[0]?.id ?? '')
-  const [duration, setDuration] = useState<string>('30')
+  const [clientId, setClientId] = useState(() => fieldValue(state.values, 'clientId') || clients[0]?.id || '')
+  const [duration, setDuration] = useState(() => fieldValue(state.values, 'durationMinutes') || '30')
   const formId = useId()
 
   useEffect(() => {
-    if (state.status === 'success') {
-      // Reset imperativo del DOM del formulario tras guardar. clientId/duration
-      // son solo estado de filtrado en pantalla (no controlan el valor
-      // enviado salvo `duration`, que el usuario vuelve a fijar en el
-      // siguiente uso); no hace falta sincronizarlos aqui.
-      formRef.current?.reset()
-    }
-  }, [state.status])
+    // Reconcilia el estado de filtrado (clientId, duration) con lo que el
+    // <form> remontado (ver `key` abajo) va a mostrar: sin esto, tras un
+    // envio fallido el select de cliente volveria a su defaultValue pero el
+    // filtrado de proyectos/contactos seguiria usando el clientId anterior.
+    // No es un efecto evitable: `values` cambia por accion del usuario
+    // (submit), no por props/estado local, asi que no hay forma de derivar
+    // esto en el render.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setClientId(fieldValue(state.values, 'clientId') || clients[0]?.id || '')
+    setDuration(fieldValue(state.values, 'durationMinutes') || '30')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.submissionId])
 
   const clientProjects = projects.filter((p) => p.clientId === clientId)
   const clientContacts = contacts.filter((c) => c.clientId === clientId)
@@ -87,7 +102,12 @@ export function NewMeetingForm({
         </div>
       ) : null}
 
-      <form ref={formRef} action={formAction} noValidate className="mt-6 grid gap-5 sm:grid-cols-2">
+      <form
+        key={state.submissionId}
+        action={formAction}
+        noValidate
+        className="mt-6 grid gap-5 sm:grid-cols-2"
+      >
         <input type="hidden" name="requestId" defaultValue={requestId} />
 
         <div>
@@ -98,7 +118,7 @@ export function NewMeetingForm({
             id={`${formId}-clientId`}
             name="clientId"
             required
-            defaultValue={clients[0]?.id ?? ''}
+            defaultValue={fieldValue(state.values, 'clientId') || clients[0]?.id || ''}
             onChange={(e) => setClientId(e.target.value)}
             className="mt-1 w-full rounded-md border border-vk-line px-3 py-2 text-sm text-vk-ink"
           >
@@ -119,7 +139,7 @@ export function NewMeetingForm({
           <select
             id={`${formId}-projectId`}
             name="projectId"
-            defaultValue=""
+            defaultValue={fieldValue(state.values, 'projectId')}
             className="mt-1 w-full rounded-md border border-vk-line px-3 py-2 text-sm text-vk-ink"
           >
             <option value="">Sin proyecto vinculado</option>
@@ -140,7 +160,7 @@ export function NewMeetingForm({
             id={`${formId}-type`}
             name="type"
             required
-            defaultValue={MEETING_TYPES[0]}
+            defaultValue={fieldValue(state.values, 'type') || MEETING_TYPES[0]}
             className="mt-1 w-full rounded-md border border-vk-line px-3 py-2 text-sm text-vk-ink"
           >
             {MEETING_TYPES.map((type) => (
@@ -162,6 +182,7 @@ export function NewMeetingForm({
             type="text"
             required
             maxLength={140}
+            defaultValue={fieldValue(state.values, 'title')}
             placeholder="Ej. Levantamiento de proceso de facturación"
             className="mt-1 w-full rounded-md border border-vk-line px-3 py-2 text-sm text-vk-ink"
           />
@@ -176,7 +197,7 @@ export function NewMeetingForm({
             id={`${formId}-organizerId`}
             name="organizerId"
             required
-            defaultValue={users[0]?.id ?? ''}
+            defaultValue={fieldValue(state.values, 'organizerId') || users[0]?.id || ''}
             className="mt-1 w-full rounded-md border border-vk-line px-3 py-2 text-sm text-vk-ink"
           >
             {users.map((u) => (
@@ -198,6 +219,7 @@ export function NewMeetingForm({
               name="date"
               type="date"
               required
+              defaultValue={fieldValue(state.values, 'date')}
               className="mt-1 w-full rounded-md border border-vk-line px-3 py-2 text-sm text-vk-ink"
             />
             <FieldError message={state.fieldErrors.date} />
@@ -211,6 +233,7 @@ export function NewMeetingForm({
               name="startTime"
               type="time"
               required
+              defaultValue={fieldValue(state.values, 'startTime')}
               className="mt-1 w-full rounded-md border border-vk-line px-3 py-2 text-sm text-vk-ink"
             />
             <FieldError message={state.fieldErrors.startTime} />
@@ -245,6 +268,7 @@ export function NewMeetingForm({
                   type="number"
                   min={5}
                   max={480}
+                  defaultValue={fieldValue(state.values, 'customDurationMinutes')}
                   placeholder="Minutos"
                   className="w-28 rounded-md border border-vk-line px-3 py-2 text-sm text-vk-ink"
                 />
@@ -264,7 +288,13 @@ export function NewMeetingForm({
               <p className="text-xs font-extrabold uppercase tracking-[0.08em] text-vk-muted">Equipo VEKTRIUM</p>
               {users.map((u) => (
                 <label key={u.id} className="mt-1 flex items-center gap-2 text-sm text-vk-ink">
-                  <input type="checkbox" name="attendeeKeys" value={`user:${u.id}`} className="h-4 w-4" />
+                  <input
+                    type="checkbox"
+                    name="attendeeKeys"
+                    value={`user:${u.id}`}
+                    defaultChecked={isAttendeeChecked(state.values, `user:${u.id}`)}
+                    className="h-4 w-4"
+                  />
                   {u.fullName}
                 </label>
               ))}
@@ -276,7 +306,13 @@ export function NewMeetingForm({
               ) : (
                 clientContacts.map((c) => (
                   <label key={c.id} className="mt-1 flex items-center gap-2 text-sm text-vk-ink">
-                    <input type="checkbox" name="attendeeKeys" value={`contact:${c.id}`} className="h-4 w-4" />
+                    <input
+                      type="checkbox"
+                      name="attendeeKeys"
+                      value={`contact:${c.id}`}
+                      defaultChecked={isAttendeeChecked(state.values, `contact:${c.id}`)}
+                      className="h-4 w-4"
+                    />
                     {c.fullName}
                   </label>
                 ))
@@ -295,6 +331,7 @@ export function NewMeetingForm({
             required
             rows={3}
             maxLength={2000}
+            defaultValue={fieldValue(state.values, 'agenda')}
             placeholder="¿Qué se espera lograr en esta reunión?"
             className="mt-1 w-full rounded-md border border-vk-line px-3 py-2 text-sm text-vk-ink"
           />
@@ -302,14 +339,22 @@ export function NewMeetingForm({
         </div>
 
         <div className="sm:col-span-2">
-          <label className="flex items-center gap-2 text-sm font-bold text-vk-navy">
-            <input type="checkbox" name="createMeet" defaultChecked className="h-4 w-4" />
-            Crear videollamada (Meet simulado)
+          <label htmlFor={`${formId}-meetUrl`} className="text-sm font-bold text-vk-navy">
+            Enlace de Meet (opcional)
           </label>
+          <input
+            id={`${formId}-meetUrl`}
+            name="meetUrl"
+            type="url"
+            defaultValue={fieldValue(state.values, 'meetUrl')}
+            placeholder="https://meet.google.com/abc-defg-hij"
+            className="mt-1 w-full rounded-md border border-vk-line px-3 py-2 text-sm text-vk-ink"
+          />
           <p className="mt-1 text-xs text-vk-muted">
-            No hay credenciales de Google conectadas: el enlace se genera con un proveedor simulado, marcado
-            siempre con la insignia SIMULADO.
+            Pégalo si ya lo creaste en Google Meet. Si lo dejas vacío, puedes agregarlo después desde la tarjeta de
+            la reunión.
           </p>
+          <FieldError message={state.fieldErrors.meetUrl} />
         </div>
 
         <div className="flex flex-wrap items-center gap-3 sm:col-span-2">
