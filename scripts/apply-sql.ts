@@ -1,29 +1,17 @@
 import { readFileSync } from 'node:fs'
 import postgres from 'postgres'
+import { loadEnv } from './load-env'
 
 /**
  * Aplica un archivo .sql de supabase/migrations/ directamente contra
  * DATABASE_URL, fuera de drizzle-kit (las migraciones de este repo se
- * escriben a mano, ver AGENTS.md). Mismo patron de carga de .env que
- * scripts/seed-founders.ts: no hay dotenv instalado, se parsea a mano y no
- * se sobreescribe lo que ya este en el entorno del proceso.
+ * escriben a mano, ver AGENTS.md). Mismo cargador de .env que
+ * scripts/seed-founders.ts (ver scripts/load-env.ts): no hay dotenv
+ * instalado, se parsea a mano y no se sobreescribe lo que ya este en el
+ * entorno del proceso.
  *
  * Uso: pnpm db:apply supabase/migrations/0006_project_current_phase.sql
  */
-function loadEnv(): void {
-  let text: string
-  try {
-    text = readFileSync('.env', 'utf8')
-  } catch {
-    return
-  }
-  for (const line of text.split('\n')) {
-    const match = line.match(/^([A-Z_]+)=(.*)$/)
-    const key = match?.[1]
-    const value = match?.[2]
-    if (key && value !== undefined && !(key in process.env)) process.env[key] = value
-  }
-}
 
 async function main() {
   loadEnv()

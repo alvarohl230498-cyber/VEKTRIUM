@@ -110,7 +110,12 @@ export function ProjectBoard({
   function handleMove(projectId: string, order: number) {
     const project = projects.find((p) => p.id === projectId)
     const targetPhase = project ? phaseAtOrder(project, order) : undefined
-    if (!project || !targetPhase || project.currentPhaseId === targetPhase.id) return
+    if (!project) return
+    if (!targetPhase) {
+      setError('Ese proyecto no tiene esa fase.')
+      return
+    }
+    if (project.currentPhaseId === targetPhase.id) return
 
     const previousProjects = projects
     setProjects((prev) => prev.map((p) => (p.id === projectId ? { ...p, currentPhaseId: targetPhase.id } : p)))
@@ -123,6 +128,11 @@ export function ProjectBoard({
       if (!result.ok) {
         setProjects(previousProjects)
         setError(result.message)
+      } else {
+        // `result.project` es `Project`, sin `phases`: se combina con el
+        // registro previo (que si tiene `phases`) en vez de reemplazarlo,
+        // igual que replaceTask en planner.tsx preserva el resto del estado.
+        setProjects((prev) => prev.map((p) => (p.id === projectId ? { ...p, ...result.project } : p)))
       }
     })
   }

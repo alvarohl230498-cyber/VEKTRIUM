@@ -456,14 +456,13 @@ export function createSupabaseRepository(actingUserId: string): VektriumReposito
 
     async moveProjectPhase(projectId, phaseId) {
       return withUserContext(actingUserId, async (tx) => {
-        const db = tx
-        const [phase] = await db
+        const [phase] = await tx
           .select({ id: schema.projectPhases.id })
           .from(schema.projectPhases)
           .where(and(eq(schema.projectPhases.id, phaseId), eq(schema.projectPhases.projectId, projectId)))
         if (!phase) return null
 
-        const [updated] = await db
+        const [updated] = await tx
           .update(schema.projects)
           .set({ currentPhaseId: phaseId, updatedAt: new Date() })
           .where(eq(schema.projects.id, projectId))

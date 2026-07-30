@@ -167,7 +167,7 @@ export async function createMeetingAction(
   const meetUrl = values.meetUrl || null
   const isMock = false
   const providerEventId: string | null = null
-  const syncStatus: MeetingSyncStatus = 'sincronizada'
+  const syncStatus: MeetingSyncStatus = meetUrl ? 'sincronizada' : 'pendiente'
   const syncError: string | null = null
 
   const meeting = await repository.createMeeting({

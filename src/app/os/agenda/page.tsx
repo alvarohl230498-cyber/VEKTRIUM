@@ -35,8 +35,8 @@ export default async function AgendaPage() {
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-vk-muted">
           Aquí Juan Diego y Álvaro agendan reuniones, ven quién asiste y en qué proyecto o cliente encajan. Sin
-          credenciales de Google conectadas, los enlaces de videollamada se generan con un proveedor simulado,
-          siempre marcado con la insignia SIMULADO.
+          credenciales de Google conectadas: crea la reunión en tu Google Calendar y pega aquí el enlace de
+          Meet.
         </p>
       </div>
 

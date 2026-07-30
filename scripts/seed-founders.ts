@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { loadEnv } from './load-env'
 
 /**
  * Este script se ejecuta con `node --conditions=react-server --import tsx`
@@ -12,25 +12,12 @@ import { readFileSync } from 'node:fs'
  * activa y cargue el modulo vacio, igual que hace Next.js en build.
  *
  * dotenv no esta instalado en este repo (ver AGENTS.md / CLAUDE.md): se
- * parsea .env a mano, igual que tests/integration/helpers/db.ts. No
- * sobreescribe variables ya presentes en el entorno del proceso, para que
- * `FOUNDER_EMAILS=... pnpm seed:founders` (pasada por la shell) siga
- * ganando sobre cualquier valor que .env pudiera definir.
+ * parsea .env a mano via scripts/load-env.ts, igual que
+ * tests/integration/helpers/db.ts. No sobreescribe variables ya presentes
+ * en el entorno del proceso, para que `FOUNDER_EMAILS=... pnpm
+ * seed:founders` (pasada por la shell) siga ganando sobre cualquier valor
+ * que .env pudiera definir.
  */
-function loadEnv(): void {
-  let text: string
-  try {
-    text = readFileSync('.env', 'utf8')
-  } catch {
-    return
-  }
-  for (const line of text.split('\n')) {
-    const match = line.match(/^([A-Z_]+)=(.*)$/)
-    const key = match?.[1]
-    const value = match?.[2]
-    if (key && value !== undefined && !(key in process.env)) process.env[key] = value
-  }
-}
 loadEnv()
 
 const emails = (process.env.FOUNDER_EMAILS ?? '')
