@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useId, useState } from 'react'
+import { useId, useState } from 'react'
 import { useActionState } from 'react'
 import type { Client, Contact, Project, User } from '@/data'
 import { MEETING_TYPES } from '@/data/types'
@@ -47,19 +47,19 @@ export function NewMeetingForm({
   const [duration, setDuration] = useState(() => fieldValue(state.values, 'durationMinutes') || '30')
   const formId = useId()
 
-  useEffect(() => {
-    // Reconcilia el estado de filtrado (clientId, duration) con lo que el
-    // <form> remontado (ver `key` abajo) va a mostrar: sin esto, tras un
-    // envio fallido el select de cliente volveria a su defaultValue pero el
-    // filtrado de proyectos/contactos seguiria usando el clientId anterior.
-    // No es un efecto evitable: `values` cambia por accion del usuario
-    // (submit), no por props/estado local, asi que no hay forma de derivar
-    // esto en el render.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+  // Reconcilia el estado de filtrado (clientId, duration) con lo que el
+  // <form> remontado (ver `key` abajo) va a mostrar: sin esto, tras un envio
+  // el select de cliente volveria a su defaultValue pero el filtrado de
+  // proyectos/contactos seguiria usando el clientId anterior. Se ajusta
+  // durante el render (patron "adjusting state when a value changes" de
+  // React) en vez de en un efecto, para que quede consistente en el mismo
+  // paint.
+  const [prevSubmissionId, setPrevSubmissionId] = useState(state.submissionId)
+  if (state.submissionId !== prevSubmissionId) {
+    setPrevSubmissionId(state.submissionId)
     setClientId(fieldValue(state.values, 'clientId') || clients[0]?.id || '')
     setDuration(fieldValue(state.values, 'durationMinutes') || '30')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.submissionId])
+  }
 
   const clientProjects = projects.filter((p) => p.clientId === clientId)
   const clientContacts = contacts.filter((c) => c.clientId === clientId)
