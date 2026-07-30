@@ -22,11 +22,13 @@ const appUrl = process.env.DATABASE_URL_APP
 if (!adminUrl) throw new Error('Falta DATABASE_URL en .env')
 if (!appUrl) throw new Error('Falta DATABASE_URL_APP en .env — falta crear el rol vektrium_app')
 
+// prepare: false — obligatorio con el pooler de Supabase en modo transaccion
+// (puerto 6543), ver el comentario equivalente en src/db/client.ts.
 /** Bypassa RLS (rol postgres). Solo para arrange/cleanup de los tests. */
-export const adminSql = postgres(adminUrl, { max: 3 })
+export const adminSql = postgres(adminUrl, { max: 3, prepare: false })
 
 /** Respeta RLS (rol vektrium_app, sin BYPASSRLS). El mismo camino que usa la app real. */
-const appSql = postgres(appUrl, { max: 5 })
+const appSql = postgres(appUrl, { max: 5, prepare: false })
 
 export class RlsError extends Error {}
 

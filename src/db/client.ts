@@ -14,7 +14,14 @@ import * as schema from './schema'
 const url = process.env.DATABASE_URL_APP
 if (!url) throw new Error('Falta DATABASE_URL_APP')
 
-const client = postgres(url, { max: 10 })
+/**
+ * prepare: false es obligatorio con el pooler de Supabase en modo
+ * transaccion (puerto 6543, pgbouncer): una sentencia preparada queda
+ * atada a la conexion fisica que la creo, pero el pooler de transaccion
+ * puede servir cada consulta desde una conexion fisica distinta. Sin esto,
+ * las queries fallan de forma intermitente y dificil de diagnosticar.
+ */
+const client = postgres(url, { max: 10, prepare: false })
 
 /** Cliente que respeta RLS. Es el unico que debe usarse desde app/. */
 export const db = drizzle(client, { schema })
