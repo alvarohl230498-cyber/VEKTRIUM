@@ -35,7 +35,7 @@ export default function AgendaPage() {
             <SectionIntro
               eyebrow="Formato"
               title="Diagnostico breve, decisiones concretas."
-              copy="Cuando conecten Google Calendar o el calendario corporativo, esta ruta puede convertirse en reserva automatica. Por ahora funciona como flujo publico de preagenda."
+              copy="Cuentanos tu disponibilidad y el equipo de VEKTRIUM confirma el horario contigo para la primera conversacion."
             />
             <div className="mt-8 grid gap-3 sm:grid-cols-2">
               {[
@@ -61,8 +61,8 @@ export default function AgendaPage() {
               ))}
             </div>
             <p className="mt-6 text-sm leading-7 text-vk-muted">
-              La integracion automatica de calendario se activara cuando el proyecto tenga el canal
-              oficial conectado.
+              Escribenos el horario que prefieras dentro de estos rangos y te confirmamos por correo o
+              WhatsApp.
             </p>
             <PrimaryLink href="/contacto">Solicitar horario</PrimaryLink>
           </aside>

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import {
   PageHero,
   PrimaryLink,
@@ -63,7 +64,7 @@ export default async function ContactPage({ searchParams }: { searchParams: Sear
             <SectionIntro
               eyebrow="Solicitud"
               title="Mientras mas concreto el dolor, mejor el diagnostico."
-              copy="Este formulario queda listo para conectarse al backend o herramienta comercial que definan los fundadores."
+              copy="Cuentanos lo esencial: con eso preparamos la primera conversacion y confirmamos si tiene sentido avanzar."
             />
             <div id="solicitud-recibida" className="mt-8 border border-vk-line bg-white p-5">
               <h2 className="font-display text-2xl font-extrabold text-vk-navy">Ruta esperada</h2>
@@ -140,7 +141,15 @@ export default async function ContactPage({ searchParams }: { searchParams: Sear
               </button>
               <p className="text-xs leading-5 text-vk-muted">
                 Al enviar la solicitud aceptas que el equipo use estos datos para responder el
-                diagnostico. Revisa privacidad y terminos antes de publicar el sitio.
+                diagnostico, segun nuestra{' '}
+                <Link href="/privacidad" className="font-bold text-vk-cobalt hover:text-vk-navy">
+                  politica de privacidad
+                </Link>{' '}
+                y{' '}
+                <Link href="/terminos" className="font-bold text-vk-cobalt hover:text-vk-navy">
+                  terminos de uso
+                </Link>
+                .
               </p>
             </form>
           )}
@@ -151,7 +160,7 @@ export default async function ContactPage({ searchParams }: { searchParams: Sear
             <SectionIntro
               eyebrow="WhatsApp empresarial"
               title="Canal preparado para el numero oficial."
-              copy="El spec pide WhatsApp empresarial, pero no hay numero confirmado en los documentos. El enlace externo debe activarse cuando Juan Diego y Alvaro validen el canal oficial."
+              copy="Estamos activando WhatsApp empresarial para consultas rapidas. Mientras se confirma el numero oficial, coordina por agenda o formulario."
             />
             <PrimaryLink href="/agenda">Usar agenda mientras tanto</PrimaryLink>
           </div>

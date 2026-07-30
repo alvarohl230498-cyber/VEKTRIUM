@@ -22,7 +22,7 @@ export default function PackagesPage() {
         <PageHero
           eyebrow="Paquetes"
           title="Alcances claros para empezar chico y escalar con evidencia."
-          copy="El spec exige no inventar montos ni resultados. Por eso los paquetes ordenan alcance, entregables y decision de avance."
+          copy="No inventamos montos ni resultados. Por eso los paquetes ordenan alcance, entregables y decision de avance."
           actions={
             <>
               <PrimaryLink href="/contacto">Cotizar segun alcance</PrimaryLink>

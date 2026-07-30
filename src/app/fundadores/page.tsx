@@ -41,6 +41,14 @@ export default function FoundersPage() {
                 {founder.name}
               </h2>
               <p className="mt-5 text-base leading-8 text-vk-muted">{founder.focus}</p>
+              <a
+                href={founder.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-vk-cobalt transition hover:text-vk-navy"
+              >
+                LinkedIn ↗
+              </a>
             </article>
           ))}
         </section>

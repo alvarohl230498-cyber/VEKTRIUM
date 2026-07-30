@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -35,7 +36,7 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
     openGraph: {
       title: `${project.title} | VEKTRIUM`,
       description: project.summary,
-      images: ['/hero-vektrium.png'],
+      images: [project.image ?? '/hero-vektrium.png'],
     },
   }
 }
@@ -62,6 +63,21 @@ export default async function ProjectCasePage({ params }: ProjectPageProps) {
             </>
           }
         />
+
+        {project.image ? (
+          <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="relative aspect-[21/9] w-full overflow-hidden border border-vk-line">
+              <Image
+                src={project.image}
+                alt={project.title}
+                fill
+                sizes="100vw"
+                priority
+                className="object-cover"
+              />
+            </div>
+          </section>
+        ) : null}
 
         <section className="mx-auto grid max-w-7xl gap-6 px-4 py-12 sm:px-6 lg:grid-cols-4 lg:px-8">
           {[
@@ -135,8 +151,8 @@ export default async function ProjectCasePage({ params }: ProjectPageProps) {
                 Criterio de publicacion
               </h2>
               <p className="mt-4 text-sm leading-7 text-vk-muted">
-                Este proyecto respeta la separacion del spec: demos y prototipos no exponen datos
-                reales, y los casos reales requieren autorizacion antes de publicarse.
+                Los demos y prototipos no exponen datos reales, y los casos reales requieren
+                autorizacion antes de publicarse.
               </p>
             </div>
             <Link

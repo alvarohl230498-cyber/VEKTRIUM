@@ -199,6 +199,12 @@ export type Project = {
   result: string
   risks: string[]
   stack: string[]
+  /**
+   * Ruta de imagen bajo /public (ej. "/proyectos/mi-caso.jpg"). Opcional: los
+   * demos ilustrativos no llevan imagen real. Para publicar un caso con foto,
+   * coloca el archivo en public/proyectos/ y referencia esa ruta aqui.
+   */
+  image?: string
 }
 
 export const projects: Project[] = [
@@ -358,12 +364,14 @@ export const founders = [
   {
     name: 'Juan Diego Salazar Campos',
     focus: 'Finanzas, estrategia, evaluacion economica y relacion comercial.',
-    role: 'Fundador - Finanzas y crecimiento',
+    role: 'Founder',
+    linkedin: 'https://www.linkedin.com/in/juandiego-salazar-finanzas/',
   },
   {
     name: 'Alvaro Rodrigo Hernandez Laos',
     focus: 'Administracion, Recursos Humanos, operaciones, procesos y producto.',
-    role: 'Fundador - Operaciones y producto',
+    role: 'Founder',
+    linkedin: 'https://www.linkedin.com/in/alvarorodrigohernandezlaos/',
   },
 ] as const
 

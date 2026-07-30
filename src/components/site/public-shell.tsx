@@ -197,6 +197,17 @@ export function SecondaryLink({ children, href }: { children: ReactNode; href: s
 export function ProjectCard({ project }: { project: Project }) {
   return (
     <article className="flex h-full flex-col border border-vk-line bg-white p-5">
+      {project.image ? (
+        <div className="relative -mx-5 -mt-5 mb-5 aspect-video overflow-hidden border-b border-vk-line">
+          <Image
+            src={project.image}
+            alt={project.title}
+            fill
+            sizes="(min-width: 1024px) 33vw, 100vw"
+            className="object-cover"
+          />
+        </div>
+      ) : null}
       <div className="flex flex-wrap gap-2">
         <span className="rounded-md bg-vk-ice px-2 py-1 text-xs font-extrabold uppercase tracking-[0.12em] text-vk-cobalt">
           {project.kind}
