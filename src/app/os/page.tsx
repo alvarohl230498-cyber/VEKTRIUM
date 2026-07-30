@@ -11,6 +11,7 @@ import {
   summarizePortfolio,
   type AttentionKind,
 } from '@/lib/dashboard'
+import { requireSession } from '@/lib/session'
 
 export const metadata: Metadata = {
   title: 'Inicio',
@@ -27,7 +28,8 @@ const ATTENTION_KIND_LABEL: Record<AttentionKind, string> = {
 }
 
 export default async function OsDashboard() {
-  const repository = getRepository()
+  const session = await requireSession()
+  const repository = getRepository(session.user.id)
   const [users, clients, opportunities, projects, projectsWithPhases, meetings] = await Promise.all([
     repository.listUsers(),
     repository.listClients(),

@@ -37,7 +37,7 @@ export async function createClientAction(
     return { ...initialClientActionState, status: 'error', fieldErrors, formError: 'Revisa los campos marcados en rojo.' }
   }
 
-  const repository = getRepository()
+  const repository = getRepository(session.user.id)
   const client = await repository.createClient({
     legalName: parsed.data.legalName,
     tradeName: parsed.data.tradeName,

@@ -1,4 +1,5 @@
 import postgres from 'postgres'
+import { sql as rawSql } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import * as schema from './schema'
 
@@ -13,28 +14,49 @@ import * as schema from './schema'
 const url = process.env.DATABASE_URL_APP
 if (!url) throw new Error('Falta DATABASE_URL_APP')
 
-const sql = postgres(url, { max: 10 })
+const client = postgres(url, { max: 10 })
 
 /** Cliente que respeta RLS. Es el unico que debe usarse desde app/. */
-export const db = drizzle(sql, { schema })
+export const db = drizzle(client, { schema })
+
+/**
+ * Tipo del `tx` que entrega db.transaction(). Se deriva del propio metodo en
+ * vez de nombrarlo a mano porque los genericos de PgTransaction dependen del
+ * schema y del dialecto exacto; extraerlo asi es lo unico que se mantiene en
+ * sincronia sin esfuerzo si cambia la version de drizzle-orm.
+ */
+export type DbTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0]
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 /**
  * Ejecuta fn dentro de una transaccion identificada como userId, con el rol
  * authenticated activo. auth.uid() (usado por las politicas RLS) lee la
  * variable de sesion request.jwt.claim.sub, que es justo lo que se fija aqui.
  * Toda escritura o lectura sensible a permisos debe pasar por este helper.
+ *
+ * Usa db.transaction() (no sql.begin() crudo) para que el `tx` que recibe fn
+ * sea una instancia de Drizzle utilizable con .select()/.insert()/etc. sin
+ * envolverla de nuevo: volver a llamar drizzle(tx, ...) sobre una transaccion
+ * activa de postgres.js rompe en tiempo de ejecucion, porque una transaccion
+ * no expone la misma forma interna que la conexion de nivel superior.
+ *
+ * SET LOCAL no admite parametros vinculados en el protocolo de Postgres, asi
+ * que el userId se interpola como texto — de ahi la validacion de formato UUID
+ * antes de construir la sentencia, en vez de confiar en que el llamador nunca
+ * pase otra cosa.
  */
 export async function withUserContext<T>(
   userId: string,
-  fn: (tx: postgres.TransactionSql) => Promise<T>,
+  fn: (tx: DbTransaction) => Promise<T>,
 ): Promise<T> {
-  let result: T
-  await sql.begin(async (tx) => {
-    await tx.unsafe('set local role authenticated')
-    await tx.unsafe(`set local request.jwt.claim.sub = '${userId}'`)
-    result = await fn(tx)
+  if (!UUID_RE.test(userId)) {
+    throw new Error(`withUserContext: userId no tiene forma de UUID: "${userId}"`)
+  }
+
+  return db.transaction(async (tx) => {
+    await tx.execute(rawSql.raw('set local role authenticated'))
+    await tx.execute(rawSql.raw(`set local request.jwt.claim.sub = '${userId}'`))
+    return fn(tx)
   })
-  // @ts-expect-error — result se asigna siempre dentro de begin() antes de resolver;
-  // TypeScript no puede verlo porque begin() recibe el callback como argumento opaco.
-  return result
 }

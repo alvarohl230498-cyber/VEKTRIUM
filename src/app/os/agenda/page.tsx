@@ -14,9 +14,9 @@ export const metadata: Metadata = {
 }
 
 export default async function AgendaPage() {
-  await requireSession()
+  const session = await requireSession()
 
-  const repository = getRepository()
+  const repository = getRepository(session.user.id)
   const [meetings, clients, projects, users] = await Promise.all([
     repository.listMeetings(),
     repository.listClients(),

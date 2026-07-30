@@ -22,7 +22,7 @@ export async function moveTaskAction(taskId: string, status: TaskStatus): Promis
     return { ok: false, message: 'No tienes permiso para mover esta tarea.' }
   }
 
-  const repository = getRepository()
+  const repository = getRepository(session.user.id)
   const task = await repository.moveTask(taskId, status)
   if (!task) {
     return {

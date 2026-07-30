@@ -55,7 +55,7 @@ export async function createOpportunityAction(
     }
   }
 
-  const repository = getRepository()
+  const repository = getRepository(session.user.id)
   const opportunity = await repository.createOpportunity({
     clientId: parsed.data.clientId,
     title: parsed.data.title,
@@ -106,7 +106,7 @@ export async function transitionOpportunityAction(
     }
   }
 
-  const repository = getRepository()
+  const repository = getRepository(session.user.id)
   const ctx = parsed.data.lossReason.trim() ? { lossReason: parsed.data.lossReason.trim() } : {}
   const result = await repository.updateOpportunityStatus(parsed.data.opportunityId, parsed.data.to, ctx)
 
@@ -153,7 +153,7 @@ export async function convertOpportunityAction(
     }
   }
 
-  const repository = getRepository()
+  const repository = getRepository(session.user.id)
   const result = await repository.convertOpportunityToProject(parsed.data.opportunityId, {
     name: parsed.data.name,
     ownerId: parsed.data.ownerId,

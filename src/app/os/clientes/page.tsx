@@ -14,9 +14,9 @@ export const metadata: Metadata = {
 }
 
 export default async function ClientesPage() {
-  await requireSession()
+  const session = await requireSession()
 
-  const repository = getRepository()
+  const repository = getRepository(session.user.id)
   const [clients, opportunities, projects, meetings] = await Promise.all([
     repository.listClients(),
     repository.listOpportunities(),

@@ -14,13 +14,19 @@ import {
   PROJECT_HEALTH_LABELS,
   PROJECT_HEALTH_TEXT_CLASS,
 } from '@/lib/labels'
-import { requireSession } from '@/lib/session'
+import { getSession, requireSession } from '@/lib/session'
 
 type Params = Promise<{ id: string }>
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { id } = await params
-  const repository = getRepository()
+  // Sin sesion (p.ej. Next resolviendo metadata antes de la redireccion a
+  // /login) no hay como abrir el repositorio Supabase-backed: se degrada al
+  // titulo generico en vez de fallar la respuesta completa.
+  const session = await getSession()
+  if (!session) return { title: 'Cliente', robots: { index: false, follow: false } }
+
+  const repository = getRepository(session.user.id)
   const client = await repository.getClientById(id)
   return {
     title: client ? (client.tradeName ?? client.legalName) : 'Cliente',
@@ -29,10 +35,10 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 }
 
 export default async function ClientDetailPage({ params }: { params: Params }) {
-  await requireSession()
+  const session = await requireSession()
   const { id } = await params
 
-  const repository = getRepository()
+  const repository = getRepository(session.user.id)
   const client = await repository.getClientById(id)
   // Recurso inexistente: 404, nunca 403 — evita confirmar por URL directa que un id existe (seccion 8 del diseno).
   if (!client) notFound()

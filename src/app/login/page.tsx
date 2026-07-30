@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { brand } from '@/site/content'
 import { DEV_SIGN_IN_USERS, isDevSignInEnabled } from '@/lib/dev-auth'
-import { devSignIn } from './actions'
+import { devSignIn, requestMagicLink } from './actions'
 
 export const metadata: Metadata = {
   title: 'Ingresar',
@@ -13,12 +13,14 @@ export const metadata: Metadata = {
 
 const ERROR_MESSAGES: Record<string, string> = {
   no_autorizado:
-    'Esta cuenta de Google no esta autorizada para VEKTRIUM OS. Pide a un fundador que la agregue a la lista de acceso.',
-  oauth: 'No se pudo completar el inicio de sesion con Google. Intenta nuevamente.',
+    'Ese correo no esta autorizado para VEKTRIUM OS. Pide a un fundador que lo agregue a la lista de acceso.',
+  oauth: 'No se pudo completar el inicio de sesion. El enlace puede haber expirado: solicita uno nuevo.',
   dev_produccion: 'El acceso de desarrollo esta deshabilitado en produccion.',
   dev_invalido: 'No se pudo iniciar sesion con ese usuario de desarrollo.',
   sin_secreto:
     'Falta configurar SESSION_SECRET en este entorno, asi que no se puede firmar la sesion.',
+  magic_link_invalido: 'Ingresa un correo valido.',
+  magic_link_error: 'No se pudo enviar el enlace de acceso. Intenta nuevamente en unos minutos.',
 }
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
@@ -28,6 +30,9 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
   const rawError = params.error
   const errorCode = Array.isArray(rawError) ? rawError[0] : rawError
   const errorMessage = errorCode ? (ERROR_MESSAGES[errorCode] ?? ERROR_MESSAGES.oauth) : null
+
+  const rawSent = params.sent
+  const magicLinkSent = (Array.isArray(rawSent) ? rawSent[0] : rawSent) === '1'
 
   const devSignInEnabled = isDevSignInEnabled()
 
@@ -47,6 +52,39 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
             {errorMessage}
           </p>
         ) : null}
+
+        <div className="mt-8">
+          {magicLinkSent ? (
+            <p
+              role="status"
+              className="rounded-md border border-vk-cobalt/30 bg-vk-cobalt/10 px-4 py-3 text-sm font-semibold text-vk-navy"
+            >
+              Si ese correo tiene acceso a VEKTRIUM OS, te enviamos un enlace de ingreso. Revisa tu
+              correo (incluida la carpeta de spam).
+            </p>
+          ) : (
+            <form action={requestMagicLink} className="space-y-3">
+              <label htmlFor="email" className="block text-xs font-extrabold uppercase tracking-[0.14em] text-vk-cobalt">
+                Correo
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                autoComplete="email"
+                placeholder="nombre@vektrium.pe"
+                className="w-full rounded-md border border-vk-line px-4 py-3 text-sm text-vk-navy outline-none focus:border-vk-cobalt"
+              />
+              <button
+                type="submit"
+                className="w-full rounded-md bg-vk-cobalt px-4 py-3 text-sm font-extrabold text-white transition hover:opacity-90"
+              >
+                Enviar enlace de acceso
+              </button>
+            </form>
+          )}
+        </div>
 
         <div className="mt-8">
           <button

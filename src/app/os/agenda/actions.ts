@@ -58,7 +58,7 @@ export async function createMeetingAction(
   }
 
   const values = parsed.data
-  const repository = getRepository()
+  const repository = getRepository(session.user.id)
 
   const [client, projects, users] = await Promise.all([
     repository.getClientById(values.clientId),
@@ -198,7 +198,7 @@ export async function retryMeetingSyncAction(meetingId: string): Promise<void> {
   const session = await requireSession()
   if (can({ globalRole: session.user.role, action: 'meeting.update' }) === 'none') return
 
-  const repository = getRepository()
+  const repository = getRepository(session.user.id)
   const [meetings, users] = await Promise.all([repository.listMeetings(), repository.listUsers()])
   const meeting: Meeting | undefined = meetings.find((m) => m.id === meetingId)
   if (!meeting) return

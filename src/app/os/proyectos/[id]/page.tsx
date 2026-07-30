@@ -14,7 +14,7 @@ import {
   TASK_STATUS_LABELS,
 } from '@/lib/labels'
 import { computeNextMeeting, computeNextMilestone, computePhaseProgress, computePriorityTasks } from '@/lib/projects'
-import { requireSession } from '@/lib/session'
+import { getSession, requireSession } from '@/lib/session'
 import { Planner } from './planner'
 
 type Params = Promise<{ id: string }>
@@ -22,7 +22,10 @@ type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { id } = await params
-  const repository = getRepository()
+  const session = await getSession()
+  if (!session) return { title: 'Proyecto', robots: { index: false, follow: false } }
+
+  const repository = getRepository(session.user.id)
   const project = await repository.getProjectWithPhases(id)
   return {
     title: project ? `${project.code} · ${project.name}` : 'Proyecto',
@@ -37,12 +40,12 @@ export default async function ProjectDetailPage({
   params: Params
   searchParams: SearchParams
 }) {
-  await requireSession()
+  const session = await requireSession()
   const { id } = await params
   const { tab } = await searchParams
   const activeTab = tab === 'planner' ? 'planner' : 'resumen'
 
-  const repository = getRepository()
+  const repository = getRepository(session.user.id)
   const project = await repository.getProjectWithPhases(id)
   if (!project) notFound()
 

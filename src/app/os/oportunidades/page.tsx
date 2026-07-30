@@ -13,9 +13,9 @@ export const metadata: Metadata = {
 }
 
 export default async function OportunidadesPage() {
-  await requireSession()
+  const session = await requireSession()
 
-  const repository = getRepository()
+  const repository = getRepository(session.user.id)
   const [opportunities, clients, users] = await Promise.all([
     repository.listOpportunities(),
     repository.listClients(),

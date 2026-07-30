@@ -6,7 +6,7 @@ import { IllustrativeBadge, SimulatedBadge } from '@/components/os/illustrative-
 import { MEETING_TYPE_LABELS, formatLimaTime } from '@/lib/agenda'
 import { formatLima } from '@/lib/dashboard'
 import { OPPORTUNITY_STATUS_LABELS } from '@/lib/labels'
-import { requireSession } from '@/lib/session'
+import { getSession, requireSession } from '@/lib/session'
 import { TransitionForm } from '../transition-form'
 import { ConvertForm } from './convert-form'
 
@@ -16,7 +16,10 @@ const currency = new Intl.NumberFormat('es-PE', { style: 'currency', currency: '
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { id } = await params
-  const repository = getRepository()
+  const session = await getSession()
+  if (!session) return { title: 'Oportunidad', robots: { index: false, follow: false } }
+
+  const repository = getRepository(session.user.id)
   const opportunity = await repository.getOpportunityById(id)
   return {
     title: opportunity ? opportunity.title : 'Oportunidad',
@@ -25,10 +28,10 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 }
 
 export default async function OpportunityDetailPage({ params }: { params: Params }) {
-  await requireSession()
+  const session = await requireSession()
   const { id } = await params
 
-  const repository = getRepository()
+  const repository = getRepository(session.user.id)
   const opportunity = await repository.getOpportunityById(id)
   if (!opportunity) notFound()
 
