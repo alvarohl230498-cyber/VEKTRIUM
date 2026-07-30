@@ -18,10 +18,10 @@ export default function TermsPage() {
         <PageHero
           eyebrow="Terminos"
           title="Terminos de uso de VEKTRIUM."
-          copy="Las condiciones que aplican al usar este sitio y solicitar un diagnostico."
+          copy="Las condiciones que aplican al usar este sitio, solicitar una consulta gratuita o iniciar un primer reporte."
           actions={
             <>
-              <PrimaryLink href="/contacto">Contactar</PrimaryLink>
+              <PrimaryLink href="/contacto">Agendar primer reporte</PrimaryLink>
               <SecondaryLink href="/privacidad">Ver privacidad</SecondaryLink>
             </>
           }
@@ -38,7 +38,8 @@ export default function TermsPage() {
           </LegalBlock>
           <LegalBlock title="Alcance de servicios">
             Los paquetes Start, Scale y Partner describen formas de trabajo. Precios, fechas y
-            entregables finales se definen por cotizacion y diagnostico.
+            entregables finales se definen por alcance validado. La oferta de primer reporte sin
+            adelanto aplica a un alcance inicial acordado antes de construir.
           </LegalBlock>
           <LegalBlock title="Propiedad intelectual">
             Los textos, estructura, demos y recursos del sitio pertenecen a VEKTRIUM o se usan con

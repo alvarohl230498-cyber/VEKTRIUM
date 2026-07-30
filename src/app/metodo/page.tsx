@@ -25,7 +25,7 @@ export default function MethodPage() {
           copy="El recorrido evita soluciones sueltas: cada fase produce evidencia, responsables y criterios para decidir si conviene avanzar."
           actions={
             <>
-              <PrimaryLink href="/contacto">Aplicarlo a mi proceso</PrimaryLink>
+              <PrimaryLink href="/contacto">Probar con mi primer reporte</PrimaryLink>
               <SecondaryLink href="/paquetes">Ver paquetes</SecondaryLink>
             </>
           }
@@ -56,13 +56,14 @@ export default function MethodPage() {
             <SectionIntro
               eyebrow="Control"
               title="El metodo tambien protege contra entregas bonitas pero fragiles."
-              copy="La adopcion, los permisos, la documentacion y la medicion se piensan desde el inicio."
+              copy="La adopcion, los permisos, la documentacion y la medicion se piensan desde el inicio, incluso en el primer reporte sin adelanto."
             />
             <div className="grid gap-3 sm:grid-cols-2">
               {[
                 'Sin metricas inventadas: se separa linea base real de dato ilustrativo.',
                 'Sin dependencia invisible: el flujo queda documentado.',
                 'Sin promesas absolutas: cada avance tiene criterio de aceptacion.',
+                'Sin adelanto en el primer reporte: pagas cuando se presenta terminado.',
                 'Sin fuga de informacion: visibilidad y autorizacion se definen antes de publicar.',
               ].map((control) => (
                 <article key={control} className="border border-vk-line bg-vk-ice p-5">

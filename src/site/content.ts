@@ -12,6 +12,20 @@ export const brand = {
     'Automatizacion, datos y productos digitales para operaciones que necesitan menos trabajo manual, mas trazabilidad y mejores decisiones.',
 }
 
+export const firstReportOffer = {
+  eyebrow: 'Primer reporte sin adelanto',
+  headline: 'Consulta y alcance gratuitos para probar nuestra eficiencia.',
+  detail:
+    'Revisamos tu proceso, definimos el reporte inicial y avanzamos sin adelanto: pagas al final, cuando te presentemos el resultado terminado.',
+  note: 'Aplica para un primer reporte de alcance acotado y validado en la consulta inicial.',
+  steps: [
+    'Nos cuentas el proceso, el reporte que necesitas y donde hoy se pierde tiempo.',
+    'Definimos alcance, datos necesarios y entregable sin costo.',
+    'Construimos el primer reporte acordado con evidencia visible.',
+    'Pagas al finalizar, cuando te lo presentemos terminado.',
+  ],
+} as const
+
 export const publicNav = [
   { href: '/servicios', label: 'Servicios' },
   { href: '/metodo', label: 'Metodo' },
@@ -29,8 +43,8 @@ export const legalNav = [
 
 export const trustSignals = [
   {
-    title: 'Procesos medibles',
-    copy: 'Cada solucion parte de una linea base y criterios de avance verificables.',
+    title: 'Primer reporte sin adelanto',
+    copy: 'Consulta y alcance inicial gratuitos; pagas cuando te presentamos el reporte terminado.',
   },
   {
     title: 'Integraciones documentadas',
@@ -378,11 +392,12 @@ export const founders = [
 export const packages = [
   {
     name: 'Start',
-    fit: 'Para diagnosticar un proceso y entregar un primer flujo funcional.',
+    fit: 'Para probar VEKTRIUM con un primer reporte o flujo funcional sin adelanto.',
     includes: [
-      'Diagnostico Vektor.',
+      'Consulta y alcance inicial gratuitos.',
       'Mapa de proceso y linea base.',
-      'Primer tablero, automatizacion o prototipo.',
+      'Primer reporte, tablero, automatizacion o prototipo.',
+      'Pago al final, cuando se presenta el resultado terminado.',
       'Recomendaciones para escalar.',
     ],
   },
@@ -416,9 +431,9 @@ export const resources = [
     href: '/proyectos',
   },
   {
-    title: 'Plantilla de diagnostico',
+    title: 'Plantilla de alcance inicial',
     type: 'Template',
-    copy: 'Guia base para levantar proceso, dolor, linea base, usuarios, riesgos y decision.',
+    copy: 'Guia base para levantar proceso, dolor, linea base, usuarios, riesgos y primer reporte.',
     href: '/contacto?recurso=plantilla-diagnostico',
   },
   {

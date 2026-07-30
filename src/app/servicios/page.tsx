@@ -7,7 +7,7 @@ import {
   SecondaryLink,
   SectionIntro,
 } from '@/components/site/public-shell'
-import { services } from '@/site/content'
+import { firstReportOffer, services } from '@/site/content'
 
 export const metadata: Metadata = {
   title: 'Servicios',
@@ -25,7 +25,7 @@ export default function ServicesPage() {
           copy="Cada servicio existe para resolver una friccion concreta: trabajo manual, reportes dispersos, falta de trazabilidad, adopcion debil o datos que no llegan a decision."
           actions={
             <>
-              <PrimaryLink href="/contacto">Solicitar diagnostico</PrimaryLink>
+              <PrimaryLink href="/contacto">Agendar primer reporte</PrimaryLink>
               <SecondaryLink href="/proyectos">Ver proyectos</SecondaryLink>
             </>
           }
@@ -52,9 +52,9 @@ export default function ServicesPage() {
         <section className="border-y border-vk-line bg-white py-20">
           <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[360px_minmax(0,1fr)] lg:px-8">
             <SectionIntro
-              eyebrow="Diagnostico"
-              title="Antes de construir, se define que significa mejorar."
-              copy="El alcance se decide con evidencia minima para no comprar tecnologia por ansiedad ni prometer resultados sin base."
+              eyebrow={firstReportOffer.eyebrow}
+              title="Antes de construir grande, validamos con un primer reporte."
+              copy="La consulta y el alcance inicial son gratuitos. Si hay un reporte concreto que podamos entregar, trabajamos sin adelanto y pagas al final, cuando te presentamos el resultado."
             />
             <div className="grid gap-3 sm:grid-cols-2">
               {[
@@ -63,7 +63,7 @@ export default function ServicesPage() {
                 'Usuarios, permisos y frecuencia de uso.',
                 'Riesgos operativos, legales y de continuidad.',
                 'Indicadores y linea base posible.',
-                'Primer entregable con valor verificable.',
+                'Pago al presentar el primer reporte terminado.',
               ].map((item) => (
                 <article key={item} className="border border-vk-line bg-vk-ice p-5">
                   <p className="text-sm font-bold leading-7 text-vk-navy">{item}</p>

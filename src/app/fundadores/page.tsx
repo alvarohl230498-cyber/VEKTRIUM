@@ -25,7 +25,7 @@ export default function FoundersPage() {
           copy="El sitio evita biografias infladas. La propuesta es simple: criterio financiero, entendimiento operativo y producto digital trabajando juntos."
           actions={
             <>
-              <PrimaryLink href="/contacto">Solicitar diagnostico</PrimaryLink>
+              <PrimaryLink href="/contacto">Agendar primer reporte</PrimaryLink>
               <SecondaryLink href="/metodo">Ver metodo</SecondaryLink>
             </>
           }
@@ -58,11 +58,12 @@ export default function FoundersPage() {
             <SectionIntro
               eyebrow="Complementariedad"
               title="La conversacion comercial no se separa de la implementacion."
-              copy="Esa mezcla ayuda a decidir que conviene construir, que no conviene prometer y como medir si la solucion realmente mejora la operacion."
+              copy="Esa mezcla permite ofrecer una consulta y alcance inicial gratuitos sin prometer de mas: primero entendemos, luego entregamos evidencia y recien ahi se paga."
             />
             <div className="grid gap-3 sm:grid-cols-2">
               {[
                 'Evaluacion economica antes de escalar alcance.',
+                'Primer reporte sin adelanto para probar eficiencia.',
                 'Procesos y usuarios reales antes de elegir herramienta.',
                 'Documentacion operativa para no depender de memoria.',
                 'Criterios de seguridad y permisos desde la fundacion.',

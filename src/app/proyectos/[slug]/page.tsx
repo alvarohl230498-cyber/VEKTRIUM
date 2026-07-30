@@ -58,7 +58,7 @@ export default async function ProjectCasePage({ params }: ProjectPageProps) {
           copy={project.summary}
           actions={
             <>
-              <PrimaryLink href="/contacto">Solicitar diagnostico</PrimaryLink>
+              <PrimaryLink href="/contacto">Agendar reporte similar</PrimaryLink>
               <SecondaryLink href="/proyectos">Volver a proyectos</SecondaryLink>
             </>
           }
@@ -159,7 +159,7 @@ export default async function ProjectCasePage({ params }: ProjectPageProps) {
               className="mt-8 inline-flex rounded-md bg-vk-cobalt px-4 py-3 text-sm font-extrabold text-white transition hover:bg-vk-navy"
               href="/contacto"
             >
-              Conversar sobre un caso similar
+              Agendar primer reporte
             </Link>
           </aside>
         </section>
@@ -169,7 +169,7 @@ export default async function ProjectCasePage({ params }: ProjectPageProps) {
             <SectionIntro
               eyebrow="Siguiente paso"
               title="El valor esta en adaptar el patron a tu proceso real."
-              copy="Los demos muestran capacidad tecnica. El diagnostico define si el flujo aplica, que datos existen y que riesgo hay que controlar."
+              copy="Los demos muestran capacidad tecnica. La consulta y el alcance inicial son gratuitos para definir si podemos entregar un primer reporte similar sin adelanto."
             />
           </div>
         </section>

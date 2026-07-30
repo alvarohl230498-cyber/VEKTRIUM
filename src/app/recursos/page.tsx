@@ -21,8 +21,8 @@ export default function ResourcesPage() {
       <main>
         <PageHero
           eyebrow="Recursos"
-          title="Material util para decidir sin vender humo."
-          copy="El repositorio publico de recursos separa demos, plantillas, walkthroughs y material privado. Lo que no este validado se marca como pendiente."
+          title="Material util para decidir sin promesas infladas."
+          copy="El repositorio publico separa demos, plantillas, walkthroughs y material privado. Las plantillas ayudan a preparar la consulta gratuita y el alcance del primer reporte."
           actions={
             <>
               <PrimaryLink href="/proyectos">Ver demos</PrimaryLink>

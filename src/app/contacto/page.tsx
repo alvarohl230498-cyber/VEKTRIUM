@@ -7,12 +7,13 @@ import {
   SecondaryLink,
   SectionIntro,
 } from '@/components/site/public-shell'
+import { firstReportOffer } from '@/site/content'
 import { submitContactRequest } from './actions'
 
 export const metadata: Metadata = {
   title: 'Contacto',
   description:
-    'Solicita un Diagnostico Vektor por formulario, agenda o canal empresarial preparado para WhatsApp.',
+    'Solicita tu primer reporte VEKTRIUM sin adelanto, con consulta y alcance inicial gratuitos.',
 }
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
@@ -36,20 +37,20 @@ export default async function ContactPage({ searchParams }: { searchParams: Sear
       <main>
         <PageHero
           eyebrow="Contacto"
-          title="Solicita un Diagnostico Vektor."
-          copy="Cuentanos que proceso consume tiempo, que reporte no llega a decision o que operacion necesita mas control."
+          title="Pide tu primer reporte sin adelanto."
+          copy="Consulta y alcance gratuitos para que pruebes nuestra eficiencia. El pago se realiza al finalizar el proceso, cuando te presentemos el reporte terminado."
           actions={
             <>
-              <PrimaryLink href="#formulario">Completar formulario</PrimaryLink>
-              <SecondaryLink href="/agenda">Ver agenda</SecondaryLink>
+              <PrimaryLink href="#formulario">Enviar mi caso</PrimaryLink>
+              <SecondaryLink href="/agenda">Ver agenda gratis</SecondaryLink>
             </>
           }
         />
 
         <section className="mx-auto grid max-w-7xl gap-6 px-4 py-12 sm:px-6 lg:grid-cols-3 lg:px-8">
           {[
-            ['Formulario', 'Levanta necesidad, datos disponibles, urgencia y contacto.', '#formulario'],
-            ['Agenda', 'Reserva una primera conversacion para ubicar alcance.', '/agenda'],
+            ['Primer reporte', 'Trabajamos sin adelanto y ves valor desde el primer entregable.', '#formulario'],
+            ['Agenda gratis', 'Consulta y alcance inicial sin costo para definir si conviene avanzar.', '/agenda'],
             ['WhatsApp empresarial', 'Canal preparado para conectar el numero oficial.', '#whatsapp'],
           ].map(([title, copy, href]) => (
             <a key={title} className="border border-vk-line bg-white p-5" href={href}>
@@ -63,16 +64,18 @@ export default async function ContactPage({ searchParams }: { searchParams: Sear
           <div>
             <SectionIntro
               eyebrow="Solicitud"
-              title="Mientras mas concreto el dolor, mejor el diagnostico."
-              copy="Cuentanos lo esencial: con eso preparamos la primera conversacion y confirmamos si tiene sentido avanzar."
+              title="Define el alcance sin pagar por la primera conversacion."
+              copy="Cuentanos lo esencial: con eso preparamos la consulta gratuita, ubicamos el reporte inicial y validamos si el alcance es razonable."
             />
             <div id="solicitud-recibida" className="mt-8 border border-vk-line bg-white p-5">
               <h2 className="font-display text-2xl font-extrabold text-vk-navy">Ruta esperada</h2>
               <ol className="mt-4 grid gap-3 text-sm leading-7 text-vk-muted">
                 <li>1. Revisar proceso, area, urgencia y datos disponibles.</li>
-                <li>2. Confirmar una sesion de diagnostico.</li>
-                <li>3. Proponer siguiente paso con alcance y evidencia minima.</li>
+                <li>2. Definir alcance inicial gratuito y primer entregable.</li>
+                <li>3. Construir el primer reporte acordado.</li>
+                <li>4. Pagar al finalizar, cuando te lo presentemos terminado.</li>
               </ol>
+              <p className="mt-4 text-xs font-semibold leading-6 text-vk-muted">{firstReportOffer.note}</p>
             </div>
           </div>
 
@@ -80,8 +83,8 @@ export default async function ContactPage({ searchParams }: { searchParams: Sear
             <div className="space-y-4 border border-vk-line bg-white p-5">
               <h2 className="font-display text-2xl font-extrabold text-vk-navy">Solicitud enviada</h2>
               <p role="status" className="text-sm leading-7 text-vk-muted">
-                Recibimos tu solicitud. El equipo de VEKTRIUM te contactara para coordinar el
-                diagnostico.
+                Recibimos tu solicitud. El equipo de VEKTRIUM te contactara para coordinar la
+                consulta gratuita y revisar tu primer reporte.
               </p>
             </div>
           ) : (
@@ -141,7 +144,7 @@ export default async function ContactPage({ searchParams }: { searchParams: Sear
               </button>
               <p className="text-xs leading-5 text-vk-muted">
                 Al enviar la solicitud aceptas que el equipo use estos datos para responder el
-                diagnostico, segun nuestra{' '}
+                caso, coordinar la consulta y definir el alcance inicial, segun nuestra{' '}
                 <Link href="/privacidad" className="font-bold text-vk-cobalt hover:text-vk-navy">
                   politica de privacidad
                 </Link>{' '}
@@ -160,9 +163,9 @@ export default async function ContactPage({ searchParams }: { searchParams: Sear
             <SectionIntro
               eyebrow="WhatsApp empresarial"
               title="Canal preparado para el numero oficial."
-              copy="Estamos activando WhatsApp empresarial para consultas rapidas. Mientras se confirma el numero oficial, coordina por agenda o formulario."
+              copy="Estamos activando WhatsApp empresarial para consultas rapidas. Mientras se confirma el numero oficial, coordina tu primer reporte por agenda o formulario."
             />
-            <PrimaryLink href="/agenda">Usar agenda mientras tanto</PrimaryLink>
+            <PrimaryLink href="/agenda">Usar agenda gratis</PrimaryLink>
           </div>
         </section>
       </main>

@@ -160,7 +160,7 @@ export function ProjectsCarouselSection() {
             className="inline-flex rounded-md bg-vk-cobalt px-5 py-3 text-sm font-extrabold text-white transition hover:bg-vk-navy focus:outline-none focus:ring-2 focus:ring-vk-cobalt focus:ring-offset-2"
             href="/contacto?motivo=proyectos"
           >
-            Conversemos sobre tu proceso
+            Agendar primer reporte
           </Link>
         </div>
 
@@ -311,7 +311,7 @@ export function ProjectsCarouselSection() {
                     className="inline-flex rounded-md bg-vk-navy px-5 py-3 text-sm font-extrabold text-white transition hover:bg-vk-cobalt focus:outline-none focus:ring-2 focus:ring-vk-cobalt focus:ring-offset-2"
                     href={`/contacto?proyecto=${activeProject.id}`}
                   >
-                    {activeProject.cta}
+                    Agendar reporte similar
                   </Link>
                   <CarouselNavigation
                     activeIndex={activeIndex}

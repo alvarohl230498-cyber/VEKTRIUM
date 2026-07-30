@@ -26,7 +26,7 @@ export default function VektriumProofPage() {
           actions={
             <>
               <PrimaryLink href="/proyectos">Ver demos publicas</PrimaryLink>
-              <SecondaryLink href="/contacto?motivo=vek-proof">Solicitar acceso</SecondaryLink>
+              <SecondaryLink href="/contacto?motivo=vek-proof">Agendar primer reporte</SecondaryLink>
             </>
           }
         />

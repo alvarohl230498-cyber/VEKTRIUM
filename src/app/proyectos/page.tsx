@@ -25,7 +25,7 @@ export default function ProjectsPage() {
           copy="El portafolio ahora vive en un carrusel unico: imagen primero, contexto despues, sin duplicar tarjetas ni mezclar piezas que compitan entre si."
           actions={
             <>
-              <PrimaryLink href="/contacto?motivo=proyectos">Conversemos sobre tu proceso</PrimaryLink>
+              <PrimaryLink href="/contacto?motivo=proyectos">Agendar primer reporte</PrimaryLink>
               <SecondaryLink href="/servicios">Ver servicios</SecondaryLink>
             </>
           }
@@ -45,7 +45,7 @@ export default function ProjectsPage() {
                 'Las imagenes se muestran completas con object-fit contain.',
                 'Los textos vienen del JSON del carrusel.',
                 'Las capacidades se limitan a cuatro puntos por proyecto.',
-                'El CTA lleva al formulario de contacto para iniciar un diagnostico.',
+                'El CTA lleva al formulario para iniciar consulta y alcance gratuitos.',
               ].map((criterion) => (
                 <article key={criterion} className="border border-vk-line bg-vk-ice p-5">
                   <p className="text-sm font-bold leading-7 text-vk-navy">{criterion}</p>

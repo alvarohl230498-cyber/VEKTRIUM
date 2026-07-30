@@ -22,7 +22,7 @@ export default function PrivacyPage() {
           copy="Como tratamos los datos que nos compartes al escribirnos o completar un formulario en este sitio."
           actions={
             <>
-              <PrimaryLink href="/contacto">Contactar</PrimaryLink>
+              <PrimaryLink href="/contacto">Agendar primer reporte</PrimaryLink>
               <SecondaryLink href="/terminos">Ver terminos</SecondaryLink>
             </>
           }
@@ -34,8 +34,9 @@ export default function PrivacyPage() {
             el visitante decida enviar por formulario.
           </LegalBlock>
           <LegalBlock title="Uso de la informacion">
-            La informacion se usa para responder solicitudes, preparar diagnosticos, coordinar
-            reuniones y dar seguimiento comercial relacionado con VEKTRIUM.
+            La informacion se usa para responder solicitudes, preparar la consulta gratuita, definir
+            el alcance inicial, coordinar reuniones y dar seguimiento comercial relacionado con
+            VEKTRIUM.
           </LegalBlock>
           <LegalBlock title="Datos sensibles y confidenciales">
             El sitio publico no recibe informacion sensible, personal o confidencial de clientes.

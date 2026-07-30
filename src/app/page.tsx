@@ -10,6 +10,7 @@ import {
 } from '@/components/site/public-shell'
 import {
   brand,
+  firstReportOffer,
   founders,
   methodSteps,
   packages,
@@ -39,9 +40,22 @@ export default function Home() {
               </p>
               <p className="mt-5 max-w-xl text-lg leading-8 text-vk-ink">{brand.description}</p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <PrimaryLink href="/contacto">Solicitar diagnostico</PrimaryLink>
+                <PrimaryLink href="/contacto">Agendar primer reporte</PrimaryLink>
                 <SecondaryLink href="/proyectos">Ver proyectos</SecondaryLink>
               </div>
+              <div className="mt-6 grid max-w-xl gap-2 sm:grid-cols-3">
+                {['Consulta gratis', 'Alcance gratis', 'Pago al presentar'].map((item) => (
+                  <span
+                    key={item}
+                    className="rounded-md border border-vk-line bg-white/80 px-3 py-2 text-sm font-extrabold text-vk-navy"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+              <p className="mt-4 max-w-xl text-sm font-semibold leading-7 text-vk-ink">
+                {firstReportOffer.detail}
+              </p>
             </div>
           </div>
         </section>
@@ -143,7 +157,7 @@ export default function Home() {
             <SectionIntro
               eyebrow="Paquetes"
               title="Empezar chico, escalar con evidencia."
-              copy="Start, Scale y Partner ordenan el alcance sin inventar precios o resultados antes del diagnostico."
+              copy="Start permite probar con un primer reporte sin adelanto; Scale y Partner escalan solo cuando hay evidencia para avanzar."
             />
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
               {packages.map((pack) => (

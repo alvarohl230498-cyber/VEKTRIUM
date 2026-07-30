@@ -7,11 +7,12 @@ import {
   SecondaryLink,
   SectionIntro,
 } from '@/components/site/public-shell'
+import { firstReportOffer } from '@/site/content'
 
 export const metadata: Metadata = {
   title: 'Agenda',
   description:
-    'Agenda una primera conversacion para un Diagnostico Vektor sobre procesos, datos y automatizacion.',
+    'Agenda una consulta gratuita para definir el alcance de tu primer reporte VEKTRIUM sin adelanto.',
 }
 
 export default function AgendaPage() {
@@ -19,13 +20,13 @@ export default function AgendaPage() {
     <PublicShell>
       <main>
         <PageHero
-          eyebrow="Agenda"
-          title="Reserva una conversacion enfocada en el proceso."
-          copy="La primera sesion debe ubicar dolor, datos, usuarios, urgencia, riesgos y un siguiente paso posible."
+          eyebrow="Agenda gratis"
+          title="Agenda tu primer reporte sin adelanto."
+          copy="Consulta y alcance inicial gratuitos. Revisamos tu proceso, definimos que reporte conviene construir y el pago llega al final, cuando te presentamos el resultado terminado."
           actions={
             <>
-              <PrimaryLink href="/contacto">Enviar contexto</PrimaryLink>
-              <SecondaryLink href="/servicios">Revisar servicios</SecondaryLink>
+              <PrimaryLink href="/contacto">Quiero agendar</PrimaryLink>
+              <SecondaryLink href="/proyectos">Ver proyectos</SecondaryLink>
             </>
           }
         />
@@ -33,16 +34,16 @@ export default function AgendaPage() {
         <section className="mx-auto grid max-w-7xl gap-8 px-4 py-20 sm:px-6 lg:grid-cols-[minmax(0,1fr)_420px] lg:px-8">
           <div>
             <SectionIntro
-              eyebrow="Formato"
-              title="Diagnostico breve, decisiones concretas."
-              copy="Cuentanos tu disponibilidad y el equipo de VEKTRIUM confirma el horario contigo para la primera conversacion."
+              eyebrow="Oferta"
+              title="Prueba nuestra eficiencia con un primer reporte."
+              copy="La primera conversacion no se cobra. Tampoco cobramos por definir el alcance inicial: queremos que veas si nuestra forma de trabajar realmente te ayuda."
             />
             <div className="mt-8 grid gap-3 sm:grid-cols-2">
               {[
-                '30 minutos para entender el proceso.',
-                'Una persona responsable del dolor operativo.',
-                'Ejemplos de reporte, flujo o tarea repetitiva.',
-                'Decision sobre si conviene diagnostico, demo o propuesta.',
+                'Consulta inicial gratuita para entender el proceso.',
+                'Alcance inicial gratuito con datos, responsables y entregable.',
+                'Primer reporte acordado antes de escalar a un proyecto mayor.',
+                'Pago al finalizar, cuando el resultado se presenta terminado.',
               ].map((item) => (
                 <article key={item} className="border border-vk-line bg-white p-5">
                   <p className="text-sm font-bold leading-7 text-vk-navy">{item}</p>
@@ -52,19 +53,21 @@ export default function AgendaPage() {
           </div>
 
           <aside className="border border-vk-line bg-white p-6">
-            <h2 className="font-display text-2xl font-extrabold text-vk-navy">Horarios sugeridos</h2>
+            <h2 className="font-display text-2xl font-extrabold text-vk-navy">Asi funciona</h2>
             <div className="mt-6 grid gap-3">
-              {['Lunes a viernes', '09:00 - 12:00', '15:00 - 18:00'].map((slot) => (
-                <div key={slot} className="rounded-md bg-vk-ice px-4 py-3 text-sm font-extrabold text-vk-navy">
-                  {slot}
+              {firstReportOffer.steps.map((step, index) => (
+                <div key={step} className="rounded-md bg-vk-ice px-4 py-3 text-sm font-bold leading-6 text-vk-navy">
+                  <span className="mr-2 font-black text-vk-cobalt">{index + 1}.</span>
+                  {step}
                 </div>
               ))}
             </div>
             <p className="mt-6 text-sm leading-7 text-vk-muted">
-              Escribenos el horario que prefieras dentro de estos rangos y te confirmamos por correo o
-              WhatsApp.
+              {firstReportOffer.note}
             </p>
-            <PrimaryLink href="/contacto">Solicitar horario</PrimaryLink>
+            <div className="mt-6">
+              <PrimaryLink href="/contacto">Solicitar agenda gratis</PrimaryLink>
+            </div>
           </aside>
         </section>
 
