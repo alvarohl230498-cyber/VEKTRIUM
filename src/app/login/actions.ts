@@ -54,13 +54,19 @@ export async function requestMagicLink(formData: FormData): Promise<void> {
 
     const hashedToken = data?.properties?.hashed_token
     if (error || !hashedToken) {
+      // Se registra el motivo real (nunca secretos) para poder diagnosticar
+      // desde los logs de Vercel — el mensaje que ve el usuario sigue siendo
+      // generico a proposito.
+      console.error('requestMagicLink: fallo generateLink', error?.message ?? 'sin hashed_token')
       sendFailed = true
     } else {
       const link = `${redirectTo}?token_hash=${hashedToken}&type=magiclink`
       const result = await sendMagicLinkEmail(parsed.data.email, link)
+      if (!result.ok) console.error('requestMagicLink: fallo sendMagicLinkEmail', result.reason)
       sendFailed = !result.ok
     }
-  } catch {
+  } catch (e) {
+    console.error('requestMagicLink: excepcion', e instanceof Error ? e.message : e)
     sendFailed = true
   }
 
