@@ -1,27 +1,14 @@
 'use client'
 
-import { useEffect, useId, useState, useTransition } from 'react'
+import { useId, useState, useTransition } from 'react'
 import type { ProjectPhaseWithTasks, Task, User } from '@/data'
 import { calculateProgress } from '@/domain/progress'
 import type { TaskStatus } from '@/domain/progress'
 import { IllustrativeBadge } from '@/components/os/illustrative-badge'
 import { formatLima } from '@/lib/dashboard'
 import { TASK_KANBAN_ORDER, TASK_STATUS_LABELS } from '@/lib/labels'
+import { useIsDesktop } from '@/lib/use-is-desktop'
 import { moveTaskAction } from '../actions'
-
-function useIsDesktop(breakpointPx = 768): boolean {
-  const [isDesktop, setIsDesktop] = useState(false)
-
-  useEffect(() => {
-    const query = window.matchMedia(`(min-width: ${breakpointPx}px)`)
-    const update = () => setIsDesktop(query.matches)
-    update()
-    query.addEventListener('change', update)
-    return () => query.removeEventListener('change', update)
-  }, [breakpointPx])
-
-  return isDesktop
-}
 
 function applyStatus(phases: ProjectPhaseWithTasks[], taskId: string, status: TaskStatus): ProjectPhaseWithTasks[] {
   return phases.map((phase) => ({
