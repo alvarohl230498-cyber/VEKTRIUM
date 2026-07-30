@@ -3,14 +3,69 @@
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import { getRepository } from '@/data'
+import { findAuthorizedUser, provisionUser } from '@/lib/auth-provisioning'
 import { isDevSignInEnabled } from '@/lib/dev-auth'
 import { sendMagicLinkEmail } from '@/lib/magic-link-email'
+import { passwordSignInSchema } from '@/lib/schemas/auth'
 import { createSession } from '@/lib/session'
+import { supabaseAuth } from '@/lib/supabase-auth-client'
 import { supabaseAdminAuth } from '@/lib/supabase-admin-auth'
 
 const magicLinkSchema = z.object({
   email: z.string().trim().toLowerCase().email(),
 })
+
+/**
+ * Login por correo y contraseña — el metodo principal para uso diario.
+ * Reproduce la misma logica de post-verificacion que el callback del
+ * magic link (src/app/auth/callback/route.ts): comprobar authorized_users,
+ * aprovisionar la fila en `users`, crear la sesion propia. La diferencia es
+ * que aqui la verificacion es sincrona (signInWithPassword responde de
+ * inmediato) en vez de requerir un correo y una segunda peticion.
+ *
+ * "Correo o contraseña incorrectos" es un unico mensaje generico para
+ * credenciales invalidas Y para cuentas sin contraseña configurada: no se
+ * distingue, por la misma razon de no filtrar informacion que ya rige
+ * requestMagicLink().
+ */
+export async function passwordSignInAction(formData: FormData): Promise<void> {
+  const parsed = passwordSignInSchema.safeParse({
+    email: formData.get('email'),
+    password: formData.get('password'),
+  })
+  if (!parsed.success) {
+    redirect('/login?error=password_invalido')
+  }
+
+  const { data, error } = await supabaseAuth.auth.signInWithPassword({
+    email: parsed.data.email,
+    password: parsed.data.password,
+  })
+
+  if (error || !data.user?.email) {
+    redirect('/login?error=password_incorrecto')
+  }
+
+  const email = data.user.email.toLowerCase()
+  const authorized = await findAuthorizedUser(email)
+  if (!authorized || authorized.status !== 'activo') {
+    await supabaseAuth.auth.signOut()
+    redirect('/login?error=no_autorizado')
+  }
+
+  const fullName = (data.user.user_metadata?.full_name as string | undefined) ?? null
+  const provisioned = await provisionUser({ id: data.user.id, email, fullName, role: authorized.role })
+  if (!provisioned) {
+    redirect('/login?error=password_incorrecto')
+  }
+
+  const created = await createSession(provisioned)
+  if (!created) {
+    redirect('/login?error=sin_secreto')
+  }
+
+  redirect('/os')
+}
 
 /**
  * Envia el magic link. Muestra SIEMPRE el mismo resultado de exito

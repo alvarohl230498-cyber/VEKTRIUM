@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { brand } from '@/site/content'
 import { DEV_SIGN_IN_USERS, isDevSignInEnabled } from '@/lib/dev-auth'
-import { devSignIn, requestMagicLink } from './actions'
+import { devSignIn, passwordSignInAction, requestMagicLink } from './actions'
 
 export const metadata: Metadata = {
   title: 'Ingresar',
@@ -21,6 +21,9 @@ const ERROR_MESSAGES: Record<string, string> = {
     'Falta configurar SESSION_SECRET en este entorno, asi que no se puede firmar la sesion.',
   magic_link_invalido: 'Ingresa un correo valido.',
   magic_link_error: 'No se pudo enviar el enlace de acceso. Intenta nuevamente en unos minutos.',
+  password_invalido: 'Ingresa tu correo y contraseña.',
+  password_incorrecto:
+    'Correo o contraseña incorrectos. Si aun no fijaste una contraseña, entra con el enlace por correo y configúrala en Mi perfil.',
 }
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
@@ -53,38 +56,80 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
           </p>
         ) : null}
 
-        <div className="mt-8">
-          {magicLinkSent ? (
-            <p
-              role="status"
-              className="rounded-md border border-vk-cobalt/30 bg-vk-cobalt/10 px-4 py-3 text-sm font-semibold text-vk-navy"
-            >
-              Si ese correo tiene acceso a VEKTRIUM OS, te enviamos un enlace de ingreso. Revisa tu
-              correo (incluida la carpeta de spam).
-            </p>
-          ) : (
-            <form action={requestMagicLink} className="space-y-3">
-              <label htmlFor="email" className="block text-xs font-extrabold uppercase tracking-[0.14em] text-vk-cobalt">
-                Correo
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                autoComplete="email"
-                placeholder="nombre@vektrium.pe"
-                className="w-full rounded-md border border-vk-line px-4 py-3 text-sm text-vk-navy outline-none focus:border-vk-cobalt"
-              />
-              <button
-                type="submit"
-                className="w-full rounded-md bg-vk-cobalt px-4 py-3 text-sm font-extrabold text-white transition hover:opacity-90"
+        <form action={passwordSignInAction} className="mt-8 space-y-3">
+          <div>
+            <label htmlFor="email" className="block text-xs font-extrabold uppercase tracking-[0.14em] text-vk-cobalt">
+              Correo
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              autoComplete="email"
+              placeholder="nombre@vektrium.pe"
+              className="mt-1 w-full rounded-md border border-vk-line px-4 py-3 text-sm text-vk-navy outline-none focus:border-vk-cobalt"
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="block text-xs font-extrabold uppercase tracking-[0.14em] text-vk-cobalt">
+              Contraseña
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              required
+              autoComplete="current-password"
+              className="mt-1 w-full rounded-md border border-vk-line px-4 py-3 text-sm text-vk-navy outline-none focus:border-vk-cobalt"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full rounded-md bg-vk-cobalt px-4 py-3 text-sm font-extrabold text-white transition hover:opacity-90"
+          >
+            Ingresar
+          </button>
+        </form>
+
+        <details className="mt-6">
+          <summary className="cursor-pointer text-sm font-bold text-vk-cobalt hover:text-vk-navy">
+            ¿No tienes contraseña o la olvidaste? Entra con un enlace por correo
+          </summary>
+          <div className="mt-3">
+            {magicLinkSent ? (
+              <p
+                role="status"
+                className="rounded-md border border-vk-cobalt/30 bg-vk-cobalt/10 px-4 py-3 text-sm font-semibold text-vk-navy"
               >
-                Enviar enlace de acceso
-              </button>
-            </form>
-          )}
-        </div>
+                Si ese correo tiene acceso a VEKTRIUM OS, te enviamos un enlace de ingreso. Revisa tu
+                correo (incluida la carpeta de spam). Al entrar, ve a Mi perfil para fijar una
+                contraseña y no depender del correo la próxima vez.
+              </p>
+            ) : (
+              <form action={requestMagicLink} className="space-y-3">
+                <label htmlFor="magic-email" className="sr-only">
+                  Correo
+                </label>
+                <input
+                  id="magic-email"
+                  name="email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  placeholder="nombre@vektrium.pe"
+                  className="w-full rounded-md border border-vk-line px-4 py-3 text-sm text-vk-navy outline-none focus:border-vk-cobalt"
+                />
+                <button
+                  type="submit"
+                  className="w-full rounded-md border border-vk-cobalt px-4 py-3 text-sm font-extrabold text-vk-cobalt transition hover:bg-vk-cobalt hover:text-white"
+                >
+                  Enviar enlace de acceso
+                </button>
+              </form>
+            )}
+          </div>
+        </details>
 
         <div className="mt-8">
           <button

@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import type { SessionUser } from '@/lib/session'
 import { signOut } from '@/app/os/actions'
 
@@ -32,7 +33,12 @@ export function OsHeader({ user }: { user: SessionUser }) {
           Crear
         </button>
 
-        <span className="hidden text-sm font-bold text-vk-ink sm:inline">{user.fullName}</span>
+        <Link
+          href="/os/perfil"
+          className="hidden text-sm font-bold text-vk-ink transition hover:text-vk-cobalt sm:inline"
+        >
+          {user.fullName}
+        </Link>
 
         <form action={signOut}>
           <button
