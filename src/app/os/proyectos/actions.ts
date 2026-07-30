@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import type { Task } from '@/data'
+import type { Project, Task } from '@/data'
 import { getRepository } from '@/data'
 import { can } from '@/domain/permissions'
 import type { TaskStatus } from '@/domain/progress'
@@ -35,4 +35,29 @@ export async function moveTaskAction(taskId: string, status: TaskStatus): Promis
   revalidatePath('/os/proyectos')
 
   return { ok: true, task }
+}
+
+export type MoveProjectPhaseResult = { ok: true; project: Project } | { ok: false; message: string }
+
+/**
+ * Llamado directamente desde el tablero de proyectos (arrastre o selector
+ * movil). Movimiento libre entre fases, sin maquina de estados (a
+ * diferencia de moveTaskAction): refleja lo que el equipo decide a mano.
+ */
+export async function moveProjectPhaseAction(projectId: string, phaseId: string): Promise<MoveProjectPhaseResult> {
+  const session = await requireSession()
+  if (can({ globalRole: session.user.role, action: 'project.update' }) === 'none') {
+    return { ok: false, message: 'No tienes permiso para mover este proyecto.' }
+  }
+
+  const repository = getRepository(session.user.id)
+  const project = await repository.moveProjectPhase(projectId, phaseId)
+  if (!project) {
+    return { ok: false, message: 'No se pudo mover el proyecto: no existe, o esa fase no pertenece a este proyecto.' }
+  }
+
+  revalidatePath('/os/proyectos')
+  revalidatePath(`/os/proyectos/${projectId}`)
+
+  return { ok: true, project }
 }
