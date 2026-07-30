@@ -1,3 +1,7 @@
 export * from './users'
 export * from './calendar'
 export * from './audit'
+export * from './clients'
+export * from './opportunities'
+export * from './projects'
+export * from './meetings'

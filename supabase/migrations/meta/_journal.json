@@ -8,6 +8,13 @@
       "when": 1785358195367,
       "tag": "0000_new_captain_cross",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1785374037847,
+      "tag": "0001_lethal_the_captain",
+      "breakpoints": true
     }
   ]
 }
