@@ -11,7 +11,8 @@
     "test:watch": "vitest",
     "test:integration": "vitest run tests/integration",
     "typecheck": "tsc --noEmit",
-    "seed:founders": "node --conditions=react-server --import tsx scripts/seed-founders.ts"
+    "seed:founders": "node --conditions=react-server --import tsx scripts/seed-founders.ts",
+    "db:apply": "node --conditions=react-server --import tsx scripts/apply-sql.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.111.0",

@@ -73,6 +73,8 @@ export interface Project extends Illustrative {
   ownerId: string
   startDate: string
   targetDate: string
+  /** Fase actual en el tablero de /os/proyectos. Ver comentario en el esquema Drizzle. */
+  currentPhaseId: string | null
   archivedAt: string | null
 }
 

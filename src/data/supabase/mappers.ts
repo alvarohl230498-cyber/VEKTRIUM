@@ -143,6 +143,7 @@ export function mapProject(row: ProjectRow): Project {
     ownerId: row.ownerId,
     startDate: toDateOnly(row.startDate),
     targetDate: toDateOnly(row.targetDate),
+    currentPhaseId: row.currentPhaseId,
     archivedAt: toIsoOrNull(row.archivedAt),
     ...illustrativeFlag(row.isIllustrative),
   }

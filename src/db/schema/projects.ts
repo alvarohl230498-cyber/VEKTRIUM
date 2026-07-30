@@ -10,6 +10,7 @@ import {
   integer,
   index,
   unique,
+  type AnyPgColumn,
 } from 'drizzle-orm/pg-core'
 import { TASK_STATUSES } from '@/domain/progress'
 import { clients } from './clients'
@@ -43,6 +44,14 @@ export const projects = pgTable(
     targetDate: date('target_date').notNull(),
     // Cache derivado, ver domain/progress.ts. La fuente de verdad es el calculo, no esta columna.
     progressCached: numeric('progress_cached').notNull().default('0'),
+    /**
+     * Fase "actual" del tablero de proyectos (/os/proyectos, vista Tablero):
+     * la fija a mano el equipo, sin relacion con el avance calculado de las
+     * tareas (esa es una senal distinta, ver "Avance por fase"). Nullable
+     * solo por seguridad referencial (ON DELETE SET NULL); en la practica
+     * todo proyecto la tiene desde que se crea (ver convertOpportunityToProject).
+     */
+    currentPhaseId: uuid('current_phase_id').references((): AnyPgColumn => projectPhases.id, { onDelete: 'set null' }),
     isIllustrative: boolean('is_illustrative').notNull().default(false),
     archivedAt: timestamp('archived_at', { withTimezone: true }),
     deletedAt: timestamp('deleted_at', { withTimezone: true }),
@@ -54,6 +63,7 @@ export const projects = pgTable(
     index('projects_opportunity_id_idx').on(t.opportunityId),
     index('projects_owner_id_idx').on(t.ownerId),
     index('projects_status_idx').on(t.status),
+    index('projects_current_phase_id_idx').on(t.currentPhaseId),
   ],
 )
 
