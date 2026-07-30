@@ -19,6 +19,21 @@ export interface MeetingActionState {
   formError: string | null
   conflicts: ConflictSummary[]
   meetingId: string | null
+  /**
+   * Ultimo valor enviado por cada campo del formulario (texto o array para
+   * attendeeKeys). Se usa para volver a llenar el formulario cuando falla
+   * la validacion: sin esto, React 19 limpia todo input no controlado antes
+   * de correr la Server Action (ver meeting-form.tsx), y no habria con que
+   * reponer lo que el usuario ya habia escrito.
+   */
+  values: Record<string, string | string[]>
+  /**
+   * Contador que sube en cada intento de envio (exito o fallo). meeting-form.tsx
+   * lo usa como `key` del <form> para forzar un remontaje: `defaultValue` de
+   * React solo se aplica en el montaje inicial, asi que sin un remontaje los
+   * campos no controlados no recuperarian `values` aunque el estado ya lo tenga.
+   */
+  submissionId: number
 }
 
 export const initialMeetingActionState: MeetingActionState = {
@@ -27,6 +42,8 @@ export const initialMeetingActionState: MeetingActionState = {
   formError: null,
   conflicts: [],
   meetingId: null,
+  values: {},
+  submissionId: 0,
 }
 
 /** Estado de las ediciones puntuales (enlace de Meet, notas) — sin campos por formulario. */

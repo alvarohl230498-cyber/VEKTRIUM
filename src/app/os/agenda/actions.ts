@@ -15,8 +15,20 @@ import {
   type SimpleActionState,
 } from './action-state'
 
-function fail(fieldErrors: Record<string, string>, formError: string): MeetingActionState {
-  return { ...initialMeetingActionState, status: 'error', fieldErrors, formError }
+function fail(
+  prevSubmissionId: number,
+  values: Record<string, string | string[]>,
+  fieldErrors: Record<string, string>,
+  formError: string,
+): MeetingActionState {
+  return {
+    ...initialMeetingActionState,
+    status: 'error',
+    fieldErrors,
+    formError,
+    values,
+    submissionId: prevSubmissionId + 1,
+  }
 }
 
 /**
@@ -27,29 +39,34 @@ function fail(fieldErrors: Record<string, string>, formError: string): MeetingAc
  * todas formas" que reenvia el mismo `requestId` con `confirmConflict=true`.
  */
 export async function createMeetingAction(
-  _prevState: MeetingActionState,
+  prevState: MeetingActionState,
   formData: FormData,
 ): Promise<MeetingActionState> {
   const session = await requireSession()
   if (can({ globalRole: session.user.role, action: 'meeting.create' }) === 'none') {
-    return { ...initialMeetingActionState, status: 'error', formError: 'No tienes permiso para crear reuniones.' }
+    return {
+      ...initialMeetingActionState,
+      status: 'error',
+      formError: 'No tienes permiso para crear reuniones.',
+      submissionId: prevState.submissionId + 1,
+    }
   }
 
-  const raw = {
-    clientId: formData.get('clientId') ?? '',
-    projectId: formData.get('projectId') ?? '',
-    type: formData.get('type') ?? '',
-    title: formData.get('title') ?? '',
-    organizerId: formData.get('organizerId') ?? '',
-    date: formData.get('date') ?? '',
-    startTime: formData.get('startTime') ?? '',
-    durationMinutes: formData.get('durationMinutes') ?? '',
-    customDurationMinutes: formData.get('customDurationMinutes') ?? '',
-    attendeeKeys: formData.getAll('attendeeKeys'),
-    agenda: formData.get('agenda') ?? '',
-    createMeet: formData.get('createMeet') ?? '',
-    requestId: formData.get('requestId') ?? '',
-    confirmConflict: formData.get('confirmConflict') ?? '',
+  const raw: Record<string, string | string[]> = {
+    clientId: String(formData.get('clientId') ?? ''),
+    projectId: String(formData.get('projectId') ?? ''),
+    type: String(formData.get('type') ?? ''),
+    title: String(formData.get('title') ?? ''),
+    organizerId: String(formData.get('organizerId') ?? ''),
+    date: String(formData.get('date') ?? ''),
+    startTime: String(formData.get('startTime') ?? ''),
+    durationMinutes: String(formData.get('durationMinutes') ?? ''),
+    customDurationMinutes: String(formData.get('customDurationMinutes') ?? ''),
+    attendeeKeys: formData.getAll('attendeeKeys').map(String),
+    agenda: String(formData.get('agenda') ?? ''),
+    meetUrl: String(formData.get('meetUrl') ?? ''),
+    requestId: String(formData.get('requestId') ?? ''),
+    confirmConflict: String(formData.get('confirmConflict') ?? ''),
   }
 
   const parsed = meetingFormSchema.safeParse(raw)
@@ -59,7 +76,7 @@ export async function createMeetingAction(
       const key = issue.path[0]
       if (typeof key === 'string' && !fieldErrors[key]) fieldErrors[key] = issue.message
     }
-    return fail(fieldErrors, 'Revisa los campos marcados en rojo.')
+    return fail(prevState.submissionId, raw, fieldErrors, 'Revisa los campos marcados en rojo.')
   }
 
   const values = parsed.data
@@ -71,12 +88,16 @@ export async function createMeetingAction(
     repository.listUsers(),
   ])
 
-  if (!client) return fail({ clientId: 'Selecciona un cliente valido.' }, 'Revisa los campos marcados en rojo.')
+  if (!client) {
+    return fail(prevState.submissionId, raw, { clientId: 'Selecciona un cliente valido.' }, 'Revisa los campos marcados en rojo.')
+  }
 
   if (values.projectId) {
     const project = projects.find((p) => p.id === values.projectId)
     if (!project || project.clientId !== values.clientId) {
       return fail(
+        prevState.submissionId,
+        raw,
         { projectId: 'Ese proyecto no pertenece al cliente seleccionado.' },
         'Revisa los campos marcados en rojo.',
       )
@@ -85,7 +106,7 @@ export async function createMeetingAction(
 
   const organizer = users.find((u) => u.id === values.organizerId)
   if (!organizer) {
-    return fail({ organizerId: 'Selecciona un organizador valido.' }, 'Revisa los campos marcados en rojo.')
+    return fail(prevState.submissionId, raw, { organizerId: 'Selecciona un organizador valido.' }, 'Revisa los campos marcados en rojo.')
   }
 
   const durationMinutes = resolveDurationMinutes(values)
@@ -93,7 +114,7 @@ export async function createMeetingAction(
   const endsAt = addMinutesIso(startsAt, durationMinutes)
 
   if (Number.isNaN(new Date(startsAt).getTime())) {
-    return fail({ date: 'La combinacion de fecha y hora no es valida.' }, 'Revisa los campos marcados en rojo.')
+    return fail(prevState.submissionId, raw, { date: 'La combinacion de fecha y hora no es valida.' }, 'Revisa los campos marcados en rojo.')
   }
 
   const existingMeetings = await repository.listMeetings()
@@ -109,6 +130,8 @@ export async function createMeetingAction(
       ...initialMeetingActionState,
       status: 'conflict',
       conflicts: conflicts.map((m) => ({ id: m.id, title: m.title, startsAt: m.startsAt, endsAt: m.endsAt })),
+      values: raw,
+      submissionId: prevState.submissionId + 1,
     }
   }
 
@@ -138,34 +161,14 @@ export async function createMeetingAction(
     }
   }
 
-  let isMock = false
-  let meetUrl: string | null = null
-  let providerEventId: string | null = null
-  let syncStatus: MeetingSyncStatus = 'sincronizada'
-  let syncError: string | null = null
-
-  if (values.createMeet === 'on') {
-    const provider = getCalendarProvider()
-    const result = await provider.createEvent({
-      requestId: values.requestId,
-      title: values.title,
-      description: values.agenda,
-      startsAt,
-      endsAt,
-      organizerEmail: organizer.email,
-      attendeeEmails: attendees.map((a) => a.email),
-    })
-
-    isMock = provider.kind === 'mock'
-    if (result.ok) {
-      meetUrl = result.value.meetUrl
-      providerEventId = result.value.providerEventId
-      syncStatus = 'sincronizada'
-    } else {
-      syncStatus = 'fallida'
-      syncError = result.error.message
-    }
-  }
+  // El enlace de Meet ya no lo genera VEKTRIUM (no hay credenciales de Google
+  // conectadas): si el usuario pego uno real al crear la reunion se guarda
+  // tal cual; si no, queda null y se puede pegar despues desde la tarjeta.
+  const meetUrl = values.meetUrl || null
+  const isMock = false
+  const providerEventId: string | null = null
+  const syncStatus: MeetingSyncStatus = 'sincronizada'
+  const syncError: string | null = null
 
   const meeting = await repository.createMeeting({
     clientId: values.clientId,
@@ -190,7 +193,12 @@ export async function createMeetingAction(
   revalidatePath('/os/agenda')
   revalidatePath('/os')
 
-  return { ...initialMeetingActionState, status: 'success', meetingId: meeting.id }
+  return {
+    ...initialMeetingActionState,
+    status: 'success',
+    meetingId: meeting.id,
+    submissionId: prevState.submissionId + 1,
+  }
 }
 
 /**
