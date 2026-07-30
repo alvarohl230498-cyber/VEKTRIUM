@@ -91,6 +91,11 @@ export interface VektriumRepository {
   createMeeting(input: NewMeetingInput): Promise<Meeting>
   /** Devuelve la reunion actualizada, o null si no existe. */
   updateMeetingStatus(id: string, patch: MeetingSyncPatch): Promise<Meeting | null>
+  /**
+   * Reemplaza las notas de una reunion. Sin versionado: la ultima escritura
+   * gana. Devuelve la reunion actualizada, o null si no existe.
+   */
+  updateMeetingNotes(id: string, notes: string): Promise<Meeting | null>
 
   /** Devuelve la tarea actualizada, o null si no existe o la transicion es invalida. */
   moveTask(taskId: string, status: TaskStatus): Promise<Task | null>

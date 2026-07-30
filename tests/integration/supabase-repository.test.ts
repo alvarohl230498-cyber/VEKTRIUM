@@ -201,6 +201,7 @@ describe('Supabase repository — reuniones', () => {
       syncStatus: 'sincronizada',
       syncError: null,
       hasMinutes: false,
+      notes: null,
       attendees: [
         { userId: OWNER, contactId: null, email: 'owner-supabase-repo-test@vektrium.test', fullName: 'Owner Supabase Repo Test', response: 'aceptado' },
       ],

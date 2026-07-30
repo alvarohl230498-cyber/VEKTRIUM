@@ -83,6 +83,7 @@ describe('buildClientRows', () => {
       syncError: null,
       attendees: [],
       hasMinutes: false,
+      notes: null,
       isIllustrative: true,
     },
   ]
@@ -155,6 +156,7 @@ describe('buildClientActivity', () => {
           syncError: null,
           attendees: [],
           hasMinutes: false,
+          notes: null,
           isIllustrative: true,
         },
       ],

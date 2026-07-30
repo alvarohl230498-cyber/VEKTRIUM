@@ -152,6 +152,12 @@ export interface Meeting extends Illustrative {
   syncError: string | null
   attendees: MeetingAttendee[]
   hasMinutes: boolean
+  /**
+   * Notas rapidas de lo que pide el cliente en la reunion. No es la minuta
+   * versionada de SP-5: texto libre, sin version ni aprobacion, para
+   * capturar algo en el momento sin friccion.
+   */
+  notes: string | null
 }
 
 export interface ProjectPhaseWithTasks extends ProjectPhase {

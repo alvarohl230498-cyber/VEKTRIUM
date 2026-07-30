@@ -24,6 +24,7 @@ function meeting(overrides: Partial<Meeting> & Pick<Meeting, 'id' | 'startsAt' |
     syncError: null,
     attendees: [],
     hasMinutes: false,
+    notes: null,
     isIllustrative: true,
     ...overrides,
   }

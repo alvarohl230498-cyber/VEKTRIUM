@@ -96,7 +96,12 @@ export async function devSignIn(formData: FormData): Promise<void> {
     redirect('/login?error=dev_invalido')
   }
 
-  const repository = getRepository()
+  // Se usa el propio userId como actingUserId: todavia no existe sesion (es
+  // justo lo que este flujo esta por crear), pero la politica RLS de users
+  // permite a cualquiera leer su propia fila (id = auth.uid()), asi que
+  // consultarse a si mismo con su propio id funciona sin necesitar una
+  // sesion previa.
+  const repository = getRepository(userId)
   const user = await repository.getUserById(userId)
   if (!user) {
     redirect('/login?error=dev_invalido')

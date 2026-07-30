@@ -244,6 +244,14 @@ export function createMemoryRepository(): VektriumRepository {
       return clone(meeting)
     },
 
+    async updateMeetingNotes(id: string, notes: string) {
+      const meeting = state.meetings.find((m) => m.id === id)
+      if (!meeting) return null
+
+      meeting.notes = notes
+      return clone(meeting)
+    },
+
     async moveTask(taskId: string, status: TaskStatus) {
       for (const phase of state.phases) {
         const task = phase.tasks.find((t) => t.id === taskId)

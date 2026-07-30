@@ -41,6 +41,10 @@ export const meetings = pgTable(
     syncStatus: meetingSyncStatusEnum('sync_status').notNull().default('pendiente'),
     syncError: text('sync_error'),
     hasMinutes: boolean('has_minutes').notNull().default(false),
+    // Notas rapidas de lo que pide el cliente en la reunion. No es la minuta
+    // versionada de SP-5 (meeting_minutes): es un campo de texto simple para
+    // uso inmediato, sin versionado ni aprobacion.
+    notes: text('notes'),
     isIllustrative: boolean('is_illustrative').notNull().default(false),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },

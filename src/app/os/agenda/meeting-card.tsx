@@ -2,6 +2,7 @@ import type { Client, Meeting, Project, User } from '@/data'
 import { IllustrativeBadge, SimulatedBadge } from '@/components/os/illustrative-badge'
 import { MEETING_SYNC_LABELS, MEETING_TYPE_LABELS, formatLimaTime } from '@/lib/agenda'
 import { retryMeetingSyncAction } from './actions'
+import { CopyLinkButton, MeetingLinkEditor, MeetingNotesEditor } from './meeting-quick-actions'
 
 const SYNC_DOT: Record<Meeting['syncStatus'], string> = {
   pendiente: 'bg-vk-warning',
@@ -79,14 +80,17 @@ export function MeetingCard({
         </span>
 
         {meeting.meetUrl ? (
-          <a
-            href={meeting.meetUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 text-sm font-extrabold text-vk-cobalt hover:text-vk-navy"
-          >
-            Unirse a Meet {meeting.isMock ? <SimulatedBadge /> : null}
-          </a>
+          <>
+            <a
+              href={meeting.meetUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-extrabold text-vk-cobalt hover:text-vk-navy"
+            >
+              Unirse a Meet {meeting.isMock ? <SimulatedBadge /> : null}
+            </a>
+            <CopyLinkButton url={meeting.meetUrl} />
+          </>
         ) : null}
 
         {meeting.syncStatus === 'fallida' ? (
@@ -106,6 +110,9 @@ export function MeetingCard({
           {meeting.syncError}
         </p>
       ) : null}
+
+      <MeetingLinkEditor meetingId={meeting.id} currentUrl={meeting.isMock ? null : meeting.meetUrl} />
+      <MeetingNotesEditor meetingId={meeting.id} currentNotes={meeting.notes} />
     </li>
   )
 }

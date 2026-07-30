@@ -6,9 +6,14 @@ import { getRepository } from '@/data'
 import { can } from '@/domain/permissions'
 import { getCalendarProvider } from '@/integrations/calendar'
 import { addMinutesIso, buildLimaIso, findSchedulingConflicts } from '@/lib/agenda'
-import { meetingFormSchema, resolveDurationMinutes } from '@/lib/schemas/meeting'
+import { meetingFormSchema, meetingLinkSchema, meetingNotesSchema, resolveDurationMinutes } from '@/lib/schemas/meeting'
 import { requireSession } from '@/lib/session'
-import { initialMeetingActionState, type MeetingActionState } from './action-state'
+import {
+  initialMeetingActionState,
+  initialSimpleActionState,
+  type MeetingActionState,
+  type SimpleActionState,
+} from './action-state'
 
 function fail(fieldErrors: Record<string, string>, formError: string): MeetingActionState {
   return { ...initialMeetingActionState, status: 'error', fieldErrors, formError }
@@ -179,6 +184,7 @@ export async function createMeetingAction(
     syncError,
     attendees,
     hasMinutes: false,
+    notes: null,
   })
 
   revalidatePath('/os/agenda')
@@ -232,4 +238,69 @@ export async function retryMeetingSyncAction(meetingId: string): Promise<void> {
 
   revalidatePath('/os/agenda')
   revalidatePath('/os')
+}
+
+/**
+ * Pega el enlace real de una reunion programada a mano en Google Meet
+ * (fuera de VEKTRIUM, sin credenciales de Google conectadas). Marca
+ * isMock=false y syncStatus='sincronizada': el enlace ya es real, no un
+ * simulacro, aunque VEKTRIUM no lo haya creado.
+ */
+export async function updateMeetingLinkAction(
+  _prevState: SimpleActionState,
+  formData: FormData,
+): Promise<SimpleActionState> {
+  const session = await requireSession()
+  if (can({ globalRole: session.user.role, action: 'meeting.update' }) === 'none') {
+    return { status: 'error', error: 'No tienes permiso para editar esta reunión.' }
+  }
+
+  const parsed = meetingLinkSchema.safeParse({
+    meetingId: formData.get('meetingId'),
+    meetUrl: formData.get('meetUrl'),
+  })
+  if (!parsed.success) {
+    return { status: 'error', error: parsed.error.issues[0]?.message ?? 'Enlace inválido.' }
+  }
+
+  const repository = getRepository(session.user.id)
+  const updated = await repository.updateMeetingStatus(parsed.data.meetingId, {
+    syncStatus: 'sincronizada',
+    syncError: null,
+    meetUrl: parsed.data.meetUrl,
+    isMock: false,
+    providerEventId: null,
+  })
+  if (!updated) return { status: 'error', error: 'La reunión ya no existe.' }
+
+  revalidatePath('/os/agenda')
+  revalidatePath('/os')
+  return { ...initialSimpleActionState, status: 'success' }
+}
+
+/** Guarda las notas de una reunion. Reemplaza el texto anterior por completo, sin versionado. */
+export async function updateMeetingNotesAction(
+  _prevState: SimpleActionState,
+  formData: FormData,
+): Promise<SimpleActionState> {
+  const session = await requireSession()
+  if (can({ globalRole: session.user.role, action: 'meeting.update' }) === 'none') {
+    return { status: 'error', error: 'No tienes permiso para editar esta reunión.' }
+  }
+
+  const parsed = meetingNotesSchema.safeParse({
+    meetingId: formData.get('meetingId'),
+    notes: formData.get('notes'),
+  })
+  if (!parsed.success) {
+    return { status: 'error', error: parsed.error.issues[0]?.message ?? 'Notas inválidas.' }
+  }
+
+  const repository = getRepository(session.user.id)
+  const updated = await repository.updateMeetingNotes(parsed.data.meetingId, parsed.data.notes)
+  if (!updated) return { status: 'error', error: 'La reunión ya no existe.' }
+
+  revalidatePath('/os/agenda')
+  revalidatePath('/os')
+  return { ...initialSimpleActionState, status: 'success' }
 }

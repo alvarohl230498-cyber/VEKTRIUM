@@ -206,6 +206,7 @@ export function mapMeeting(row: MeetingRow, attendees: MeetingAttendeeRow[]): Me
     syncError: row.syncError,
     attendees: attendees.map(mapMeetingAttendee),
     hasMinutes: row.hasMinutes,
+    notes: row.notes,
     ...illustrativeFlag(row.isIllustrative),
   }
 }

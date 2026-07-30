@@ -358,6 +358,7 @@ export function createSupabaseRepository(actingUserId: string): VektriumReposito
             syncStatus: input.syncStatus,
             syncError: input.syncError,
             hasMinutes: input.hasMinutes,
+            notes: input.notes,
           })
           .returning()
         if (!meetingRow) throw new Error('No se pudo crear la reunion.')
@@ -392,6 +393,24 @@ export function createSupabaseRepository(actingUserId: string): VektriumReposito
         if (patch.isMock !== undefined) set.isMock = patch.isMock
 
         const [updated] = await db.update(schema.meetings).set(set).where(eq(schema.meetings.id, id)).returning()
+        if (!updated) return null
+
+        const attendeeRows = await db
+          .select()
+          .from(schema.meetingAttendees)
+          .where(eq(schema.meetingAttendees.meetingId, id))
+        return mapMeeting(updated, attendeeRows)
+      })
+    },
+
+    async updateMeetingNotes(id: string, notes: string) {
+      return withUserContext(actingUserId, async (tx) => {
+        const db = tx
+        const [updated] = await db
+          .update(schema.meetings)
+          .set({ notes })
+          .where(eq(schema.meetings.id, id))
+          .returning()
         if (!updated) return null
 
         const attendeeRows = await db

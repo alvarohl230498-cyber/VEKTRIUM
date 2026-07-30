@@ -28,3 +28,14 @@ export const initialMeetingActionState: MeetingActionState = {
   conflicts: [],
   meetingId: null,
 }
+
+/** Estado de las ediciones puntuales (enlace de Meet, notas) — sin campos por formulario. */
+export interface SimpleActionState {
+  status: 'idle' | 'error' | 'success'
+  error: string | null
+}
+
+export const initialSimpleActionState: SimpleActionState = {
+  status: 'idle',
+  error: null,
+}

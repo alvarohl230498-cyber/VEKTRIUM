@@ -49,6 +49,21 @@ export const meetingFormSchema = z
 
 export type MeetingFormValues = z.infer<typeof meetingFormSchema>
 
+/**
+ * Enlace de Meet pegado a mano: el fundador programa la reunion en su propio
+ * Google Calendar (fuera de VEKTRIUM, sin credenciales conectadas) y pega
+ * aqui el enlace real para tenerlo a mano y copiarlo rapido para el cliente.
+ */
+export const meetingLinkSchema = z.object({
+  meetingId: z.string().min(1),
+  meetUrl: z.url('Pega un enlace valido, por ejemplo https://meet.google.com/abc-defg-hij'),
+})
+
+export const meetingNotesSchema = z.object({
+  meetingId: z.string().min(1),
+  notes: z.string().trim().max(4000, 'Las notas no pueden superar 4000 caracteres.'),
+})
+
 /** Minutos efectivos de la reunion a partir de los campos validados del formulario. */
 export function resolveDurationMinutes(values: Pick<MeetingFormValues, 'durationMinutes' | 'customDurationMinutes'>): number {
   if (values.durationMinutes === 'custom') return Number(values.customDurationMinutes)

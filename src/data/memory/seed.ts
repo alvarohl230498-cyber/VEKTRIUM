@@ -617,6 +617,7 @@ export const seedMeetings: Meeting[] = [
     syncStatus: 'sincronizada',
     syncError: null,
     hasMinutes: true,
+    notes: null,
     isIllustrative: true,
     attendees: [
       { userId: 'user-alvaro', contactId: null, email: 'alvaro@vektrium.pe', fullName: 'Alvaro Rodrigo Hernandez Laos', response: 'aceptado' },
@@ -640,6 +641,7 @@ export const seedMeetings: Meeting[] = [
     syncStatus: 'sincronizada',
     syncError: null,
     hasMinutes: false,
+    notes: null,
     isIllustrative: true,
     attendees: [
       { userId: 'user-juan-diego', contactId: null, email: 'juandiego@vektrium.pe', fullName: 'Juan Diego Salazar Campos', response: 'aceptado' },
@@ -663,6 +665,7 @@ export const seedMeetings: Meeting[] = [
     syncStatus: 'sincronizada',
     syncError: null,
     hasMinutes: true,
+    notes: null,
     isIllustrative: true,
     attendees: [
       { userId: 'user-alvaro', contactId: null, email: 'alvaro@vektrium.pe', fullName: 'Alvaro Rodrigo Hernandez Laos', response: 'aceptado' },
@@ -686,6 +689,7 @@ export const seedMeetings: Meeting[] = [
     syncStatus: 'pendiente',
     syncError: null,
     hasMinutes: false,
+    notes: null,
     isIllustrative: true,
     attendees: [
       { userId: 'user-juan-diego', contactId: null, email: 'juandiego@vektrium.pe', fullName: 'Juan Diego Salazar Campos', response: 'aceptado' },
@@ -709,6 +713,7 @@ export const seedMeetings: Meeting[] = [
     syncStatus: 'pendiente',
     syncError: null,
     hasMinutes: false,
+    notes: null,
     isIllustrative: true,
     attendees: [
       { userId: 'user-alvaro', contactId: null, email: 'alvaro@vektrium.pe', fullName: 'Alvaro Rodrigo Hernandez Laos', response: 'aceptado' },
@@ -732,6 +737,7 @@ export const seedMeetings: Meeting[] = [
     syncStatus: 'fallida',
     syncError: 'No se pudo confirmar el evento simulado a tiempo. Reintenta la sincronizacion.',
     hasMinutes: false,
+    notes: null,
     isIllustrative: true,
     attendees: [
       { userId: 'user-alvaro', contactId: null, email: 'alvaro@vektrium.pe', fullName: 'Alvaro Rodrigo Hernandez Laos', response: 'pendiente' },
@@ -755,6 +761,7 @@ export const seedMeetings: Meeting[] = [
     syncStatus: 'sincronizada',
     syncError: null,
     hasMinutes: true,
+    notes: null,
     isIllustrative: true,
     attendees: [
       { userId: 'user-alvaro', contactId: null, email: 'alvaro@vektrium.pe', fullName: 'Alvaro Rodrigo Hernandez Laos', response: 'aceptado' },
@@ -778,6 +785,7 @@ export const seedMeetings: Meeting[] = [
     syncStatus: 'pendiente',
     syncError: null,
     hasMinutes: false,
+    notes: null,
     isIllustrative: true,
     attendees: [
       { userId: 'user-juan-diego', contactId: null, email: 'juandiego@vektrium.pe', fullName: 'Juan Diego Salazar Campos', response: 'aceptado' },
