@@ -1,0 +1,202 @@
+[
+  {
+    "id": "buk-people-analytics",
+    "order": 1,
+    "owner": "Álvaro",
+    "eyebrow": "Integración API + People Analytics",
+    "title": "Analítica de RR. HH. conectada a BUK",
+    "summary": "Transformamos la información operativa de BUK en dashboards ejecutivos que facilitan el análisis de la dotación, la demografía y la rotación.",
+    "description": "La solución integra datos mediante API, los organiza bajo una estructura analítica y los presenta en tableros con filtros por empresa, área, sede, cargo, periodo y otros criterios relevantes para Gestión de Personas.",
+    "highlights": [
+      "Integración y procesamiento de información proveniente de BUK.",
+      "Visualización de indicadores demográficos y de rotación.",
+      "Filtros ejecutivos para analizar tendencias y segmentos.",
+      "Información organizada para una toma de decisiones más ágil."
+    ],
+    "tags": [
+      "API BUK",
+      "People Analytics",
+      "Power BI",
+      "RR. HH."
+    ],
+    "images": [
+      {
+        "src": "/projects/01-buk-analytics-demografia.jpeg",
+        "alt": "Dashboard de data demográfica de Recursos Humanos conectado a BUK"
+      },
+      {
+        "src": "/projects/01-buk-analytics-rotacion.jpeg",
+        "alt": "Dashboard de rotación de personal conectado a BUK"
+      }
+    ],
+    "cta": "Explorar solución"
+  },
+  {
+    "id": "finova-ai",
+    "order": 2,
+    "owner": "Álvaro",
+    "eyebrow": "Aplicación móvil + Inteligencia Artificial",
+    "title": "FinovaAI: finanzas personales por voz",
+    "summary": "Una experiencia móvil que permite registrar movimientos financieros hablando o escribiendo y convertirlos automáticamente en información organizada.",
+    "description": "La aplicación interpreta el contexto, identifica montos y categorías, y prepara cada movimiento para su revisión. El objetivo es simplificar el registro cotidiano y mejorar la visibilidad sobre las finanzas personales.",
+    "highlights": [
+      "Registro de ingresos y gastos mediante voz o texto.",
+      "Interpretación inteligente de montos, conceptos y categorías.",
+      "Validación previa antes de guardar cada movimiento.",
+      "Información lista para consultar, analizar y organizar."
+    ],
+    "tags": [
+      "IA",
+      "Reconocimiento de voz",
+      "App móvil",
+      "Finanzas"
+    ],
+    "images": [
+      {
+        "src": "/projects/02-finova-ai.jpeg",
+        "alt": "Flujo de registro por voz y procesamiento inteligente de FinovaAI"
+      }
+    ],
+    "cta": "Conocer FinovaAI"
+  },
+  {
+    "id": "sistema-remuneraciones",
+    "order": 3,
+    "owner": "Álvaro",
+    "eyebrow": "Payroll Tech para Perú",
+    "title": "Sistema integral de planillas y remuneraciones",
+    "summary": "Una plataforma diseñada para ordenar el ciclo mensual de planillas, desde la gestión de trabajadores y novedades hasta el cálculo y la exportación.",
+    "description": "Centraliza trabajadores, faltas, horas extras, bonos, descuentos y resultados del periodo en un flujo guiado. Incluye salidas operativas para boletas, Excel, PLAME y AFPNet.",
+    "highlights": [
+      "Gestión de trabajadores activos y cesados.",
+      "Registro de incidencias, horas extras, bonos y descuentos.",
+      "Cálculo de planilla y control del cierre mensual.",
+      "Exportación de boletas y archivos operativos."
+    ],
+    "tags": [
+      "Planillas",
+      "Remuneraciones",
+      "PLAME",
+      "AFPNet"
+    ],
+    "images": [
+      {
+        "src": "/projects/03-sistema-remuneraciones.jpeg",
+        "alt": "Sistema de planillas y remuneraciones para empresas peruanas"
+      }
+    ],
+    "cta": "Ver plataforma"
+  },
+  {
+    "id": "automatizacion-buk",
+    "order": 4,
+    "owner": "Álvaro",
+    "eyebrow": "Automatización de procesos de RR. HH.",
+    "title": "Automatización operativa conectada a BUK",
+    "summary": "Un flujo de trabajo que toma información de origen, valida estructuras y prepara archivos para procesos laborales críticos.",
+    "description": "La solución reduce tareas manuales en la preparación de PLAME, AFP, liquidaciones y consolidaciones, incorporando validaciones, seguimiento de progreso e identificación de incidencias.",
+    "highlights": [
+      "Carga y validación estructural de archivos.",
+      "Preparación de información para PLAME y AFP.",
+      "Soporte para liquidaciones y consolidación.",
+      "Registro de progreso, estados e incidencias."
+    ],
+    "tags": [
+      "BUK",
+      "Automatización",
+      "PLAME",
+      "Procesos de RR. HH."
+    ],
+    "images": [
+      {
+        "src": "/projects/04-automatizacion-buk.jpeg",
+        "alt": "Automatización de archivos de Recursos Humanos conectada a BUK"
+      }
+    ],
+    "cta": "Ver automatización"
+  },
+  {
+    "id": "reportflow",
+    "order": 5,
+    "owner": "Juan Diego",
+    "eyebrow": "Automatización financiera",
+    "title": "ReportFlow: reportes financieros automáticos",
+    "summary": "Automatiza la descarga, consolidación y preparación de reportes para múltiples entidades y periodos.",
+    "description": "El flujo centraliza parámetros, credenciales, historial y resultados, y prepara archivos en Excel y Word para reducir tareas repetitivas y mejorar la consistencia de la información.",
+    "highlights": [
+      "Procesamiento de múltiples entidades y periodos.",
+      "Consolidación automática de reportes.",
+      "Generación de resultados en Excel y Word.",
+      "Historial, trazabilidad y control del proceso."
+    ],
+    "tags": [
+      "Automatización",
+      "Reportes",
+      "Excel",
+      "Finanzas"
+    ],
+    "images": [
+      {
+        "src": "/projects/05-reportflow.jpeg",
+        "alt": "Plataforma ReportFlow para automatizar reportes financieros"
+      }
+    ],
+    "cta": "Explorar ReportFlow"
+  },
+  {
+    "id": "doclink-qr",
+    "order": 6,
+    "owner": "Juan Diego",
+    "eyebrow": "Automatización documental",
+    "title": "DocLink QR: documentos conectados y accesibles",
+    "summary": "Convierte archivos PDF en experiencias digitales mediante códigos QR vinculados a documentos almacenados en Google Drive.",
+    "description": "La solución procesa múltiples PDF, genera códigos QR únicos, organiza los archivos en la nube y facilita el acceso mediante escaneo, manteniendo una trazabilidad clara del proceso.",
+    "highlights": [
+      "Carga individual o masiva de documentos PDF.",
+      "Generación de códigos QR únicos por archivo.",
+      "Integración con Google Drive.",
+      "Organización, acceso y seguimiento centralizados."
+    ],
+    "tags": [
+      "QR",
+      "Google Drive",
+      "Documentos",
+      "Automatización"
+    ],
+    "images": [
+      {
+        "src": "/projects/06-doclink-qr.jpeg",
+        "alt": "Plataforma DocLink QR integrada con Google Drive"
+      }
+    ],
+    "cta": "Conocer DocLink QR"
+  },
+  {
+    "id": "globalmatch",
+    "order": 7,
+    "owner": "Juan Diego",
+    "eyebrow": "Conciliación y analítica financiera",
+    "title": "GlobalMatch: conciliación intercompañías",
+    "summary": "Una solución de análisis para cruzar transacciones entre entidades, identificar diferencias y priorizar excepciones.",
+    "description": "El dashboard consolida información de distintas compañías, monedas y documentos para visualizar partidas sin coincidencia, pares descuadrados y métricas clave de conciliación.",
+    "highlights": [
+      "Cruce de transacciones entre múltiples entidades.",
+      "Detección y clasificación de excepciones.",
+      "Análisis por entidad, moneda y tipo de documento.",
+      "Visibilidad ejecutiva y trazabilidad para auditoría."
+    ],
+    "tags": [
+      "Conciliación",
+      "Power BI",
+      "Finanzas",
+      "Intercompañías"
+    ],
+    "images": [
+      {
+        "src": "/projects/07-globalmatch.jpeg",
+        "alt": "Dashboard GlobalMatch de conciliación intercompañías"
+      }
+    ],
+    "cta": "Ver dashboard"
+  }
+]

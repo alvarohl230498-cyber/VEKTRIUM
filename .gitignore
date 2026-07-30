@@ -29,6 +29,9 @@ supabase/.branches/
 # Superpowers — mockups de brainstorming
 .superpowers/
 
+# Assets locales originales ya normalizados en public/projects/
+public/Fotos de proyectos/
+
 # Testing
 coverage/
 playwright-report/
