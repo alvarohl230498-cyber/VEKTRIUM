@@ -32,6 +32,13 @@ export async function GET(request: NextRequest) {
   })
 
   if (error || !data.user?.email) {
+    // Se registra el motivo real (nunca el token) para diagnosticar desde
+    // los logs de Vercel — el mensaje que ve el usuario sigue siendo generico.
+    console.error(
+      'auth/callback: fallo verifyOtp',
+      error?.message ?? 'sin data.user.email',
+      'type=' + type,
+    )
     return NextResponse.redirect(new URL('/login?error=oauth', request.url))
   }
 
