@@ -6,6 +6,7 @@ import {
   SecondaryLink,
   SectionIntro,
 } from '@/components/site/public-shell'
+import { submitContactRequest } from './actions'
 
 export const metadata: Metadata = {
   title: 'Contacto',
@@ -13,7 +14,22 @@ export const metadata: Metadata = {
     'Solicita un Diagnostico Vektor por formulario, agenda o canal empresarial preparado para WhatsApp.',
 }
 
-export default function ContactPage() {
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
+
+const ERROR_MESSAGES: Record<string, string> = {
+  invalido: 'Revisa el formulario: falta completar algun campo.',
+  envio: 'No se pudo enviar la solicitud. Intenta nuevamente en unos minutos o escribe por WhatsApp.',
+}
+
+export default async function ContactPage({ searchParams }: { searchParams: SearchParams }) {
+  const params = await searchParams
+  const rawError = params.error
+  const errorCode = Array.isArray(rawError) ? rawError[0] : rawError
+  const errorMessage = errorCode ? (ERROR_MESSAGES[errorCode] ?? ERROR_MESSAGES.envio) : null
+
+  const rawEnviado = params.enviado
+  const enviado = (Array.isArray(rawEnviado) ? rawEnviado[0] : rawEnviado) === '1'
+
   return (
     <PublicShell>
       <main>
@@ -59,57 +75,75 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <form action="/contacto#solicitud-recibida" method="get" className="space-y-4 border border-vk-line bg-white p-5">
-            <label className="block">
-              <span className="text-sm font-extrabold text-vk-navy">Nombre</span>
-              <input
-                className="mt-2 w-full rounded-md border border-vk-line px-3 py-3 text-sm outline-none focus:border-vk-cobalt"
-                name="nombre"
-                required
-              />
-            </label>
-            <label className="block">
-              <span className="text-sm font-extrabold text-vk-navy">Correo o telefono</span>
-              <input
-                className="mt-2 w-full rounded-md border border-vk-line px-3 py-3 text-sm outline-none focus:border-vk-cobalt"
-                name="contacto"
-                required
-              />
-            </label>
-            <label className="block">
-              <span className="text-sm font-extrabold text-vk-navy">Area</span>
-              <select
-                className="mt-2 w-full rounded-md border border-vk-line px-3 py-3 text-sm outline-none focus:border-vk-cobalt"
-                name="area"
-                required
+          {enviado ? (
+            <div className="space-y-4 border border-vk-line bg-white p-5">
+              <h2 className="font-display text-2xl font-extrabold text-vk-navy">Solicitud enviada</h2>
+              <p role="status" className="text-sm leading-7 text-vk-muted">
+                Recibimos tu solicitud. El equipo de VEKTRIUM te contactara para coordinar el
+                diagnostico.
+              </p>
+            </div>
+          ) : (
+            <form action={submitContactRequest} className="space-y-4 border border-vk-line bg-white p-5">
+              {errorMessage ? (
+                <p
+                  role="alert"
+                  className="rounded-md border border-vk-danger/30 bg-vk-danger/10 px-4 py-3 text-sm font-semibold text-vk-danger"
+                >
+                  {errorMessage}
+                </p>
+              ) : null}
+              <label className="block">
+                <span className="text-sm font-extrabold text-vk-navy">Nombre</span>
+                <input
+                  className="mt-2 w-full rounded-md border border-vk-line px-3 py-3 text-sm outline-none focus:border-vk-cobalt"
+                  name="nombre"
+                  required
+                />
+              </label>
+              <label className="block">
+                <span className="text-sm font-extrabold text-vk-navy">Correo o telefono</span>
+                <input
+                  className="mt-2 w-full rounded-md border border-vk-line px-3 py-3 text-sm outline-none focus:border-vk-cobalt"
+                  name="contacto"
+                  required
+                />
+              </label>
+              <label className="block">
+                <span className="text-sm font-extrabold text-vk-navy">Area</span>
+                <select
+                  className="mt-2 w-full rounded-md border border-vk-line px-3 py-3 text-sm outline-none focus:border-vk-cobalt"
+                  name="area"
+                  required
+                >
+                  <option value="">Seleccionar</option>
+                  <option>Finanzas</option>
+                  <option>Recursos Humanos</option>
+                  <option>Operaciones</option>
+                  <option>Comercial</option>
+                  <option>Direccion</option>
+                </select>
+              </label>
+              <label className="block">
+                <span className="text-sm font-extrabold text-vk-navy">Necesidad</span>
+                <textarea
+                  className="mt-2 min-h-32 w-full rounded-md border border-vk-line px-3 py-3 text-sm outline-none focus:border-vk-cobalt"
+                  name="necesidad"
+                  required
+                />
+              </label>
+              <button
+                className="w-full rounded-md bg-vk-cobalt px-4 py-3 text-sm font-extrabold text-white transition hover:bg-vk-navy"
+                type="submit"
               >
-                <option value="">Seleccionar</option>
-                <option>Finanzas</option>
-                <option>Recursos Humanos</option>
-                <option>Operaciones</option>
-                <option>Comercial</option>
-                <option>Direccion</option>
-              </select>
-            </label>
-            <label className="block">
-              <span className="text-sm font-extrabold text-vk-navy">Necesidad</span>
-              <textarea
-                className="mt-2 min-h-32 w-full rounded-md border border-vk-line px-3 py-3 text-sm outline-none focus:border-vk-cobalt"
-                name="necesidad"
-                required
-              />
-            </label>
-            <button
-              className="w-full rounded-md bg-vk-cobalt px-4 py-3 text-sm font-extrabold text-white transition hover:bg-vk-navy"
-              type="submit"
-            >
-              Enviar solicitud
-            </button>
-            <p className="text-xs leading-5 text-vk-muted">
-              Al enviar la solicitud aceptas que el equipo use estos datos para responder el
-              diagnostico. Revisa privacidad y terminos antes de publicar el sitio.
-            </p>
-          </form>
+                Enviar solicitud
+              </button>
+              <p className="text-xs leading-5 text-vk-muted">
+                Al enviar la solicitud aceptas que el equipo use estos datos para responder el
+                diagnostico. Revisa privacidad y terminos antes de publicar el sitio.
+              </p>
+            </form>
+          )}
         </section>
 
         <section id="whatsapp" className="border-y border-vk-line bg-white py-16">
