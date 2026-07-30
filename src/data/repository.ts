@@ -99,4 +99,13 @@ export interface VektriumRepository {
 
   /** Devuelve la tarea actualizada, o null si no existe o la transicion es invalida. */
   moveTask(taskId: string, status: TaskStatus): Promise<Task | null>
+
+  /**
+   * Mueve la fase "actual" de un proyecto (tablero de /os/proyectos).
+   * Movimiento libre: a diferencia de moveTask, no hay maquina de estados —
+   * cualquier fase a cualquier otra, porque refleja lo que el equipo decide
+   * a mano, no una garantia de proceso. Devuelve null si el proyecto no
+   * existe, o si phaseId no pertenece a las fases de ese proyecto.
+   */
+  moveProjectPhase(projectId: string, phaseId: string): Promise<Project | null>
 }

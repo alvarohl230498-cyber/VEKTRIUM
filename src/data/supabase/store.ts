@@ -270,9 +270,19 @@ export function createSupabaseRepository(actingUserId: string): VektriumReposito
           .where(eq(schema.opportunities.id, opportunityId))
 
         const orderedPhases = [...phaseRows].sort((a, b) => a.order - b.order)
+        const firstPhase = orderedPhases.find((p) => p.order === 0)
+        if (!firstPhase) throw new Error('La plantilla de fases no genero una fase de orden 0.')
+
+        const [finalProjectRow] = await db
+          .update(schema.projects)
+          .set({ currentPhaseId: firstPhase.id })
+          .where(eq(schema.projects.id, projectRow.id))
+          .returning()
+        if (!finalProjectRow) throw new Error('No se pudo fijar la fase actual del proyecto.')
+
         const phases: ProjectPhaseWithTasks[] = orderedPhases.map((p) => ({ ...mapProjectPhase(p), tasks: [] }))
 
-        return ok({ ...mapProject(projectRow), phases })
+        return ok({ ...mapProject(finalProjectRow), phases })
       })
     },
 
@@ -441,6 +451,25 @@ export function createSupabaseRepository(actingUserId: string): VektriumReposito
           .returning()
         if (!updated) return null
         return mapTask(updated)
+      })
+    },
+
+    async moveProjectPhase(projectId, phaseId) {
+      return withUserContext(actingUserId, async (tx) => {
+        const db = tx
+        const [phase] = await db
+          .select({ id: schema.projectPhases.id })
+          .from(schema.projectPhases)
+          .where(and(eq(schema.projectPhases.id, phaseId), eq(schema.projectPhases.projectId, projectId)))
+        if (!phase) return null
+
+        const [updated] = await db
+          .update(schema.projects)
+          .set({ currentPhaseId: phaseId, updatedAt: new Date() })
+          .where(eq(schema.projects.id, projectId))
+          .returning()
+        if (!updated) return null
+        return mapProject(updated)
       })
     },
   }

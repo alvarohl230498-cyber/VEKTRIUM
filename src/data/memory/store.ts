@@ -169,22 +169,6 @@ export function createMemoryRepository(): VektriumRepository {
       }
 
       const projectId = `project-${randomUUID()}`
-      const project: Project = {
-        id: projectId,
-        code: nextProjectCode(state.projects),
-        clientId: opportunity.clientId,
-        opportunityId: opportunity.id,
-        name: input.name,
-        status: 'activo',
-        health: 'sano',
-        healthReason: null,
-        ownerId: input.ownerId,
-        startDate: input.startDate,
-        targetDate: input.targetDate,
-        archivedAt: null,
-      }
-      state.projects.push(project)
-
       const templates = buildPhasesForProject(projectId)
       const phases: ProjectPhaseWithTasks[] = templates.map((t) => ({
         id: `${projectId}-phase-${t.order}`,
@@ -197,6 +181,25 @@ export function createMemoryRepository(): VektriumRepository {
         plannedEnd: null,
         tasks: [],
       }))
+      const firstPhase = phases.find((p) => p.order === 0)
+      if (!firstPhase) throw new Error('La plantilla de fases no genero una fase de orden 0.')
+
+      const project: Project = {
+        id: projectId,
+        code: nextProjectCode(state.projects),
+        clientId: opportunity.clientId,
+        opportunityId: opportunity.id,
+        name: input.name,
+        status: 'activo',
+        health: 'sano',
+        healthReason: null,
+        ownerId: input.ownerId,
+        startDate: input.startDate,
+        targetDate: input.targetDate,
+        currentPhaseId: firstPhase.id,
+        archivedAt: null,
+      }
+      state.projects.push(project)
       state.phases.push(...phases)
 
       opportunity.status = 'ganado'
@@ -265,6 +268,17 @@ export function createMemoryRepository(): VektriumRepository {
         return clone(task)
       }
       return null
+    },
+
+    async moveProjectPhase(projectId: string, phaseId: string) {
+      const project = state.projects.find((p) => p.id === projectId)
+      if (!project) return null
+
+      const belongsToProject = state.phases.some((p) => p.id === phaseId && p.projectId === projectId)
+      if (!belongsToProject) return null
+
+      project.currentPhaseId = phaseId
+      return clone(project)
     },
   }
 }

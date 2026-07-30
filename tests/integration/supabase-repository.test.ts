@@ -121,61 +121,149 @@ describe('Supabase repository — oportunidades y conversion a proyecto', () => 
     15000,
   )
 
-  it('convertOpportunityToProject crea el proyecto con sus 9 fases y marca la oportunidad como ganado', async () => {
-    const result = await repo.convertOpportunityToProject(opportunityId, {
-      name: 'Proyecto de prueba del repositorio',
-      ownerId: OWNER,
-      startDate: '2026-08-01',
-      targetDate: '2026-12-01',
-    })
+  it(
+    'convertOpportunityToProject crea el proyecto con sus 9 fases y marca la oportunidad como ganado',
+    async () => {
+      // Seis transacciones de red secuenciales (select oportunidad, select
+      // codigos, insert proyecto, insert 9 fases, update para fijar la fase
+      // inicial, update oportunidad): el timeout por defecto de Vitest (5s)
+      // no alcanza. Ver la nota identica en el test "camina la oportunidad...".
+      const result = await repo.convertOpportunityToProject(opportunityId, {
+        name: 'Proyecto de prueba del repositorio',
+        ownerId: OWNER,
+        startDate: '2026-08-01',
+        targetDate: '2026-12-01',
+      })
 
-    expect(result).not.toBeNull()
-    if (!result || !result.ok) throw new Error('La conversion debio tener exito')
+      expect(result).not.toBeNull()
+      if (!result || !result.ok) throw new Error('La conversion debio tener exito')
 
-    projectId = result.value.id
-    expect(result.value.code).toMatch(/^VK-\d{4}$/)
-    expect(result.value.phases).toHaveLength(9)
-    expect(result.value.phases.every((p) => p.tasks.length === 0)).toBe(true)
-    expect([...result.value.phases].sort((a, b) => a.order - b.order).map((p) => p.order)).toEqual([
-      0, 1, 2, 3, 4, 5, 6, 7, 8,
-    ])
+      projectId = result.value.id
+      expect(result.value.code).toMatch(/^VK-\d{4}$/)
+      expect(result.value.phases).toHaveLength(9)
+      expect(result.value.phases.every((p) => p.tasks.length === 0)).toBe(true)
+      expect([...result.value.phases].sort((a, b) => a.order - b.order).map((p) => p.order)).toEqual([
+        0, 1, 2, 3, 4, 5, 6, 7, 8,
+      ])
 
-    const opportunity = await repo.getOpportunityById(opportunityId)
-    expect(opportunity?.status).toBe('ganado')
+      const opportunity = await repo.getOpportunityById(opportunityId)
+      expect(opportunity?.status).toBe('ganado')
 
+      const withPhases = await repo.getProjectWithPhases(projectId)
+      expect(withPhases?.phases).toHaveLength(9)
+    },
+    15000,
+  )
+
+  it('convertOpportunityToProject deja current_phase_id en la fase de orden 0', async () => {
     const withPhases = await repo.getProjectWithPhases(projectId)
-    expect(withPhases?.phases).toHaveLength(9)
+    const firstPhase = withPhases?.phases.find((p) => p.order === 0)
+    expect(firstPhase).toBeDefined()
+    expect(withPhases?.currentPhaseId).toBe(firstPhase?.id)
   })
 })
 
 describe('Supabase repository — tareas', () => {
-  it('mueve una tarea a traves de transiciones validas e invalidas', async () => {
-    const withPhases = await repo.getProjectWithPhases(projectId)
-    const firstPhase = withPhases?.phases[0]
-    if (!firstPhase) throw new Error('El proyecto de prueba deberia tener fases')
+  it(
+    'mueve una tarea a traves de transiciones validas e invalidas',
+    async () => {
+      const withPhases = await repo.getProjectWithPhases(projectId)
+      const firstPhase = withPhases?.phases[0]
+      if (!firstPhase) throw new Error('El proyecto de prueba deberia tener fases')
 
-    const [taskRow] = await adminSql`
-      insert into tasks (project_id, phase_id, title, assignee_id)
-      values (${projectId}, ${firstPhase.id}, 'Tarea de prueba del repositorio', ${OWNER})
-      returning id
-    `
-    if (!taskRow) throw new Error('No se pudo crear la tarea de prueba')
-    taskId = taskRow.id
+      const [taskRow] = await adminSql`
+        insert into tasks (project_id, phase_id, title, assignee_id)
+        values (${projectId}, ${firstPhase.id}, 'Tarea de prueba del repositorio', ${OWNER})
+        returning id
+      `
+      if (!taskRow) throw new Error('No se pudo crear la tarea de prueba')
+      taskId = taskRow.id
 
-    const started = await repo.moveTask(taskId, 'en_progreso')
-    expect(started?.status).toBe('en_progreso')
+      const started = await repo.moveTask(taskId, 'en_progreso')
+      expect(started?.status).toBe('en_progreso')
 
-    // en_progreso -> lista_para_iniciar no es una transicion valida.
-    const invalid = await repo.moveTask(taskId, 'lista_para_iniciar')
-    expect(invalid).toBeNull()
+      // en_progreso -> lista_para_iniciar no es una transicion valida.
+      const invalid = await repo.moveTask(taskId, 'lista_para_iniciar')
+      expect(invalid).toBeNull()
 
-    const completed = await repo.moveTask(taskId, 'completada')
-    expect(completed?.status).toBe('completada')
-    expect(completed?.completedAt).not.toBeNull()
-  })
+      const completed = await repo.moveTask(taskId, 'completada')
+      expect(completed?.status).toBe('completada')
+      expect(completed?.completedAt).not.toBeNull()
+    },
+    15000,
+  )
 
   it('moveTask devuelve null si la tarea no existe', async () => {
     const result = await repo.moveTask('00000000-0000-4000-9000-000000000000', 'en_progreso')
+    expect(result).toBeNull()
+  })
+})
+
+describe('Supabase repository — tablero de fases', () => {
+  it('moveProjectPhase mueve el proyecto a otra fase del mismo proyecto', async () => {
+    const withPhases = await repo.getProjectWithPhases(projectId)
+    const targetPhase = withPhases?.phases.find((p) => p.order === 3)
+    if (!targetPhase) throw new Error('El proyecto de prueba deberia tener una fase de orden 3')
+
+    const moved = await repo.moveProjectPhase(projectId, targetPhase.id)
+    expect(moved?.currentPhaseId).toBe(targetPhase.id)
+  })
+
+  it(
+    'moveProjectPhase devuelve null si la fase no pertenece al proyecto',
+    async () => {
+      const otherClient = await repo.createClient({
+        legalName: 'Otro Cliente Repo Test S.A.C.',
+        tradeName: 'Otro Cliente',
+        ruc: '20601234598',
+        industry: 'Tecnologia',
+        size: 'micro',
+        city: 'Lima',
+        country: 'Peru',
+        confidentiality: 'interno',
+      })
+      const otherOpportunity = await repo.createOpportunity({
+        clientId: otherClient.id,
+        title: 'Oportunidad ajena de prueba',
+        expectedAmount: 500,
+        ownerId: OWNER,
+      })
+      // convertOpportunityToProject exige llegar a 'ganado' desde un estado
+      // valido segun la maquina de estados (solo 'propuesta_enviada' o
+      // 'en_negociacion' -> 'ganado'; ver domain/state-machines.ts). Una
+      // oportunidad recien creada nace en 'nuevo_lead', asi que se adelanta
+      // el estado por fuera de la logica de negocio (como ya hace este mismo
+      // archivo al insertar tareas directo por adminSql): el foco de este
+      // test es el aislamiento de moveProjectPhase, no el flujo completo de
+      // transiciones de oportunidad (que ya cubre "camina la oportunidad...").
+      await adminSql`update opportunities set status = 'propuesta_enviada' where id = ${otherOpportunity.id}`
+      const otherResult = await repo.convertOpportunityToProject(otherOpportunity.id, {
+        name: 'Proyecto ajeno de prueba',
+        ownerId: OWNER,
+        startDate: '2026-08-01',
+        targetDate: '2026-12-01',
+      })
+      if (!otherResult || !otherResult.ok) throw new Error('La conversion del proyecto ajeno debio tener exito')
+      const foreignPhaseId = otherResult.value.phases[0]?.id
+      if (!foreignPhaseId) throw new Error('El proyecto ajeno deberia tener fases')
+
+      const result = await repo.moveProjectPhase(projectId, foreignPhaseId)
+      expect(result).toBeNull()
+
+      await adminSql`delete from project_phases where project_id = ${otherResult.value.id}`
+      await adminSql`delete from projects where id = ${otherResult.value.id}`
+      await adminSql`delete from opportunities where id = ${otherOpportunity.id}`
+      await adminSql`delete from clients where id = ${otherClient.id}`
+    },
+    15000,
+  )
+
+  it('moveProjectPhase devuelve null si el proyecto no existe', async () => {
+    const withPhases = await repo.getProjectWithPhases(projectId)
+    const anyPhaseId = withPhases?.phases[0]?.id
+    if (!anyPhaseId) throw new Error('El proyecto de prueba deberia tener fases')
+
+    const result = await repo.moveProjectPhase('00000000-0000-4000-9000-000000000000', anyPhaseId)
     expect(result).toBeNull()
   })
 })
