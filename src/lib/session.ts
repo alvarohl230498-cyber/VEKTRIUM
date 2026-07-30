@@ -3,6 +3,7 @@ import { createHmac, timingSafeEqual } from 'node:crypto'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import type { Role } from '@/domain/roles'
+import { getSessionSecret } from './session-secret'
 
 const SESSION_COOKIE_NAME = 'vektrium_session'
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7 // 7 dias
@@ -21,21 +22,19 @@ export interface Session {
 /**
  * No hay Supabase todavia, asi que la sesion no la firma un proveedor de
  * identidad sino esta capa: un cookie HMAC-firmado con Node `crypto`, sin
- * dependencias nuevas. SESSION_SECRET debe fijarse por variable de entorno
- * antes de ir a produccion; el valor de respaldo es exclusivamente para que
- * `next dev` funcione hoy sin configuracion.
+ * dependencias nuevas. La resolucion del secreto vive en session-secret.ts
+ * para poder probarse sin `next/headers`.
  */
-function getSessionSecret(): string {
-  return process.env.SESSION_SECRET ?? 'vektrium-dev-insecure-secret-configura-SESSION_SECRET'
+function sign(payload: string): string | null {
+  const secret = getSessionSecret()
+  if (!secret) return null
+  return createHmac('sha256', secret).update(payload).digest('base64url')
 }
 
-function sign(payload: string): string {
-  return createHmac('sha256', getSessionSecret()).update(payload).digest('base64url')
-}
-
-function encode(user: SessionUser): string {
+function encode(user: SessionUser): string | null {
   const payload = Buffer.from(JSON.stringify(user), 'utf8').toString('base64url')
-  return `${payload}.${sign(payload)}`
+  const signature = sign(payload)
+  return signature ? `${payload}.${signature}` : null
 }
 
 function isSessionUser(value: unknown): value is SessionUser {
@@ -56,6 +55,8 @@ function decode(token: string): SessionUser | null {
   const payload = token.slice(0, separatorIndex)
   const signature = token.slice(separatorIndex + 1)
   const expected = sign(payload)
+  // Sin secreto (produccion sin SESSION_SECRET) ninguna cookie es valida.
+  if (!expected) return null
 
   const provided = Buffer.from(signature)
   const reference = Buffer.from(expected)
@@ -88,16 +89,24 @@ export async function requireSession(): Promise<Session> {
   return session
 }
 
-/** Solo puede llamarse desde un Server Action o Route Handler (ver next/headers). */
-export async function createSession(user: SessionUser): Promise<void> {
+/**
+ * Solo puede llamarse desde un Server Action o Route Handler (ver next/headers).
+ * Devuelve false si no hay secreto con el que firmar, en vez de emitir un cookie
+ * que nadie podria verificar despues.
+ */
+export async function createSession(user: SessionUser): Promise<boolean> {
+  const token = encode(user)
+  if (!token) return false
+
   const store = await cookies()
-  store.set(SESSION_COOKIE_NAME, encode(user), {
+  store.set(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production',
     path: '/',
     maxAge: SESSION_MAX_AGE_SECONDS,
   })
+  return true
 }
 
 /** Solo puede llamarse desde un Server Action o Route Handler (ver next/headers). */

@@ -17,6 +17,8 @@ const ERROR_MESSAGES: Record<string, string> = {
   oauth: 'No se pudo completar el inicio de sesion con Google. Intenta nuevamente.',
   dev_produccion: 'El acceso de desarrollo esta deshabilitado en produccion.',
   dev_invalido: 'No se pudo iniciar sesion con ese usuario de desarrollo.',
+  sin_secreto:
+    'Falta configurar SESSION_SECRET en este entorno, asi que no se puede firmar la sesion.',
 }
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>

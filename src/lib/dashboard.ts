@@ -6,7 +6,7 @@ import type { Client, Meeting, Opportunity, Project, Task, User } from '@/data'
  * levantar Next ni la capa de datos.
  */
 
-const OPEN_OPPORTUNITY_STATUSES: ReadonlySet<Opportunity['status']> = new Set([
+export const OPEN_OPPORTUNITY_STATUSES: ReadonlySet<Opportunity['status']> = new Set([
   'nuevo_lead',
   'contactado',
   'diagnostico_agendado',

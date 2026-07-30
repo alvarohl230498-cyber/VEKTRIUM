@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import type { Task } from '@/data'
 import { getRepository } from '@/data'
 import { IllustrativeBadge, SimulatedBadge } from '@/components/os/illustrative-badge'
+import { MEETING_TYPE_LABELS } from '@/lib/agenda'
 import {
   formatLima,
   formatLimaDateTime,
@@ -17,13 +18,6 @@ export const metadata: Metadata = {
     index: false,
     follow: false,
   },
-}
-
-const MEETING_TYPE_LABEL: Record<string, string> = {
-  diagnostico: 'Diagnostico',
-  validacion: 'Validacion',
-  seguimiento: 'Seguimiento',
-  interna: 'Interna',
 }
 
 const ATTENTION_KIND_LABEL: Record<AttentionKind, string> = {
@@ -135,8 +129,10 @@ export default async function OsDashboard() {
 
           {upcomingMeetings.length === 0 ? (
             <p className="mt-6 text-sm leading-6 text-vk-muted">
-              No hay reuniones agendadas. Agenda la primera desde el modulo Agenda cuando este
-              disponible.
+              No hay reuniones agendadas.{' '}
+              <a href="/os/agenda" className="font-extrabold text-vk-cobalt hover:text-vk-navy">
+                Agenda la primera desde el modulo Agenda.
+              </a>
             </p>
           ) : (
             <ul className="mt-6 space-y-4">
@@ -148,7 +144,7 @@ export default async function OsDashboard() {
                   </div>
                   <p className="mt-1 text-sm leading-6 text-vk-muted">
                     {formatLimaDateTime(new Date(meeting.startsAt))} · {meeting.clientName} ·{' '}
-                    {MEETING_TYPE_LABEL[meeting.type] ?? meeting.type}
+                    {MEETING_TYPE_LABELS[meeting.type] ?? meeting.type}
                   </p>
                   {meeting.meetUrl ? (
                     <a

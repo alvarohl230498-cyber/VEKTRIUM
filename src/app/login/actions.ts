@@ -30,6 +30,11 @@ export async function devSignIn(formData: FormData): Promise<void> {
     redirect('/login?error=dev_invalido')
   }
 
-  await createSession(user)
+  const created = await createSession(user)
+  if (!created) {
+    // Sin SESSION_SECRET no hay con que firmar. No se emite un cookie inutil.
+    redirect('/login?error=sin_secreto')
+  }
+
   redirect('/os')
 }

@@ -99,7 +99,25 @@ export interface Task extends Illustrative {
   completedAt: string | null
 }
 
-export type MeetingType = 'diagnostico' | 'validacion' | 'seguimiento' | 'interna'
+/**
+ * Los diez tipos de reunion del brief. Cubren el ciclo completo desde el
+ * primer contacto comercial hasta el seguimiento posterior a la entrega.
+ */
+export const MEETING_TYPES = [
+  'contacto_inicial',
+  'descubrimiento',
+  'levantamiento',
+  'validacion',
+  'revision_avance',
+  'presentacion_prototipo',
+  'presentacion_final',
+  'entrega_capacitacion',
+  'seguimiento_postentrega',
+  'reunion_interna',
+] as const
+
+export type MeetingType = (typeof MEETING_TYPES)[number]
+
 export type MeetingSyncStatus = 'pendiente' | 'sincronizada' | 'fallida'
 export type AttendeeResponse = 'pendiente' | 'aceptado' | 'declinado'
 
@@ -117,12 +135,21 @@ export interface Meeting extends Illustrative {
   projectId: string | null
   type: MeetingType
   title: string
+  /** Agenda u objetivos de la reunion, texto libre obligatorio. */
+  agenda: string
   startsAt: string
   endsAt: string
   organizerId: string
+  /** true si el evento (si existe) fue creado por MockCalendarProvider. */
   isMock: boolean
   meetUrl: string | null
+  /** Id del evento en el proveedor de calendario, o null si no se creo evento. */
+  providerEventId: string | null
+  /** Clave de idempotencia usada al llamar a CalendarProvider.createEvent. */
+  requestId: string
   syncStatus: MeetingSyncStatus
+  /** Mensaje en espanol cuando syncStatus es 'fallida'. */
+  syncError: string | null
   attendees: MeetingAttendee[]
   hasMinutes: boolean
 }

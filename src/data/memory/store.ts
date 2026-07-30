@@ -1,7 +1,16 @@
 import { randomUUID } from 'node:crypto'
+import { buildPhasesForProject } from '@/domain/phases'
 import type { TaskStatus } from '@/domain/progress'
-import { transitionTask } from '@/domain/state-machines'
-import type { NewClientInput, NewMeetingInput, VektriumRepository } from '../repository'
+import { err, ok } from '@/domain/result'
+import { transitionOpportunity, transitionTask } from '@/domain/state-machines'
+import type {
+  ConvertOpportunityInput,
+  MeetingSyncPatch,
+  NewClientInput,
+  NewMeetingInput,
+  NewOpportunityInput,
+  VektriumRepository,
+} from '../repository'
 import type {
   Client,
   Contact,
@@ -25,6 +34,16 @@ import {
 /** Copia profunda para que nadie mute el estado del modulo por referencia. */
 function clone<T>(value: T): T {
   return structuredClone(value)
+}
+
+/** Siguiente codigo secuencial VK-0001, VK-0002... a partir de los existentes. */
+function nextProjectCode(projects: Project[]): string {
+  const max = projects.reduce((acc, p) => {
+    const match = /^VK-(\d+)$/.exec(p.code)
+    if (!match || !match[1]) return acc
+    return Math.max(acc, Number(match[1]))
+  }, 0)
+  return `VK-${String(max + 1).padStart(4, '0')}`
 }
 
 interface MemoryState {
@@ -108,6 +127,84 @@ export function createMemoryRepository(): VektriumRepository {
       return opportunity ? clone(opportunity) : null
     },
 
+    async createOpportunity(input: NewOpportunityInput) {
+      const now = new Date().toISOString()
+      const opportunity: Opportunity = {
+        id: `opp-${randomUUID()}`,
+        clientId: input.clientId,
+        title: input.title,
+        status: 'nuevo_lead',
+        lossReason: null,
+        expectedAmount: input.expectedAmount,
+        ownerId: input.ownerId,
+        createdAt: now,
+        updatedAt: now,
+      }
+      state.opportunities.push(opportunity)
+      return clone(opportunity)
+    },
+
+    async updateOpportunityStatus(id, to, ctx) {
+      const opportunity = state.opportunities.find((o) => o.id === id)
+      if (!opportunity) return null
+
+      const result = transitionOpportunity(opportunity.status, to, ctx)
+      if (!result.ok) return err(result.error)
+
+      opportunity.status = result.value
+      opportunity.updatedAt = new Date().toISOString()
+      if (result.value === 'no_aceptado' && ctx.lossReason) {
+        opportunity.lossReason = ctx.lossReason
+      }
+      return ok(clone(opportunity))
+    },
+
+    async convertOpportunityToProject(opportunityId, input: ConvertOpportunityInput) {
+      const opportunity = state.opportunities.find((o) => o.id === opportunityId)
+      if (!opportunity) return null
+
+      if (opportunity.status !== 'ganado') {
+        const result = transitionOpportunity(opportunity.status, 'ganado', {})
+        if (!result.ok) return err(result.error)
+      }
+
+      const projectId = `project-${randomUUID()}`
+      const project: Project = {
+        id: projectId,
+        code: nextProjectCode(state.projects),
+        clientId: opportunity.clientId,
+        opportunityId: opportunity.id,
+        name: input.name,
+        status: 'activo',
+        health: 'sano',
+        healthReason: null,
+        ownerId: input.ownerId,
+        startDate: input.startDate,
+        targetDate: input.targetDate,
+        archivedAt: null,
+      }
+      state.projects.push(project)
+
+      const templates = buildPhasesForProject(projectId)
+      const phases: ProjectPhaseWithTasks[] = templates.map((t) => ({
+        id: `${projectId}-phase-${t.order}`,
+        projectId: t.projectId,
+        order: t.order,
+        name: t.name,
+        description: t.description,
+        weight: t.weight,
+        plannedStart: null,
+        plannedEnd: null,
+        tasks: [],
+      }))
+      state.phases.push(...phases)
+
+      opportunity.status = 'ganado'
+      opportunity.updatedAt = new Date().toISOString()
+
+      return ok(projectWithPhases(project))
+    },
+
     async listProjects() {
       return clone(state.projects)
     },
@@ -131,6 +228,19 @@ export function createMemoryRepository(): VektriumRepository {
         id: `meeting-${randomUUID()}`,
       }
       state.meetings.push(meeting)
+      return clone(meeting)
+    },
+
+    async updateMeetingStatus(id: string, patch: MeetingSyncPatch) {
+      const meeting = state.meetings.find((m) => m.id === id)
+      if (!meeting) return null
+
+      meeting.syncStatus = patch.syncStatus
+      if (patch.syncError !== undefined) meeting.syncError = patch.syncError
+      if (patch.meetUrl !== undefined) meeting.meetUrl = patch.meetUrl
+      if (patch.providerEventId !== undefined) meeting.providerEventId = patch.providerEventId
+      if (patch.isMock !== undefined) meeting.isMock = patch.isMock
+
       return clone(meeting)
     },
 

@@ -20,5 +20,13 @@ export function getRepository(): VektriumRepository {
   return repository
 }
 
-export type { VektriumRepository, NewClientInput, NewMeetingInput } from './repository'
+export type {
+  VektriumRepository,
+  NewClientInput,
+  NewMeetingInput,
+  MeetingSyncPatch,
+  ConvertOpportunityInput,
+  NewOpportunityInput,
+} from './repository'
 export type * from './types'
+export { MEETING_TYPES } from './types'

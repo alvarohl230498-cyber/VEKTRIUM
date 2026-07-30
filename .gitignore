@@ -49,3 +49,6 @@ backups/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Configuracion local de Claude Code
+.claude/
