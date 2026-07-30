@@ -18,10 +18,19 @@ describe('frontera de la clave de servicio', () => {
     expect(offenders).toEqual([])
   })
 
-  it('SUPABASE_SERVICE_ROLE_KEY solo se lee dentro de src/db/admin', () => {
+  it('SUPABASE_SERVICE_ROLE_KEY solo se lee en los modulos autorizados', () => {
+    // src/db/admin: acceso Drizzle/Postgres con service_role, bypassa RLS.
+    // src/lib/supabase-admin-auth.ts: acceso al SDK de Auth con service_role,
+    // usado unicamente por requestMagicLink() para generateLink() — Supabase
+    // no puede enviar el correo el mismo (su SMTP rechaza el remitente de
+    // pruebas de Resend), asi que la app genera el token y lo envia ella
+    // misma via la API REST de Resend. Ninguno de los dos se importa desde
+    // codigo que atienda peticiones ya autenticadas.
+    const ALLOWED = ['src/db/admin/', 'src/lib/supabase-admin-auth.ts']
+
     const offenders = walk('src')
       .filter((f) => /\.tsx?$/.test(f))
-      .filter((f) => !f.replace(/\\/g, '/').includes('src/db/admin/'))
+      .filter((f) => !ALLOWED.some((allowed) => f.replace(/\\/g, '/').includes(allowed)))
       .filter((f) => readFileSync(f, 'utf8').includes('SUPABASE_SERVICE_ROLE_KEY'))
 
     expect(offenders).toEqual([])

@@ -4,8 +4,9 @@ import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import { getRepository } from '@/data'
 import { isDevSignInEnabled } from '@/lib/dev-auth'
+import { sendMagicLinkEmail } from '@/lib/magic-link-email'
 import { createSession } from '@/lib/session'
-import { supabaseAuth } from '@/lib/supabase-auth-client'
+import { supabaseAdminAuth } from '@/lib/supabase-admin-auth'
 
 const magicLinkSchema = z.object({
   email: z.string().trim().toLowerCase().email(),
@@ -16,12 +17,20 @@ const magicLinkSchema = z.object({
  * (`?sent=1`) sin importar si el correo esta en `authorized_users` — esa
  * comprobacion ocurre recien en el callback (src/app/auth/callback/route.ts),
  * despues de verificar el token. Hacerlo antes (p. ej. consultando
- * authorized_users aqui para decidir si llamar a signInWithOtp) filtrarma
- * por temporizacion o por rama de codigo que correos estan registrados.
+ * authorized_users aqui para decidir si generar el enlace) filtraria por
+ * temporizacion o por rama de codigo que correos estan registrados.
  *
- * Solo se distingue un error de validacion de formato (no es un correo) de
- * un fallo real de Supabase al enviar — ninguno de los dos revela nada sobre
- * autorizacion, solo sobre el propio intento de envio.
+ * No usa supabase.auth.signInWithOtp() (que hace que Supabase envie el
+ * correo via su propio SMTP). El SMTP de Supabase, retransmitido por
+ * smtp.resend.com, rechaza el remitente de pruebas onboarding@resend.dev:
+ * Resend solo permite ese remitente a traves de su API REST, no via SMTP
+ * crudo — confirmado por los 500 repetidos en los logs de Auth de Supabase
+ * al intentarlo. En vez de depender de un dominio propio verificado en
+ * Resend (que VEKTRIUM aun no tiene), se genera el enlace con la API de
+ * administracion (supabaseAdminAuth.auth.admin.generateLink, service_role)
+ * y se envia por la API REST de Resend (src/lib/magic-link-email.ts), el
+ * mismo camino que ya funciona para /contacto. Supabase nunca envia el
+ * correo en este flujo — solo emite el token.
  */
 export async function requestMagicLink(formData: FormData): Promise<void> {
   const parsed = magicLinkSchema.safeParse({ email: formData.get('email') })
@@ -29,22 +38,28 @@ export async function requestMagicLink(formData: FormData): Promise<void> {
     redirect('/login?error=magic_link_invalido')
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+  const redirectTo = `${siteUrl}/auth/callback`
 
   // redirect() de next/navigation lanza internamente para cortar el render:
-  // por eso las llamadas a redirect() se mantienen FUERA de este try/catch
-  // (que solo envuelve la llamada de red a Supabase), en vez de intentar
-  // distinguir ese throw especial de un error real dentro de un catch.
+  // por eso las llamadas a redirect() se mantienen FUERA de este try/catch,
+  // en vez de intentar distinguir ese throw especial de un error real.
   let sendFailed = false
   try {
-    // `options` se omite por completo (en vez de fijarse en `undefined`)
-    // cuando no hay NEXT_PUBLIC_SITE_URL: con exactOptionalPropertyTypes,
-    // { options: undefined } no es asignable a una propiedad opcional.
-    const { error } = await supabaseAuth.auth.signInWithOtp({
+    const { data, error } = await supabaseAdminAuth.auth.admin.generateLink({
+      type: 'magiclink',
       email: parsed.data.email,
-      ...(siteUrl ? { options: { emailRedirectTo: `${siteUrl}/auth/callback` } } : {}),
+      options: { redirectTo },
     })
-    sendFailed = Boolean(error)
+
+    const hashedToken = data?.properties?.hashed_token
+    if (error || !hashedToken) {
+      sendFailed = true
+    } else {
+      const link = `${redirectTo}?token_hash=${hashedToken}&type=magiclink`
+      const result = await sendMagicLinkEmail(parsed.data.email, link)
+      sendFailed = !result.ok
+    }
   } catch {
     sendFailed = true
   }
