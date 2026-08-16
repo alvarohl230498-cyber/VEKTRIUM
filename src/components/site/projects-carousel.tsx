@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { ArrowRight, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import rawProjects from '@/site/projects-carousel.json'
 
@@ -119,7 +120,7 @@ export function ProjectsCarouselSection() {
   return (
     <section
       id="proyectos-desarrollados"
-      className="overflow-hidden bg-vk-ice py-20"
+      className="overflow-hidden bg-white py-20"
       onFocus={() => setIsPaused(true)}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
@@ -149,18 +150,19 @@ export function ProjectsCarouselSection() {
               Proyectos desarrollados
             </p>
             <h2 className="mt-3 font-display text-3xl font-extrabold leading-tight text-vk-navy sm:text-4xl">
-              Soluciones que convierten procesos manuales en resultados útiles
+              Soluciones visuales para procesos ya documentados
             </h2>
             <p className="mt-4 text-base leading-8 text-vk-muted">
-              Diseñamos automatizaciones, aplicaciones y dashboards que conectan datos, simplifican
-              tareas y permiten tomar mejores decisiones.
+              El carrusel muestra proyectos y demos registrados con su imagen, categoria,
+              capacidades y tecnologia, sin mezclar metricas no validadas.
             </p>
           </div>
           <Link
-            className="inline-flex rounded-md bg-vk-cobalt px-5 py-3 text-sm font-extrabold text-white transition hover:bg-vk-navy focus:outline-none focus:ring-2 focus:ring-vk-cobalt focus:ring-offset-2"
+            className="inline-flex items-center gap-2 rounded-md bg-vk-lime px-5 py-3 text-sm font-black text-vk-navy shadow-[0_18px_42px_rgba(183,243,74,0.22)] transition hover:-translate-y-0.5 hover:bg-vk-aqua focus:outline-none focus:ring-2 focus:ring-vk-lime focus:ring-offset-2"
             href="/contacto?motivo=proyectos"
           >
             Agendar primer reporte
+            <ArrowRight aria-hidden="true" size={16} strokeWidth={2.6} />
           </Link>
         </div>
 
@@ -185,12 +187,12 @@ export function ProjectsCarouselSection() {
             Proyecto {activeNumber} de {formatProjectNumber(projects.length)}: {activeProject.title}
           </p>
 
-          <article className="grid min-h-[620px] gap-6 border border-vk-line bg-white p-4 shadow-[0_16px_42px_rgba(10,22,51,0.08)] sm:p-5 lg:grid-cols-[minmax(0,1.62fr)_minmax(330px,1fr)] lg:p-6">
+          <article className="grid min-h-[620px] gap-6 overflow-hidden border border-vk-line bg-white p-4 shadow-[0_22px_65px_rgba(10,22,51,0.10)] sm:p-5 lg:grid-cols-[minmax(0,1.62fr)_minmax(330px,1fr)] lg:p-6">
             <div className="order-1">
               <div className="border border-vk-line bg-vk-ice p-3">
                 <button
                   aria-label={`Abrir imagen de ${activeProject.title}`}
-                  className="relative flex aspect-[16/10] w-full items-center justify-center overflow-hidden bg-white focus:outline-none focus:ring-2 focus:ring-vk-cobalt focus:ring-offset-2"
+                  className="group relative flex aspect-[16/10] w-full items-center justify-center overflow-hidden bg-white focus:outline-none focus:ring-2 focus:ring-vk-cobalt focus:ring-offset-2"
                   onClick={() => setLightboxImage(activeImage)}
                   type="button"
                 >
@@ -201,8 +203,11 @@ export function ProjectsCarouselSection() {
                     height={activeImageMeta.height}
                     priority={activeIndex <= 1}
                     sizes="(min-width: 1024px) 62vw, 100vw"
-                    className="h-full w-full object-contain"
+                    className="h-full w-full object-contain transition duration-500 group-hover:scale-[1.015]"
                   />
+                  <span className="pointer-events-none absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-md border border-vk-line bg-white/92 text-vk-navy opacity-0 shadow-vk transition group-hover:opacity-100">
+                    <Maximize2 aria-hidden="true" size={18} strokeWidth={2.4} />
+                  </span>
                 </button>
               </div>
 
@@ -308,10 +313,11 @@ export function ProjectsCarouselSection() {
 
                 <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
                   <Link
-                    className="inline-flex rounded-md bg-vk-navy px-5 py-3 text-sm font-extrabold text-white transition hover:bg-vk-cobalt focus:outline-none focus:ring-2 focus:ring-vk-cobalt focus:ring-offset-2"
+                    className="inline-flex items-center gap-2 rounded-md bg-vk-navy px-5 py-3 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-vk-cobalt focus:outline-none focus:ring-2 focus:ring-vk-cobalt focus:ring-offset-2"
                     href={`/contacto?proyecto=${activeProject.id}`}
                   >
                     Agendar reporte similar
+                    <ArrowRight aria-hidden="true" size={16} strokeWidth={2.6} />
                   </Link>
                   <CarouselNavigation
                     activeIndex={activeIndex}
@@ -373,11 +379,11 @@ function CarouselNavigation({
     <div className="flex items-center gap-3">
       <button
         aria-label="Proyecto anterior"
-        className="flex min-h-11 min-w-11 items-center justify-center rounded-md border border-vk-line bg-white text-lg font-black text-vk-navy transition hover:border-vk-cobalt hover:text-vk-cobalt focus:outline-none focus:ring-2 focus:ring-vk-cobalt focus:ring-offset-2"
+        className="flex min-h-11 min-w-11 items-center justify-center rounded-md border border-vk-line bg-white text-vk-navy transition hover:-translate-y-0.5 hover:border-vk-cobalt hover:text-vk-cobalt focus:outline-none focus:ring-2 focus:ring-vk-cobalt focus:ring-offset-2"
         onClick={() => moveBy(-1)}
         type="button"
       >
-        ‹
+        <ChevronLeft aria-hidden="true" size={20} strokeWidth={2.6} />
       </button>
       <div className="flex items-center gap-2">
         {projects.map((project, index) => (
@@ -395,11 +401,11 @@ function CarouselNavigation({
       </div>
       <button
         aria-label="Proyecto siguiente"
-        className="flex min-h-11 min-w-11 items-center justify-center rounded-md border border-vk-line bg-white text-lg font-black text-vk-navy transition hover:border-vk-cobalt hover:text-vk-cobalt focus:outline-none focus:ring-2 focus:ring-vk-cobalt focus:ring-offset-2"
+        className="flex min-h-11 min-w-11 items-center justify-center rounded-md border border-vk-line bg-white text-vk-navy transition hover:-translate-y-0.5 hover:border-vk-cobalt hover:text-vk-cobalt focus:outline-none focus:ring-2 focus:ring-vk-cobalt focus:ring-offset-2"
         onClick={() => moveBy(1)}
         type="button"
       >
-        ›
+        <ChevronRight aria-hidden="true" size={20} strokeWidth={2.6} />
       </button>
     </div>
   )

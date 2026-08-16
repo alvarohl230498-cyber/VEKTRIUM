@@ -39,3 +39,27 @@ body {
   color: var(--foreground);
   font-family: var(--font-inter), sans-serif;
 }
+
+.public-site :is(article, a, button) {
+  transition-duration: 260ms;
+  transition-property: background-color, border-color, box-shadow, color, opacity, transform;
+  transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@media (hover: hover) {
+  .public-site main article:hover {
+    border-color: rgba(59, 110, 245, 0.38);
+    box-shadow: 0 22px 55px rgba(10, 22, 51, 0.13);
+    transform: translateY(-3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .public-site :is(article, a, button) {
+    transition-duration: 1ms;
+  }
+
+  .public-site main article:hover {
+    transform: none;
+  }
+}

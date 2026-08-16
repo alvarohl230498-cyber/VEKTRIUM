@@ -21,8 +21,8 @@ export default function ProjectsPage() {
       <main>
         <PageHero
           eyebrow="Portafolio VEKTRIUM"
-          title="Proyectos reales presentados como una experiencia visual."
-          copy="El portafolio ahora vive en un carrusel unico: imagen primero, contexto despues, sin duplicar tarjetas ni mezclar piezas que compitan entre si."
+          title="Proyectos, demos y prototipos presentados con claridad visual."
+          copy="El portafolio vive en un carrusel unico: imagen primero, contexto despues, sin duplicar tarjetas ni mezclar piezas que compitan entre si."
           actions={
             <>
               <PrimaryLink href="/contacto?motivo=proyectos">Agendar primer reporte</PrimaryLink>
@@ -38,7 +38,7 @@ export default function ProjectsPage() {
             <SectionIntro
               eyebrow="Criterio de portafolio"
               title="Una sola lectura, sin inflar resultados."
-              copy="La pagina no repite el portafolio en tarjetas grandes porque el carrusel es la pieza central. Cada proyecto muestra responsable, categoria, capacidades, tecnologia e imagen real del alcance trabajado."
+              copy="La pagina no repite el portafolio en tarjetas grandes porque el carrusel es la pieza central. Cada pieza muestra responsable, categoria, capacidades, tecnologia e imagen del alcance trabajado o documentado."
             />
             <div className="grid gap-3 sm:grid-cols-2">
               {[
