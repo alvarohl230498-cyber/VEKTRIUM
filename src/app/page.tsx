@@ -1,99 +1,95 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { Compass, Headphones, ShieldCheck, Workflow, Zap } from 'lucide-react'
+import {
+  ArrowRight,
+  CalendarDays,
+  ClipboardList,
+  Compass,
+  Headphones,
+  MessageSquare,
+  ShieldCheck,
+  UsersRound,
+  Workflow,
+  Zap,
+} from 'lucide-react'
+
 import { AutomationNetwork } from '@/components/site/automation-network'
 import { AutomationPreviewPanel } from '@/components/site/automation-preview-panel'
 import { ProcessFlow, type ProcessStep } from '@/components/site/process-flow'
 import { Reveal, Stagger, StaggerItem } from '@/components/site/reveal'
-import {
-  brand,
-  firstReportOffer,
-  founders,
-  methodSteps,
-  packages,
-  services,
-  trustSignals,
-} from '@/site/content'
+import { brand, firstReportOffer, founders } from '@/site/content'
 
 const featuredProjects = [
   {
     title: 'Analitica de RR. HH. conectada a BUK',
-    eyebrow: 'API BUK + People Analytics',
-    copy:
-      'Informacion operativa de BUK organizada en dashboards para revisar dotacion, demografia y rotacion.',
+    category: 'People Analytics',
     image: '/projects/01-buk-analytics-demografia.jpeg',
-    tags: ['API BUK', 'People Analytics', 'Power BI'],
+    description:
+      'Dashboard ejecutivo y operativo para convertir datos de BUK en lectura accionable.',
+    tags: ['API BUK', 'Power BI', 'RR. HH.'],
   },
   {
     title: 'Sistema integral de planillas y remuneraciones',
-    eyebrow: 'Payroll Tech para Peru',
-    copy:
-      'Flujo para ordenar trabajadores, novedades, calculo de planilla y salidas operativas como boletas, PLAME y AFPNet.',
+    category: 'Operacion interna',
     image: '/projects/03-sistema-remuneraciones.jpeg',
-    tags: ['Planillas', 'PLAME', 'AFPNet'],
+    description:
+      'Estructura de control para calculo, validacion y seguimiento de remuneraciones.',
+    tags: ['Planillas', 'Control', 'RR. HH.'],
   },
   {
     title: 'ReportFlow: reportes financieros automaticos',
-    eyebrow: 'Automatizacion financiera',
-    copy:
-      'Descarga, consolidacion y preparacion de reportes para multiples entidades y periodos, con trazabilidad del proceso.',
+    category: 'Finanzas',
     image: '/projects/05-reportflow.jpeg',
-    tags: ['Reportes', 'Excel', 'Finanzas'],
+    description:
+      'Flujo para transformar archivos operativos en reportes financieros listos para decision.',
+    tags: ['Reportes', 'Finanzas', 'Automatizacion'],
   },
   {
     title: 'GlobalMatch: conciliacion intercompanias',
-    eyebrow: 'Analitica financiera',
-    copy:
-      'Cruce de transacciones entre entidades para identificar diferencias, pares descuadrados y excepciones prioritarias.',
+    category: 'Conciliacion',
     image: '/projects/07-globalmatch.jpeg',
-    tags: ['Conciliacion', 'Power BI', 'Finanzas'],
+    description:
+      'Propuesta para cruzar operaciones entre companias y detectar diferencias pendientes.',
+    tags: ['Conciliacion', 'Control', 'Datos'],
   },
 ] as const
 
 const heroBadges = [
-  'Consulta inicial gratuita',
-  'Alcance sin costo',
-  'Pago al presentar el reporte',
-] as const
-
-const contactOptions = [
   {
-    title: 'Agenda gratuita',
-    copy: 'Reserva la primera conversacion para revisar si tu proceso calza con un primer reporte.',
-    href: '/agenda',
+    eyebrow: 'Primera consultoria',
+    title: 'GRATIS',
+    copy: 'Consulta y alcance inicial sin costo.',
+    icon: CalendarDays,
   },
   {
-    title: 'Formulario de contexto',
-    copy: 'Cuentanos el area, el reporte o la tarea repetitiva que hoy consume tiempo.',
-    href: '/contacto#formulario',
-  },
-  {
-    title: 'WhatsApp empresarial',
-    copy: 'Canal en preparacion; mientras se confirma el numero oficial, coordinamos por agenda o formulario.',
-    href: '/contacto#whatsapp',
+    eyebrow: 'Solo pagas cuando',
+    title: 'presentamos el resultado',
+    copy: 'El primer reporte se paga al finalizar el proceso.',
+    icon: ShieldCheck,
   },
 ] as const
 
-const focusAreas = services.slice(0, 5)
-
-const automationSteps = [
+const automationSteps: ProcessStep[] = [
   {
-    title: 'Entendemos tu proceso',
-    copy: 'Nos cuentas el proceso, el reporte que necesitas y donde hoy se pierde tiempo.',
+    title: 'Entendemos tu negocio',
+    copy:
+      'Revisamos tu proceso, tus archivos y el resultado que necesitas conseguir.',
     icon: 'message',
   },
   {
-    title: 'Definimos el alcance',
-    copy: 'Aterrizamos datos necesarios, responsables y entregable inicial sin costo.',
+    title: 'Disenamos tu solucion',
+    copy:
+      'Definimos el reporte, dashboard o automatizacion con el alcance correcto.',
     icon: 'puzzle',
   },
   {
-    title: 'Construimos y presentamos',
-    copy: 'Trabajamos el primer reporte acordado y el pago llega cuando se presenta terminado.',
+    title: 'Implementamos y escalamos',
+    copy:
+      'Construimos el entregable, lo presentamos y dejamos clara la siguiente mejora.',
     icon: 'rocket',
   },
-] satisfies ProcessStep[]
+]
 
 const differentiators = [
   {
@@ -102,280 +98,248 @@ const differentiators = [
     icon: Compass,
   },
   {
-    title: 'Implementacion con evidencia',
-    copy: 'Cada avance deja alcance, supuestos y entregable visible.',
+    title: 'Implementacion rapida',
+    copy: 'Priorizamos entregables concretos y revisiones cortas.',
     icon: Zap,
   },
   {
-    title: 'Sin adelanto inicial',
-    copy: 'Primer reporte con consulta y alcance gratuitos.',
+    title: 'Sin contratos largos',
+    copy: 'El primer reporte se paga cuando esta presentado.',
     icon: ShieldCheck,
   },
   {
-    title: 'Tecnologia trazable',
-    copy: 'Datos, permisos y responsables quedan documentados.',
+    title: 'Tecnologia que escala',
+    copy: 'Dejamos una base lista para crecer con mas automatizaciones.',
     icon: Workflow,
   },
   {
     title: 'Acompanamiento real',
-    copy: 'Fundadores involucrados antes, durante y despues.',
+    copy: 'Trabajamos contigo antes, durante y despues del entregable.',
     icon: Headphones,
+  },
+] as const
+
+const contactOptions = [
+  {
+    title: 'WhatsApp empresarial',
+    copy: 'Canal en preparacion',
+    href: '/contacto#whatsapp',
+    icon: MessageSquare,
+  },
+  {
+    title: 'Formulario de contexto',
+    copy: 'Para entender tu primer reporte',
+    href: '/contacto#formulario',
+    icon: ClipboardList,
+  },
+  {
+    title: 'LinkedIn fundadores',
+    copy: 'Perfiles publicados en fundadores',
+    href: '/fundadores',
+    icon: UsersRound,
   },
 ] as const
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-vk-ice text-vk-ink">
+    <main className="public-site overflow-hidden bg-white text-vk-navy">
       <section className="relative isolate overflow-hidden bg-vk-navy text-white">
         <ImpactBackdrop />
         <LandingNav />
 
-        <div className="relative mx-auto grid min-h-[780px] max-w-7xl gap-12 px-4 py-14 sm:px-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(430px,0.78fr)] lg:items-center lg:px-8 lg:py-20">
+        <div className="relative mx-auto grid min-h-[720px] max-w-7xl gap-12 px-4 pb-16 pt-10 sm:px-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(430px,0.85fr)] lg:items-center lg:px-8 lg:pb-20 lg:pt-14">
           <Reveal className="max-w-3xl">
-            <p className="text-sm font-black uppercase tracking-[0.16em] text-vk-aqua">
-              Automatizacion, datos y productos digitales
-            </p>
-            <h1 className="mt-5 font-display text-5xl font-black leading-[0.98] text-white sm:text-6xl lg:text-7xl">
-              Menos trabajo manual.{' '}
-              <span className="text-vk-lime">Mas reportes claros.</span> Mejor control operativo.
+            <h1 className="text-balance text-5xl font-black leading-[0.95] tracking-normal sm:text-6xl lg:text-7xl">
+              Automatizamos tu empresa para que{' '}
+              <span className="text-vk-lime">vendas mas</span> y trabajes
+              menos.
             </h1>
-            <p className="mt-6 max-w-2xl text-base leading-8 text-[#DCE7FF] sm:text-lg">
-              {brand.description} Empezamos por un primer reporte acotado para revisar proceso,
-              datos, responsables y entregable antes de escalar.
+
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-white/78 sm:text-xl">
+              Creamos sistemas, dashboards e inteligencia artificial para
+              reducir procesos manuales y convertir datos en entregables claros.
             </p>
 
-            <div className="mt-8 grid max-w-2xl gap-3 sm:grid-cols-3">
-              {heroBadges.map((item) => (
-                <div key={item} className="border border-white/15 bg-white/8 px-4 py-3">
-                  <p className="text-sm font-black leading-6 text-white">{item}</p>
+            <div className="mt-8 grid max-w-3xl gap-3 sm:grid-cols-2">
+              {heroBadges.map((badge) => (
+                <div
+                  key={badge.title}
+                  className="group border border-white/18 bg-white/[0.035] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.24)] backdrop-blur-xl transition duration-300 hover:border-vk-aqua/60 hover:bg-white/[0.07]"
+                >
+                  <div className="flex items-center gap-4">
+                    <span className="grid size-12 shrink-0 place-items-center border border-vk-lime/55 bg-vk-lime/10 text-vk-lime">
+                      <badge.icon className="size-6" />
+                    </span>
+                    <span>
+                      <span className="block text-sm text-white/74">
+                        {badge.eyebrow}
+                      </span>
+                      <span className="mt-1 block text-xl font-black leading-tight text-vk-lime">
+                        {badge.title}
+                      </span>
+                    </span>
+                  </div>
+                  <p className="mt-4 text-sm leading-6 text-white/64">
+                    {badge.copy}
+                  </p>
                 </div>
               ))}
             </div>
 
-            <div className="mt-9 flex flex-wrap gap-3">
-              <DarkPrimaryCta href="/agenda">Agendar primer reporte</DarkPrimaryCta>
-              <DarkSecondaryCta href="/proyectos">Ver proyectos y demos</DarkSecondaryCta>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <DarkPrimaryCta href="/agenda">
+                <CalendarDays className="size-5" />
+                Agendar consulta gratuita
+                <ArrowRight className="size-5" />
+              </DarkPrimaryCta>
             </div>
 
-            <p className="mt-6 max-w-2xl text-xs font-semibold leading-6 text-[#BFD0F4]">
-              {firstReportOffer.note}
-            </p>
+            <div className="mt-7 flex flex-wrap items-center gap-4 text-sm text-white/68">
+              <div className="flex -space-x-2">
+                {founders.map((founder) => (
+                  <span
+                    key={founder.name}
+                    className="grid size-10 place-items-center border border-white/16 bg-white/10 text-xs font-black text-white shadow-lg"
+                  >
+                    {getInitials(founder.name)}
+                  </span>
+                ))}
+              </div>
+              <p>{firstReportOffer.note}</p>
+            </div>
           </Reveal>
 
           <Reveal delay={0.12}>
-            <AutomationPreviewPanel title="Panel operativo VEKTRIUM" subtitle="Vista preparada para datos reales" />
+            <AutomationPreviewPanel
+              title="Dashboard operativo"
+              subtitle="Panel preparado para conectar datos reales"
+            />
           </Reveal>
         </div>
       </section>
 
-      <section id="como-trabajamos" className="bg-white py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Reveal className="mx-auto max-w-3xl text-center">
-            <p className="text-sm font-black uppercase tracking-[0.16em] text-vk-cobalt">
-              Como trabajamos
-            </p>
-            <h2 className="mt-3 font-display text-4xl font-black leading-tight text-vk-navy">
-              Un proceso simple, con evidencia antes de escalar.
-            </h2>
-            <p className="mt-4 text-base leading-8 text-vk-muted">
-              {firstReportOffer.detail}
-            </p>
-          </Reveal>
+      <section id="como-trabajamos" className="bg-white px-4 py-20 sm:px-6 lg:px-8">
+        <Reveal className="mx-auto max-w-5xl text-center">
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-vk-cobalt">
+            Como trabajamos
+          </p>
+          <h2 className="mt-3 text-3xl font-black tracking-normal text-vk-navy sm:text-4xl">
+            Un proceso simple, resultados reales
+          </h2>
+        </Reveal>
 
+        <div className="mx-auto mt-14 max-w-6xl">
           <ProcessFlow
             steps={automationSteps}
-            note="Pagas al finalizar, cuando el primer reporte acordado se presenta terminado."
+            note="Pagas unicamente cuando el primer reporte queda terminado y presentado."
           />
         </div>
       </section>
 
-      <section id="proyectos" className="border-y border-vk-line bg-vk-ice py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Reveal className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-            <SectionHeading
-              eyebrow="Proyectos del portafolio"
-              title="Casos y demos con nombres, imagenes y alcance ya registrados."
-              copy="Esta seccion resume piezas del carrusel actual: BUK, planillas, ReportFlow y GlobalMatch. El carrusel completo mantiene mas detalle de capacidades, tecnologias e imagenes."
-            />
-            <SecondaryCta href="/proyectos">Abrir carrusel completo</SecondaryCta>
-          </Reveal>
-
-          <Stagger className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {featuredProjects.map((project) => (
-              <StaggerItem key={project.title}>
-                <ProjectCard {...project} />
-              </StaggerItem>
-            ))}
-          </Stagger>
-        </div>
-      </section>
-
-      <section id="servicios" className="bg-white py-20">
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[360px_minmax(0,1fr)] lg:px-8">
-          <Reveal>
-            <SectionHeading
-              eyebrow="Que construimos"
-              title="Tecnologia aplicada a procesos que ya entendimos bien."
-              copy="VEKTRIUM no parte de una herramienta favorita. El trabajo se ordena por proceso, datos disponibles, usuarios, permisos, trazabilidad y decision."
-            />
-          </Reveal>
-          <Stagger className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {focusAreas.map((service) => (
-              <StaggerItem key={service.slug}>
-                <article className="border border-vk-line bg-vk-ice p-5">
-                  <h2 className="font-display text-xl font-black text-vk-navy">{service.title}</h2>
-                  <p className="mt-3 text-sm leading-7 text-vk-muted">{service.summary}</p>
-                </article>
-              </StaggerItem>
-            ))}
-          </Stagger>
-        </div>
-      </section>
-
-      <section className="relative isolate overflow-hidden bg-vk-navy py-20 text-white">
-        <ImpactBackdrop />
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[340px_minmax(0,1fr)] lg:px-8">
-          <Reveal>
-            <p className="text-sm font-black uppercase tracking-[0.16em] text-vk-aqua">
-              Metodo V.E.K.T.O.R.
-            </p>
-            <h2 className="mt-3 font-display text-4xl font-black leading-tight text-white">
-              Se avanza por evidencia, no por promesas sueltas.
-            </h2>
-            <p className="mt-4 text-sm leading-7 text-[#DCE7FF]">
-              El metodo del sitio ordena el trabajo en seis fases: ver, establecer, construir,
-              transformar, operar y revisar.
-            </p>
-          </Reveal>
-          <Stagger className="relative grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-            {methodSteps.map((step) => (
-              <StaggerItem key={step.letter}>
-                <article className="border border-white/15 bg-white/8 p-5">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-md bg-vk-lime text-sm font-black text-vk-navy">
-                    {step.letter}
-                  </span>
-                  <h3 className="mt-5 font-display text-xl font-black text-white">{step.title}</h3>
-                  <p className="mt-3 text-sm leading-7 text-[#DCE7FF]">{step.copy}</p>
-                </article>
-              </StaggerItem>
-            ))}
-          </Stagger>
-        </div>
-      </section>
-
-      <section className="bg-gradient-to-r from-white via-vk-ice to-white py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-sm font-black uppercase tracking-[0.16em] text-vk-cobalt">
-            Por que elegir VEKTRIUM
+      <section id="proyectos" className="bg-vk-ice px-4 py-20 sm:px-6 lg:px-8">
+        <Reveal className="mx-auto max-w-4xl text-center">
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-vk-cobalt">
+            Proyectos destacados
           </p>
-          <Stagger className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {differentiators.map((item) => {
-              const Icon = item.icon
+          <h2 className="mt-3 text-3xl font-black tracking-normal text-vk-navy sm:text-4xl">
+            Soluciones que generan impacto
+          </h2>
+        </Reveal>
 
-              return (
-                <StaggerItem key={item.title}>
-                  <article className="h-full text-center">
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-md bg-white text-vk-cobalt shadow-[0_14px_34px_rgba(10,22,51,0.10)]">
-                      <Icon aria-hidden="true" size={24} strokeWidth={2.4} />
-                    </div>
-                    <h3 className="mt-4 font-display text-lg font-black text-vk-navy">{item.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-vk-muted">{item.copy}</p>
-                  </article>
-                </StaggerItem>
-              )
-            })}
-          </Stagger>
-        </div>
+        <Stagger className="mx-auto mt-12 grid max-w-7xl gap-5 md:grid-cols-2 xl:grid-cols-4">
+          {featuredProjects.map((project) => (
+            <StaggerItem key={project.title}>
+              <ProjectCard project={project} />
+            </StaggerItem>
+          ))}
+        </Stagger>
+
+        <Reveal className="mt-10 flex justify-center">
+          <DarkSecondaryCta href="/proyectos">
+            Ver mas proyectos
+            <ArrowRight className="size-4" />
+          </DarkSecondaryCta>
+        </Reveal>
       </section>
 
-      <section className="bg-white py-20">
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:px-8">
-          <Reveal>
-            <SectionHeading
-              eyebrow="Criterios para clientes"
-              title="La propuesta se sostiene en control, trazabilidad y transferencia."
-              copy="Estos puntos ya forman parte del sitio publico y explican como se trabaja antes de convertir un alcance inicial en una implementacion mayor."
-            />
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              {trustSignals.map((signal) => (
-                <article key={signal.title} className="border border-vk-line bg-vk-ice p-5">
-                  <h3 className="font-display text-xl font-black text-vk-navy">{signal.title}</h3>
-                  <p className="mt-3 text-sm leading-7 text-vk-muted">{signal.copy}</p>
-                </article>
-              ))}
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.1} className="border border-vk-line bg-vk-ice p-6">
-            <p className="text-sm font-black uppercase tracking-[0.16em] text-vk-cobalt">
-              Paquetes
-            </p>
-            <h2 className="mt-3 font-display text-2xl font-black text-vk-navy">
-              Start, Scale y Partner
-            </h2>
-            <div className="mt-5 grid gap-4">
-              {packages.map((pack) => (
-                <div key={pack.name} className="border-t border-vk-line pt-4 first:border-t-0 first:pt-0">
-                  <h3 className="font-black text-vk-navy">{pack.name}</h3>
-                  <p className="mt-2 text-sm leading-6 text-vk-muted">{pack.fit}</p>
-                </div>
-              ))}
-            </div>
-          </Reveal>
-        </div>
+      <section className="border-y border-vk-mint/55 bg-gradient-to-r from-vk-lime/10 via-white to-vk-aqua/10 px-4 py-12 sm:px-6 lg:px-8">
+        <Reveal className="mx-auto max-w-7xl">
+          <p className="text-center text-xs font-black uppercase tracking-[0.18em] text-vk-cobalt">
+            Por que elegir VEKTRIUM?
+          </p>
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+            {differentiators.map((item) => (
+              <div key={item.title} className="text-center">
+                <item.icon className="mx-auto size-10 text-vk-aqua" />
+                <h3 className="mt-4 text-base font-black text-vk-navy">
+                  {item.title}
+                </h3>
+                <p className="mx-auto mt-2 max-w-44 text-sm leading-6 text-vk-slate">
+                  {item.copy}
+                </p>
+              </div>
+            ))}
+          </div>
+        </Reveal>
       </section>
 
-      <section id="contacto" className="relative isolate overflow-hidden bg-vk-navy py-20 text-white">
-        <ImpactBackdrop />
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-start lg:px-8">
+      <section id="contacto" className="relative overflow-hidden bg-vk-navy px-4 py-18 text-white sm:px-6 lg:px-8">
+        <ImpactBackdrop compact />
+        <div className="relative mx-auto grid max-w-7xl gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(430px,0.78fr)] lg:items-center">
           <Reveal>
-            <p className="text-sm font-black uppercase tracking-[0.16em] text-vk-aqua">
-              Siguiente paso
-            </p>
-            <h2 className="mt-3 font-display text-4xl font-black leading-tight text-white sm:text-5xl">
-              Si tienes un reporte o proceso trabado, empecemos por un alcance claro.
+            <h2 className="text-balance text-4xl font-black leading-tight sm:text-5xl">
+              Listo para <span className="text-vk-lime">transformar</span> tu
+              negocio?
             </h2>
-            <p className="mt-5 max-w-2xl text-sm leading-7 text-[#DCE7FF]">
-              Finanzas, estrategia, operaciones y producto se revisan juntos para decidir si
-              conviene construir un primer reporte, una automatizacion o un portal interno.
+            <p className="mt-5 max-w-2xl text-lg leading-8 text-white/74">
+              La primera consultoria y el alcance inicial son gratuitos.
+              Revisamos tu contexto y te mostramos como podemos ayudarte.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                className="inline-flex rounded-md bg-white px-5 py-3 text-sm font-black text-vk-navy transition hover:bg-vk-lime"
-                href="/agenda"
-              >
-                Agendar primer reporte
-              </Link>
-              <Link
-                className="inline-flex rounded-md border border-white/25 px-5 py-3 text-sm font-black text-white transition hover:border-vk-aqua hover:text-vk-aqua"
-                href="/contacto"
-              >
-                Enviar contexto
-              </Link>
+            <div className="mt-8">
+              <DarkPrimaryCta href="/agenda">
+                <CalendarDays className="size-5" />
+                Agendar consulta gratuita
+                <ArrowRight className="size-5" />
+              </DarkPrimaryCta>
             </div>
           </Reveal>
 
-          <Reveal delay={0.1} className="border border-white/15 bg-white/8 p-6">
-            <h2 className="font-display text-2xl font-black text-white">Canales actuales</h2>
-            <div className="mt-5 grid gap-3">
-              {contactOptions.map((option) => (
-                <Link
-                  key={option.title}
-                  className="block rounded-md border border-white/12 bg-vk-navy-2/70 p-4 transition hover:border-vk-aqua"
-                  href={option.href}
-                >
-                  <span className="block text-sm font-black text-vk-aqua">{option.title}</span>
-                  <span className="mt-2 block text-sm leading-6 text-[#DCE7FF]">{option.copy}</span>
-                </Link>
-              ))}
+          <Reveal
+            delay={0.1}
+            className="grid gap-5 sm:grid-cols-[minmax(0,1fr)_240px]"
+          >
+            <div className="border border-white/12 bg-white/[0.045] p-5 shadow-[0_22px_70px_rgba(0,0,0,0.25)] backdrop-blur-xl">
+              <p className="text-sm font-black text-white">O contactanos por:</p>
+              <div className="mt-4 space-y-3">
+                {contactOptions.map((option) => (
+                  <Link
+                    key={option.title}
+                    href={option.href}
+                    className="group flex items-center gap-3 border border-white/10 bg-vk-navy-2/60 p-3 transition hover:border-vk-aqua/50 hover:bg-white/8"
+                  >
+                    <span className="grid size-10 place-items-center bg-vk-aqua/15 text-vk-aqua">
+                      <option.icon className="size-5" />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-sm font-black text-white">
+                        {option.title}
+                      </span>
+                      <span className="block truncate text-xs text-white/58">
+                        {option.copy}
+                      </span>
+                    </span>
+                    <ArrowRight className="size-4 text-white/42 transition group-hover:translate-x-1 group-hover:text-vk-lime" />
+                  </Link>
+                ))}
+              </div>
             </div>
-            <div className="mt-6 border-t border-white/15 pt-5">
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-vk-aqua">
-                Fundadores
-              </p>
-              <p className="mt-3 text-sm leading-7 text-[#DCE7FF]">
-                {founders.map((founder) => founder.name).join(' y ')} trabajan la lectura comercial,
-                financiera, operativa y de producto de cada alcance.
+
+            <div className="flex min-h-64 flex-col justify-center border border-white/12 bg-vk-navy-2/64 p-7 shadow-[0_22px_70px_rgba(0,0,0,0.22)]">
+              <span className="text-2xl font-black tracking-normal text-white">
+                {brand.name}
+              </span>
+              <p className="mt-5 text-lg font-black leading-7 text-white">
+                Automatizamos hoy, transformamos tu operacion manana.
               </p>
             </div>
           </Reveal>
@@ -386,91 +350,67 @@ export default function Home() {
 }
 
 function LandingNav() {
+  const links = [
+    { href: '#proyectos', label: 'Proyectos' },
+    { href: '#como-trabajamos', label: 'Como trabajamos' },
+    { href: '#contacto', label: 'Contacto' },
+  ]
+
   return (
-    <header className="relative z-20 border-b border-white/10 bg-vk-navy/92 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-3" aria-label="Inicio VEKTRIUM">
-          <span className="flex h-9 w-9 items-center justify-center rounded-md bg-vk-lime font-display text-lg font-black text-vk-navy">
-            V
-          </span>
-          <span className="font-display text-xl font-black text-white">{brand.name}</span>
-        </Link>
-        <nav className="hidden items-center gap-6 text-sm font-extrabold text-white/70 lg:flex">
-          <Link className="transition hover:text-vk-lime" href="#como-trabajamos">
-            Primer reporte
+    <header className="relative z-20 mx-auto flex max-w-7xl items-center justify-between px-4 py-6 sm:px-6 lg:px-8">
+      <Link href="/" className="flex items-center gap-3" aria-label="VEKTRIUM">
+        <span className="grid size-10 place-items-center bg-vk-lime text-vk-navy">
+          <span className="text-xl font-black">V</span>
+        </span>
+        <span className="text-xl font-black tracking-normal text-white">
+          VEKTRIUM
+        </span>
+      </Link>
+      <nav className="hidden items-center gap-9 text-sm font-bold text-white/76 lg:flex">
+        {links.map((link) => (
+          <Link key={link.href} href={link.href} className="transition hover:text-vk-lime">
+            {link.label}
           </Link>
-          <Link className="transition hover:text-vk-lime" href="#proyectos">
-            Proyectos
-          </Link>
-          <Link className="transition hover:text-vk-lime" href="#servicios">
-            Servicios
-          </Link>
-          <Link className="transition hover:text-vk-lime" href="#contacto">
-            Contacto
-          </Link>
-        </nav>
-        <Link
-          className="rounded-md bg-vk-lime px-4 py-2 text-sm font-black text-vk-navy transition hover:bg-vk-aqua focus:outline-none focus:ring-2 focus:ring-vk-lime focus:ring-offset-2 focus:ring-offset-vk-navy"
-          href="/agenda"
-        >
-          Agenda gratis
-        </Link>
-      </div>
+        ))}
+      </nav>
+      <Link
+        href="/agenda"
+        className="inline-flex h-12 items-center justify-center bg-vk-lime px-6 text-sm font-black text-vk-navy shadow-[0_16px_38px_rgba(63,240,128,0.24)] transition hover:-translate-y-0.5 hover:bg-vk-mint focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-vk-aqua"
+      >
+        Agendar consulta
+      </Link>
     </header>
   )
 }
 
-function SectionHeading({
-  eyebrow,
-  title,
-  copy,
-}: {
-  eyebrow: string
-  title: string
-  copy?: string
-}) {
+function ProjectCard({ project }: { project: (typeof featuredProjects)[number] }) {
   return (
-    <div className="max-w-3xl">
-      <p className="text-sm font-black uppercase tracking-[0.16em] text-vk-cobalt">{eyebrow}</p>
-      <h2 className="mt-3 font-display text-3xl font-black leading-tight text-vk-navy sm:text-4xl">
-        {title}
-      </h2>
-      {copy ? <p className="mt-4 text-base leading-8 text-vk-muted">{copy}</p> : null}
-    </div>
-  )
-}
-
-function ProjectCard({
-  title,
-  eyebrow,
-  copy,
-  image,
-  tags,
-}: {
-  title: string
-  eyebrow: string
-  copy: string
-  image: string
-  tags: readonly string[]
-}) {
-  return (
-    <article className="flex h-full flex-col overflow-hidden border border-vk-line bg-white shadow-vk">
-      <div className="relative aspect-[16/10] border-b border-vk-line bg-vk-ice">
+    <article className="group h-full overflow-hidden border border-vk-border bg-white shadow-[0_18px_42px_rgba(10,20,44,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_30px_80px_rgba(10,20,44,0.14)]">
+      <div className="relative aspect-[1.75] overflow-hidden bg-vk-navy">
         <Image
-          src={image}
-          alt={title}
+          src={project.image}
+          alt={project.title}
           fill
-          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-          className="object-contain p-2"
+          className="object-cover transition duration-500 group-hover:scale-105"
+          sizes="(min-width: 1280px) 25vw, (min-width: 768px) 50vw, 100vw"
         />
       </div>
-      <div className="flex flex-1 flex-col p-5">
-        <p className="text-xs font-black uppercase tracking-[0.12em] text-vk-cobalt">{eyebrow}</p>
-        <h3 className="mt-3 font-display text-xl font-black leading-tight text-vk-navy">{title}</h3>
-        <p className="mt-3 flex-1 text-sm leading-7 text-vk-muted">{copy}</p>
+      <div className="p-5">
+        <p className="text-xs font-black uppercase tracking-[0.12em] text-vk-cobalt">
+          {project.category}
+        </p>
+        <h3 className="mt-2 min-h-14 text-lg font-black leading-7 text-vk-navy">
+          {project.title}
+        </h3>
+        <p className="mt-3 min-h-20 text-sm leading-6 text-vk-slate">
+          {project.description}
+        </p>
         <div className="mt-5 flex flex-wrap gap-2">
-          {tags.map((tag) => (
-            <span key={tag} className="rounded-md bg-vk-ice px-2 py-1 text-xs font-bold text-vk-navy">
+          {project.tags.map((tag) => (
+            <span
+              key={tag}
+              className="border border-vk-border bg-vk-ice px-2.5 py-1 text-xs font-bold text-vk-slate"
+            >
               {tag}
             </span>
           ))}
@@ -480,48 +420,63 @@ function ProjectCard({
   )
 }
 
-function DarkPrimaryCta({ children, href }: { children: ReactNode; href: string }) {
+function DarkPrimaryCta({
+  href,
+  children,
+}: {
+  href: string
+  children: ReactNode
+}) {
   return (
     <Link
-      className="inline-flex rounded-md bg-vk-lime px-5 py-3 text-sm font-black text-vk-navy shadow-vk transition hover:bg-vk-aqua focus:outline-none focus:ring-2 focus:ring-vk-lime focus:ring-offset-2 focus:ring-offset-vk-navy"
       href={href}
+      className="inline-flex h-14 items-center justify-center gap-3 bg-vk-lime px-6 text-sm font-black uppercase tracking-normal text-vk-navy shadow-[0_18px_44px_rgba(63,240,128,0.28)] transition hover:-translate-y-0.5 hover:bg-vk-mint focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-vk-aqua"
     >
       {children}
     </Link>
   )
 }
 
-function DarkSecondaryCta({ children, href }: { children: ReactNode; href: string }) {
+function DarkSecondaryCta({
+  href,
+  children,
+}: {
+  href: string
+  children: ReactNode
+}) {
   return (
     <Link
-      className="inline-flex rounded-md border border-white/20 bg-white/8 px-5 py-3 text-sm font-black text-white transition hover:border-vk-aqua hover:text-vk-aqua focus:outline-none focus:ring-2 focus:ring-vk-aqua focus:ring-offset-2 focus:ring-offset-vk-navy"
       href={href}
+      className="inline-flex h-12 items-center justify-center gap-2 border border-vk-cobalt/40 bg-white px-6 text-sm font-black text-vk-navy transition hover:-translate-y-0.5 hover:border-vk-cobalt hover:text-vk-cobalt focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-vk-cobalt"
     >
       {children}
     </Link>
   )
 }
 
-function SecondaryCta({ children, href }: { children: ReactNode; href: string }) {
+function ImpactBackdrop({ compact = false }: { compact?: boolean }) {
   return (
-    <Link
-      className="inline-flex rounded-md border border-vk-line bg-white px-5 py-3 text-sm font-black text-vk-navy transition hover:border-vk-cobalt hover:text-vk-cobalt focus:outline-none focus:ring-2 focus:ring-vk-cobalt focus:ring-offset-2"
-      href={href}
-    >
-      {children}
-    </Link>
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 opacity-50">
+        <AutomationNetwork density={compact ? 14 : 28} />
+      </div>
+      <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(2,8,23,0.98)_0%,rgba(4,12,30,0.88)_48%,rgba(4,18,36,0.92)_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_28%,rgba(31,216,169,0.22),transparent_36%),radial-gradient(circle_at_42%_72%,rgba(25,107,255,0.14),transparent_30%)]" />
+      <div className="absolute right-[-12%] top-[13%] h-72 w-[58rem] rotate-[-14deg] border border-vk-aqua/18" />
+      {!compact ? (
+        <div className="absolute right-[-18%] top-[34%] h-72 w-[64rem] rotate-[-21deg] border border-vk-lime/13" />
+      ) : null}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:72px_72px] opacity-20" />
+    </div>
   )
 }
 
-function ImpactBackdrop() {
-  return (
-    <>
-      <AutomationNetwork density={24} />
-      <div className="absolute inset-0 opacity-25 [background-image:linear-gradient(rgba(255,255,255,0.10)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.10)_1px,transparent_1px)] [background-size:82px_82px]" />
-      <div className="absolute left-0 top-28 h-px w-full bg-gradient-to-r from-transparent via-vk-aqua/50 to-transparent" />
-      <div className="absolute bottom-16 left-0 h-px w-full bg-gradient-to-r from-transparent via-vk-cobalt/35 to-transparent" />
-      <div className="absolute right-[8%] top-[18%] h-72 w-72 rounded-full border border-vk-aqua/20" />
-      <div className="absolute right-[16%] top-[34%] h-96 w-96 rounded-full border border-vk-cobalt/20" />
-    </>
-  )
+function getInitials(name: string) {
+  return name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join('')
+    .toUpperCase()
 }

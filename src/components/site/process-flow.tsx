@@ -51,10 +51,10 @@ export function ProcessFlow({ note, steps }: { note: string; steps: ProcessStep[
             <motion.article
               key={step.title}
               className="relative border border-vk-line bg-white p-6 text-center shadow-[0_18px_45px_rgba(10,22,51,0.08)]"
-              initial={{ opacity: 0, y: 18 }}
+              initial={{ opacity: 0.98, y: 8 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.5, delay: index * 0.08 }}
+              transition={{ duration: 0.45, delay: index * 0.08 }}
             >
               {content}
             </motion.article>

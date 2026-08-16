@@ -11,28 +11,33 @@ export type AutomationPreviewPanelProps = {
 }
 
 const emptyMetrics: PreviewMetric[] = [
-  { label: 'Indicador principal' },
-  { label: 'Tiempo operativo' },
-  { label: 'Estado del proceso' },
+  { label: 'Ventas' },
+  { label: 'Utilidad' },
+  { label: 'Margen' },
 ]
 
+const processItems = ['Facturacion', 'Reportes', 'Notificaciones', 'Backup']
+const categories = ['Servicios', 'Productos', 'Suscripciones', 'Otros']
+
 export function AutomationPreviewPanel({
-  title = 'Vista de automatizacion',
-  subtitle = 'Datos listos para conectar',
+  title = 'Dashboard operativo',
+  subtitle = 'Panel preparado para conectar datos reales',
   metrics = emptyMetrics,
 }: AutomationPreviewPanelProps) {
   // TODO: conectar con fuente de datos real cuando existan KPIs validados.
   return (
     <aside className="relative">
-      <div className="absolute -inset-6 border border-vk-aqua/20" />
-      <div className="relative overflow-hidden border border-white/14 bg-vk-navy-2/95 p-4 shadow-[0_28px_80px_rgba(0,0,0,0.34)]">
-        <div className="flex items-center justify-between border-b border-white/10 pb-4">
+      <div className="absolute -inset-5 border border-vk-aqua/20 shadow-[0_0_80px_rgba(31,216,169,0.12)]" />
+      <div className="relative overflow-hidden border border-white/14 bg-vk-navy-2/95 p-4 shadow-[0_30px_100px_rgba(0,0,0,0.45)] backdrop-blur">
+        <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.16em] text-vk-aqua">{subtitle}</p>
-            <h2 className="mt-2 font-display text-2xl font-black text-white">{title}</h2>
+            <p className="text-xs font-black text-white">{title}</p>
+            <p className="mt-1 text-xs font-semibold text-[#88A0C9]">
+              {subtitle}
+            </p>
           </div>
-          <span className="rounded-md border border-vk-aqua/35 px-3 py-2 text-xs font-black text-vk-aqua">
-            Sin datos reales
+          <span className="border border-vk-aqua/30 px-3 py-1.5 text-xs font-black text-vk-aqua">
+            Sin datos
           </span>
         </div>
 
@@ -40,43 +45,65 @@ export function AutomationPreviewPanel({
           {metrics.map((metric) => (
             <div key={metric.label} className="border border-white/10 bg-white/7 p-4">
               <p className="text-xs font-bold text-[#BFD0F4]">{metric.label}</p>
-              <p className="mt-3 font-display text-3xl font-black text-white">{metric.value ?? '—'}</p>
-              <p className="mt-2 text-xs font-semibold text-vk-aqua">{metric.helper ?? 'Pendiente de fuente real'}</p>
+              <p className="mt-3 font-display text-3xl font-black text-white">
+                {metric.value ?? '-'}
+              </p>
+              <p className="mt-2 text-xs font-semibold text-vk-aqua">
+                {metric.helper ?? 'Conectar fuente real'}
+              </p>
             </div>
           ))}
         </div>
 
-        <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,1.3fr)_minmax(190px,0.7fr)]">
-          <div className="border border-white/10 bg-white/7 p-4">
-            <p className="text-xs font-black uppercase tracking-[0.14em] text-white">Flujo de proceso</p>
-            <div className="mt-5 grid gap-3">
-              {[58, 72, 46, 64].map((width, index) => (
-                <div key={index} className="h-3 overflow-hidden rounded-md bg-white/8">
-                  <div
-                    className="h-full rounded-md bg-gradient-to-r from-vk-aqua to-vk-lime opacity-70"
-                    style={{ width: `${width}%` }}
-                  />
+        <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,1.25fr)_minmax(190px,0.75fr)]">
+          <div className="min-h-56 border border-white/10 bg-white/7 p-4">
+            <p className="text-xs font-black text-white">Tendencia del reporte</p>
+            <div className="relative mt-5 h-36 overflow-hidden border border-white/8 bg-vk-navy/30">
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:100%_33%,20%_100%]" />
+              <div className="absolute inset-x-6 top-1/2 border-t border-dashed border-vk-aqua/35" />
+              <div className="absolute inset-0 grid place-items-center">
+                <span className="border border-white/12 bg-vk-navy-2/85 px-3 py-2 text-xs font-black text-[#DCE7FF]">
+                  Datos pendientes
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="min-h-56 border border-white/10 bg-white/7 p-4">
+            <p className="text-xs font-black text-white">
+              Distribucion por categoria
+            </p>
+            <div className="mt-5 grid place-items-center">
+              <div className="grid size-28 place-items-center rounded-full border-[14px] border-vk-aqua/30 bg-[conic-gradient(from_130deg,rgba(31,216,169,0.85),rgba(25,107,255,0.85),rgba(178,132,255,0.8),rgba(63,240,128,0.85),rgba(31,216,169,0.85))]">
+                <div className="grid size-16 place-items-center rounded-full bg-vk-navy-2 text-xl font-black text-white">
+                  -
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 space-y-2">
+              {categories.map((category) => (
+                <div
+                  key={category}
+                  className="flex items-center justify-between gap-3 text-xs"
+                >
+                  <span className="text-[#BFD0F4]">{category}</span>
+                  <span className="font-black text-white">-</span>
                 </div>
               ))}
             </div>
           </div>
-          <div className="border border-white/10 bg-white/7 p-4">
-            <p className="text-xs font-black uppercase tracking-[0.14em] text-white">Lectura</p>
-            <div className="mt-5 grid place-items-center">
-              <div className="grid h-32 w-32 place-items-center rounded-full border-[14px] border-vk-aqua/40 text-center">
-                <span className="text-xs font-black leading-5 text-[#DCE7FF]">Fuente pendiente</span>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <div className="mt-4 grid gap-3 sm:grid-cols-4">
-          {['Datos', 'Validacion', 'Reporte', 'Entrega'].map((item) => (
-            <div key={item} className="border border-white/10 bg-white/7 px-3 py-3">
-              <p className="text-xs font-black text-white">{item}</p>
-              <p className="mt-1 text-xs font-semibold text-[#BFD0F4]">—</p>
-            </div>
-          ))}
+        <div className="mt-4 border border-white/10 bg-white/7 p-4">
+          <p className="text-xs font-black text-white">Procesos automatizados</p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-4">
+            {processItems.map((item) => (
+              <div key={item} className="border border-white/10 bg-vk-navy/30 p-3">
+                <p className="text-xs font-black text-white">{item}</p>
+                <p className="mt-2 text-xs font-semibold text-vk-aqua">Pendiente</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </aside>
