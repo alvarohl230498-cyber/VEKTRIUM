@@ -1,6 +1,11 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
+import { Compass, Headphones, ShieldCheck, Workflow, Zap } from 'lucide-react'
+import { AutomationNetwork } from '@/components/site/automation-network'
+import { AutomationPreviewPanel } from '@/components/site/automation-preview-panel'
+import { ProcessFlow, type ProcessStep } from '@/components/site/process-flow'
+import { Reveal, Stagger, StaggerItem } from '@/components/site/reveal'
 import {
   brand,
   firstReportOffer,
@@ -72,6 +77,52 @@ const contactOptions = [
 
 const focusAreas = services.slice(0, 5)
 
+const automationSteps = [
+  {
+    title: 'Entendemos tu proceso',
+    copy: 'Nos cuentas el proceso, el reporte que necesitas y donde hoy se pierde tiempo.',
+    icon: 'message',
+  },
+  {
+    title: 'Definimos el alcance',
+    copy: 'Aterrizamos datos necesarios, responsables y entregable inicial sin costo.',
+    icon: 'puzzle',
+  },
+  {
+    title: 'Construimos y presentamos',
+    copy: 'Trabajamos el primer reporte acordado y el pago llega cuando se presenta terminado.',
+    icon: 'rocket',
+  },
+] satisfies ProcessStep[]
+
+const differentiators = [
+  {
+    title: 'Soluciones a medida',
+    copy: 'Partimos del proceso real, no de una plantilla generica.',
+    icon: Compass,
+  },
+  {
+    title: 'Implementacion con evidencia',
+    copy: 'Cada avance deja alcance, supuestos y entregable visible.',
+    icon: Zap,
+  },
+  {
+    title: 'Sin adelanto inicial',
+    copy: 'Primer reporte con consulta y alcance gratuitos.',
+    icon: ShieldCheck,
+  },
+  {
+    title: 'Tecnologia trazable',
+    copy: 'Datos, permisos y responsables quedan documentados.',
+    icon: Workflow,
+  },
+  {
+    title: 'Acompanamiento real',
+    copy: 'Fundadores involucrados antes, durante y despues.',
+    icon: Headphones,
+  },
+] as const
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-vk-ice text-vk-ink">
@@ -80,7 +131,7 @@ export default function Home() {
         <LandingNav />
 
         <div className="relative mx-auto grid min-h-[780px] max-w-7xl gap-12 px-4 py-14 sm:px-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(430px,0.78fr)] lg:items-center lg:px-8 lg:py-20">
-          <div className="max-w-3xl">
+          <Reveal className="max-w-3xl">
             <p className="text-sm font-black uppercase tracking-[0.16em] text-vk-aqua">
               Automatizacion, datos y productos digitales
             </p>
@@ -109,79 +160,82 @@ export default function Home() {
             <p className="mt-6 max-w-2xl text-xs font-semibold leading-6 text-[#BFD0F4]">
               {firstReportOffer.note}
             </p>
-          </div>
+          </Reveal>
 
-          <PortfolioPanel />
+          <Reveal delay={0.12}>
+            <AutomationPreviewPanel title="Panel operativo VEKTRIUM" subtitle="Vista preparada para datos reales" />
+          </Reveal>
         </div>
       </section>
 
       <section id="como-trabajamos" className="bg-white py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
+          <Reveal className="mx-auto max-w-3xl text-center">
             <p className="text-sm font-black uppercase tracking-[0.16em] text-vk-cobalt">
-              Primer reporte sin adelanto
+              Como trabajamos
             </p>
             <h2 className="mt-3 font-display text-4xl font-black leading-tight text-vk-navy">
-              Una ruta corta para probar valor sin promesas infladas.
+              Un proceso simple, con evidencia antes de escalar.
             </h2>
             <p className="mt-4 text-base leading-8 text-vk-muted">
               {firstReportOffer.detail}
             </p>
-          </div>
+          </Reveal>
 
-          <div className="mt-12 grid gap-4 lg:grid-cols-4">
-            {firstReportOffer.steps.map((step, index) => (
-              <article key={step} className="border border-vk-line bg-vk-ice p-5 shadow-vk">
-                <span className="flex h-11 w-11 items-center justify-center rounded-md bg-vk-cobalt text-sm font-black text-white">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                <p className="mt-5 text-sm font-bold leading-7 text-vk-navy">{step}</p>
-              </article>
-            ))}
-          </div>
+          <ProcessFlow
+            steps={automationSteps}
+            note="Pagas al finalizar, cuando el primer reporte acordado se presenta terminado."
+          />
         </div>
       </section>
 
       <section id="proyectos" className="border-y border-vk-line bg-vk-ice py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+          <Reveal className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
             <SectionHeading
               eyebrow="Proyectos del portafolio"
               title="Casos y demos con nombres, imagenes y alcance ya registrados."
               copy="Esta seccion resume piezas del carrusel actual: BUK, planillas, ReportFlow y GlobalMatch. El carrusel completo mantiene mas detalle de capacidades, tecnologias e imagenes."
             />
             <SecondaryCta href="/proyectos">Abrir carrusel completo</SecondaryCta>
-          </div>
+          </Reveal>
 
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <Stagger className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {featuredProjects.map((project) => (
-              <ProjectCard key={project.title} {...project} />
+              <StaggerItem key={project.title}>
+                <ProjectCard {...project} />
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         </div>
       </section>
 
       <section id="servicios" className="bg-white py-20">
         <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[360px_minmax(0,1fr)] lg:px-8">
-          <SectionHeading
-            eyebrow="Que construimos"
-            title="Tecnologia aplicada a procesos que ya entendimos bien."
-            copy="VEKTRIUM no parte de una herramienta favorita. El trabajo se ordena por proceso, datos disponibles, usuarios, permisos, trazabilidad y decision."
-          />
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <Reveal>
+            <SectionHeading
+              eyebrow="Que construimos"
+              title="Tecnologia aplicada a procesos que ya entendimos bien."
+              copy="VEKTRIUM no parte de una herramienta favorita. El trabajo se ordena por proceso, datos disponibles, usuarios, permisos, trazabilidad y decision."
+            />
+          </Reveal>
+          <Stagger className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {focusAreas.map((service) => (
-              <article key={service.slug} className="border border-vk-line bg-vk-ice p-5">
-                <h2 className="font-display text-xl font-black text-vk-navy">{service.title}</h2>
-                <p className="mt-3 text-sm leading-7 text-vk-muted">{service.summary}</p>
-              </article>
+              <StaggerItem key={service.slug}>
+                <article className="border border-vk-line bg-vk-ice p-5">
+                  <h2 className="font-display text-xl font-black text-vk-navy">{service.title}</h2>
+                  <p className="mt-3 text-sm leading-7 text-vk-muted">{service.summary}</p>
+                </article>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         </div>
       </section>
 
-      <section className="bg-vk-navy py-20 text-white">
+      <section className="relative isolate overflow-hidden bg-vk-navy py-20 text-white">
+        <ImpactBackdrop />
         <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[340px_minmax(0,1fr)] lg:px-8">
-          <div>
+          <Reveal>
             <p className="text-sm font-black uppercase tracking-[0.16em] text-vk-aqua">
               Metodo V.E.K.T.O.R.
             </p>
@@ -192,24 +246,51 @@ export default function Home() {
               El metodo del sitio ordena el trabajo en seis fases: ver, establecer, construir,
               transformar, operar y revisar.
             </p>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          </Reveal>
+          <Stagger className="relative grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {methodSteps.map((step) => (
-              <article key={step.letter} className="border border-white/15 bg-white/8 p-5">
-                <span className="flex h-10 w-10 items-center justify-center rounded-md bg-vk-lime text-sm font-black text-vk-navy">
-                  {step.letter}
-                </span>
-                <h3 className="mt-5 font-display text-xl font-black text-white">{step.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-[#DCE7FF]">{step.copy}</p>
-              </article>
+              <StaggerItem key={step.letter}>
+                <article className="border border-white/15 bg-white/8 p-5">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-md bg-vk-lime text-sm font-black text-vk-navy">
+                    {step.letter}
+                  </span>
+                  <h3 className="mt-5 font-display text-xl font-black text-white">{step.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-[#DCE7FF]">{step.copy}</p>
+                </article>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
+        </div>
+      </section>
+
+      <section className="bg-gradient-to-r from-white via-vk-ice to-white py-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <p className="text-center text-sm font-black uppercase tracking-[0.16em] text-vk-cobalt">
+            Por que elegir VEKTRIUM
+          </p>
+          <Stagger className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            {differentiators.map((item) => {
+              const Icon = item.icon
+
+              return (
+                <StaggerItem key={item.title}>
+                  <article className="h-full text-center">
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-md bg-white text-vk-cobalt shadow-[0_14px_34px_rgba(10,22,51,0.10)]">
+                      <Icon aria-hidden="true" size={24} strokeWidth={2.4} />
+                    </div>
+                    <h3 className="mt-4 font-display text-lg font-black text-vk-navy">{item.title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-vk-muted">{item.copy}</p>
+                  </article>
+                </StaggerItem>
+              )
+            })}
+          </Stagger>
         </div>
       </section>
 
       <section className="bg-white py-20">
         <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:px-8">
-          <div>
+          <Reveal>
             <SectionHeading
               eyebrow="Criterios para clientes"
               title="La propuesta se sostiene en control, trazabilidad y transferencia."
@@ -223,9 +304,9 @@ export default function Home() {
                 </article>
               ))}
             </div>
-          </div>
+          </Reveal>
 
-          <aside className="border border-vk-line bg-vk-ice p-6">
+          <Reveal delay={0.1} className="border border-vk-line bg-vk-ice p-6">
             <p className="text-sm font-black uppercase tracking-[0.16em] text-vk-cobalt">
               Paquetes
             </p>
@@ -240,13 +321,14 @@ export default function Home() {
                 </div>
               ))}
             </div>
-          </aside>
+          </Reveal>
         </div>
       </section>
 
-      <section id="contacto" className="bg-vk-navy py-20 text-white">
+      <section id="contacto" className="relative isolate overflow-hidden bg-vk-navy py-20 text-white">
+        <ImpactBackdrop />
         <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-start lg:px-8">
-          <div>
+          <Reveal>
             <p className="text-sm font-black uppercase tracking-[0.16em] text-vk-aqua">
               Siguiente paso
             </p>
@@ -271,9 +353,9 @@ export default function Home() {
                 Enviar contexto
               </Link>
             </div>
-          </div>
+          </Reveal>
 
-          <aside className="border border-white/15 bg-white/8 p-6">
+          <Reveal delay={0.1} className="border border-white/15 bg-white/8 p-6">
             <h2 className="font-display text-2xl font-black text-white">Canales actuales</h2>
             <div className="mt-5 grid gap-3">
               {contactOptions.map((option) => (
@@ -296,7 +378,7 @@ export default function Home() {
                 financiera, operativa y de producto de cada alcance.
               </p>
             </div>
-          </aside>
+          </Reveal>
         </div>
       </section>
     </main>
@@ -335,69 +417,6 @@ function LandingNav() {
         </Link>
       </div>
     </header>
-  )
-}
-
-function PortfolioPanel() {
-  return (
-    <aside className="relative">
-      <div className="absolute -inset-6 border border-vk-aqua/20" />
-      <div className="relative border border-white/12 bg-vk-navy-2/95 p-4 shadow-[0_28px_80px_rgba(0,0,0,0.34)]">
-        <div className="flex items-center justify-between border-b border-white/10 pb-4">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[0.16em] text-vk-aqua">
-              Portafolio VEKTRIUM
-            </p>
-            <h2 className="mt-2 font-display text-2xl font-black text-white">
-              Proyectos y demos ya registrados
-            </h2>
-          </div>
-          <span className="rounded-md bg-vk-lime px-3 py-2 text-xs font-black text-vk-navy">
-            Publico
-          </span>
-        </div>
-
-        <div className="mt-4 grid gap-3">
-          <div className="relative aspect-[16/10] overflow-hidden border border-white/10 bg-white">
-            <Image
-              src="/projects/01-buk-analytics-demografia.jpeg"
-              alt="Dashboard de data demografica de Recursos Humanos conectado a BUK"
-              fill
-              priority
-              sizes="(min-width: 1024px) 430px, 100vw"
-              className="object-contain p-2"
-            />
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {featuredProjects.slice(1, 3).map((project) => (
-              <div key={project.title} className="border border-white/10 bg-white/7 p-3">
-                <div className="relative mb-3 aspect-[16/9] bg-white">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    sizes="220px"
-                    className="object-contain p-1"
-                  />
-                </div>
-                <p className="text-xs font-black uppercase tracking-[0.12em] text-vk-aqua">
-                  {project.eyebrow}
-                </p>
-                <p className="mt-1 text-sm font-black leading-5 text-white">{project.title}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-4 grid gap-3 sm:grid-cols-3">
-          {['BUK', 'Planillas', 'ReportFlow'].map((item) => (
-            <div key={item} className="border border-white/10 bg-white/7 px-3 py-2">
-              <p className="text-xs font-black text-white">{item}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </aside>
   )
 }
 
@@ -497,6 +516,7 @@ function SecondaryCta({ children, href }: { children: ReactNode; href: string })
 function ImpactBackdrop() {
   return (
     <>
+      <AutomationNetwork density={24} />
       <div className="absolute inset-0 opacity-25 [background-image:linear-gradient(rgba(255,255,255,0.10)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.10)_1px,transparent_1px)] [background-size:82px_82px]" />
       <div className="absolute left-0 top-28 h-px w-full bg-gradient-to-r from-transparent via-vk-aqua/50 to-transparent" />
       <div className="absolute bottom-16 left-0 h-px w-full bg-gradient-to-r from-transparent via-vk-cobalt/35 to-transparent" />

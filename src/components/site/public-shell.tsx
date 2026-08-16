@@ -9,13 +9,16 @@ import {
   Layers,
   ShieldCheck,
 } from 'lucide-react'
+import { AutomationNetwork } from '@/components/site/automation-network'
+import { PageTransition } from '@/components/site/page-transition'
+import { Reveal } from '@/components/site/reveal'
 import { brand, firstReportOffer, legalNav, publicNav, type Project } from '@/site/content'
 
 export function PublicShell({ children }: { children: ReactNode }) {
   return (
     <div className="public-site min-h-screen bg-vk-ice text-vk-ink">
       <PublicHeader />
-      {children}
+      <PageTransition>{children}</PageTransition>
       <PublicFooter />
     </div>
   )
@@ -149,16 +152,16 @@ export function PageHero({
     <section className="relative isolate overflow-hidden border-b border-white/10 bg-vk-navy text-white">
       <ImpactBackdrop />
       <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(340px,0.55fr)] lg:items-center lg:px-8 lg:py-20">
-        <div>
+        <Reveal>
           <p className="text-sm font-black uppercase tracking-[0.16em] text-vk-aqua">{eyebrow}</p>
           <h1 className="mt-5 font-display text-4xl font-black leading-[1.02] text-white sm:text-5xl lg:text-6xl">
             {title}
           </h1>
           <p className="mt-6 max-w-3xl text-base leading-8 text-[#DCE7FF] sm:text-lg">{copy}</p>
           {actions ? <div className="mt-8 flex flex-wrap gap-3">{actions}</div> : null}
-        </div>
+        </Reveal>
 
-        <aside className="border border-white/14 bg-vk-navy-2/85 p-5 shadow-[0_28px_80px_rgba(0,0,0,0.30)]">
+        <Reveal delay={0.1} className="border border-white/14 bg-vk-navy-2/85 p-5 shadow-[0_28px_80px_rgba(0,0,0,0.30)]">
           <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.16em] text-vk-aqua">
@@ -186,7 +189,7 @@ export function PageHero({
           <p className="mt-4 text-xs font-semibold leading-6 text-[#BFD0F4]">
             {firstReportOffer.note}
           </p>
-        </aside>
+        </Reveal>
       </div>
     </section>
   )
@@ -356,6 +359,7 @@ function BrandWordmark() {
 function ImpactBackdrop() {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+      <AutomationNetwork density={22} />
       <div className="absolute inset-0 opacity-25 [background-image:linear-gradient(rgba(255,255,255,0.10)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.10)_1px,transparent_1px)] [background-size:82px_82px]" />
       <div className="absolute left-0 top-24 h-px w-full bg-gradient-to-r from-transparent via-vk-aqua/45 to-transparent" />
       <div className="absolute bottom-12 left-0 h-px w-full bg-gradient-to-r from-transparent via-vk-cobalt/35 to-transparent" />
