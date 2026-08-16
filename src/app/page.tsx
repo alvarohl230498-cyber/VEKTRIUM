@@ -1,282 +1,310 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { brand } from '@/site/content'
-
-const ctaHref = '/agenda'
-
-const workSteps = [
-  {
-    number: '01',
-    mark: '...',
-    title: 'Entendemos tu negocio',
-    copy: 'Analizamos tus procesos y detectamos oportunidades de mejora.',
-    tone: 'bg-vk-aqua/12 text-vk-aqua',
-  },
-  {
-    number: '02',
-    mark: '+',
-    title: 'Disenamos tu solucion',
-    copy: 'Creamos la estrategia, el sistema o dashboard a medida de tus necesidades.',
-    tone: 'bg-vk-cobalt/12 text-vk-cobalt',
-  },
-  {
-    number: '03',
-    mark: '>>',
-    title: 'Implementamos y escalamos',
-    copy: 'Lo implementamos, automatizamos y te acompanamos para que crezcas.',
-    tone: 'bg-vk-lime/25 text-vk-navy',
-  },
-]
+import {
+  brand,
+  firstReportOffer,
+  founders,
+  methodSteps,
+  packages,
+  services,
+  trustSignals,
+} from '@/site/content'
 
 const featuredProjects = [
   {
-    title: 'Dashboard Financiero',
-    copy: 'Informacion en tiempo real para tomar mejores decisiones.',
+    title: 'Analitica de RR. HH. conectada a BUK',
+    eyebrow: 'API BUK + People Analytics',
+    copy:
+      'Informacion operativa de BUK organizada en dashboards para revisar dotacion, demografia y rotacion.',
+    image: '/projects/01-buk-analytics-demografia.jpeg',
+    tags: ['API BUK', 'People Analytics', 'Power BI'],
+  },
+  {
+    title: 'Sistema integral de planillas y remuneraciones',
+    eyebrow: 'Payroll Tech para Peru',
+    copy:
+      'Flujo para ordenar trabajadores, novedades, calculo de planilla y salidas operativas como boletas, PLAME y AFPNet.',
+    image: '/projects/03-sistema-remuneraciones.jpeg',
+    tags: ['Planillas', 'PLAME', 'AFPNet'],
+  },
+  {
+    title: 'ReportFlow: reportes financieros automaticos',
+    eyebrow: 'Automatizacion financiera',
+    copy:
+      'Descarga, consolidacion y preparacion de reportes para multiples entidades y periodos, con trazabilidad del proceso.',
     image: '/projects/05-reportflow.jpeg',
-    tags: ['Power BI', 'Finanzas', 'Dashboard'],
+    tags: ['Reportes', 'Excel', 'Finanzas'],
   },
   {
-    title: 'Automatizacion de Procesos',
-    copy: 'Eliminamos tareas manuales y ahorramos horas de trabajo.',
-    image: '/projects/04-automatizacion-buk.jpeg',
-    tags: ['Automatizacion', 'Make', 'API'],
+    title: 'GlobalMatch: conciliacion intercompanias',
+    eyebrow: 'Analitica financiera',
+    copy:
+      'Cruce de transacciones entre entidades para identificar diferencias, pares descuadrados y excepciones prioritarias.',
+    image: '/projects/07-globalmatch.jpeg',
+    tags: ['Conciliacion', 'Power BI', 'Finanzas'],
   },
-  {
-    title: 'Plataforma de Reservas',
-    copy: 'Sistema web para gestionar reservas, clientes y operaciones.',
-    image: '/projects/02-finova-ai.jpeg',
-    tags: ['Desarrollo Web', 'SaaS', 'UX/UI'],
-  },
-  {
-    title: 'Agentes de IA',
-    copy: 'Asistentes inteligentes que responden y trabajan 24/7 por ti.',
-    image: '/projects/06-doclink-qr.jpeg',
-    tags: ['IA', 'Chatbot', 'OpenAI'],
-  },
-]
+] as const
 
-const benefits = [
-  {
-    mark: 'O',
-    title: 'Soluciones a medida',
-    copy: 'Disenamos lo que tu empresa realmente necesita.',
-    color: 'text-vk-aqua',
-  },
-  {
-    mark: '!',
-    title: 'Implementacion rapida',
-    copy: 'Entregamos resultados en semanas, no en meses.',
-    color: 'text-vk-cobalt',
-  },
-  {
-    mark: 'V',
-    title: 'Sin contratos largos',
-    copy: 'Trabajamos por resultados, no por contratos.',
-    color: 'text-vk-navy',
-  },
-  {
-    mark: '/\\',
-    title: 'Tecnologia que escala',
-    copy: 'Soluciones pensadas para crecer contigo.',
-    color: 'text-vk-warning',
-  },
-  {
-    mark: '24',
-    title: 'Acompanamiento real',
-    copy: 'Estamos contigo antes, durante y despues.',
-    color: 'text-vk-cobalt',
-  },
-]
+const focusAreas = services.slice(0, 5)
 
-const contactLinks = [
+const contactOptions = [
   {
-    label: 'WhatsApp',
-    value: '+51 987 654 321',
-    href: 'https://wa.me/51987654321',
-    tone: 'bg-vk-success text-white',
+    title: 'Agenda gratuita',
+    copy: 'Reserva la primera conversacion para revisar si tu proceso calza con un primer reporte.',
+    href: '/agenda',
   },
   {
-    label: 'Email',
-    value: 'hola@vektrium.com',
-    href: 'mailto:hola@vektrium.com',
-    tone: 'bg-vk-cobalt text-white',
+    title: 'Formulario de contexto',
+    copy: 'Cuentanos el area, el reporte o la tarea repetitiva que hoy consume tiempo.',
+    href: '/contacto#formulario',
   },
   {
-    label: 'LinkedIn',
-    value: '/company/vektrium',
-    href: 'https://www.linkedin.com/company/vektrium',
-    tone: 'bg-vk-navy text-white',
+    title: 'WhatsApp empresarial',
+    copy: 'Canal en preparacion; mientras se confirma el numero oficial, coordinamos por agenda o formulario.',
+    href: '/contacto#whatsapp',
   },
-]
+] as const
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-vk-ice text-vk-ink">
-      <section className="relative isolate overflow-hidden bg-vk-navy text-white">
-        <NetworkBackdrop />
+      <section className="relative isolate overflow-hidden border-b border-vk-line bg-vk-ice">
+        <Image
+          src="/hero-vektrium.png"
+          alt="Panel visual con tableros y flujos de automatizacion de VEKTRIUM"
+          fill
+          priority
+          className="object-cover object-center opacity-55"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,246,252,0.98)_0%,rgba(242,246,252,0.94)_42%,rgba(242,246,252,0.72)_72%,rgba(242,246,252,0.86)_100%)]" />
+
         <LandingNav />
 
-        <div className="relative mx-auto grid max-w-7xl gap-12 px-4 pb-16 pt-10 sm:px-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(440px,1fr)] lg:items-center lg:px-8 lg:pb-24 lg:pt-20">
-          <div className="max-w-2xl">
-            <h1 className="font-display text-4xl font-black leading-[1.02] tracking-normal text-white sm:text-6xl lg:text-7xl">
-              Automatizamos tu empresa para que{' '}
-              <span className="text-vk-lime">vendas mas</span> y trabajes menos.
+        <div className="relative mx-auto grid min-h-[760px] max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(420px,0.75fr)] lg:items-center lg:px-8">
+          <div className="max-w-3xl">
+            <p className="text-sm font-black uppercase tracking-[0.16em] text-vk-cobalt">
+              Automatizacion, datos y productos digitales
+            </p>
+            <h1 className="mt-5 font-display text-5xl font-black leading-[0.98] text-vk-navy sm:text-6xl lg:text-7xl">
+              Menos trabajo manual. Mas reportes claros. Mejor control operativo.
             </h1>
-            <p className="mt-6 max-w-xl text-base leading-8 text-white/78 sm:text-lg">
-              Creamos sistemas, dashboards e inteligencia artificial que eliminan procesos manuales
-              y te dan resultados reales.
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-vk-ink">
+              {brand.description} El primer paso es acotado: revisamos el proceso, definimos el
+              reporte inicial y pagas cuando presentamos el resultado terminado.
             </p>
 
-            <div className="mt-8 grid max-w-xl gap-3 sm:grid-cols-2">
-              <HeroBadge mark="Cal" title="Primera consultoria" value="GRATIS" />
-              <HeroBadge mark="Ok" title="Solo pagas cuando" value="apruebas el resultado" />
+            <div className="mt-8 grid max-w-2xl gap-3 sm:grid-cols-3">
+              {[
+                'Consulta inicial gratuita',
+                'Alcance sin costo',
+                'Pago al presentar',
+              ].map((item) => (
+                <div key={item} className="border border-vk-line bg-white/90 px-4 py-3 shadow-vk">
+                  <p className="text-sm font-black leading-6 text-vk-navy">{item}</p>
+                </div>
+              ))}
             </div>
 
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <LandingButton href={ctaHref}>AGENDAR CONSULTA GRATUITA -&gt;</LandingButton>
-              <Link
-                className="text-sm font-extrabold text-vk-aqua underline-offset-4 transition hover:text-vk-lime hover:underline"
-                href="/proyectos"
-              >
-                Ver proyectos
-              </Link>
-            </div>
-
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <div className="flex -space-x-3" aria-hidden="true">
-                {['JD', 'AH', 'BI', 'AI'].map((initials) => (
-                  <span
-                    key={initials}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-vk-navy bg-vk-ice text-xs font-black text-vk-navy"
-                  >
-                    {initials}
-                  </span>
-                ))}
-              </div>
-              <div>
-                <p className="text-sm font-black text-vk-lime">5/5 en claridad operativa</p>
-                <p className="text-xs leading-5 text-white/66">
-                  Empresas que ya revisaron y transformaron su operacion.
-                </p>
-              </div>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <PrimaryCta href="/agenda">Agendar primer reporte</PrimaryCta>
+              <SecondaryCta href="/proyectos">Ver proyectos y demos</SecondaryCta>
             </div>
           </div>
 
-          <div className="relative min-h-[420px] lg:min-h-[560px]" aria-label="Mockup de dashboard financiero">
-            <div className="absolute inset-0 hidden border border-vk-aqua/20 lg:block" />
-            <FinancialDashboard />
-          </div>
+          <HeroEvidencePanel />
         </div>
       </section>
 
-      <section id="como-trabajamos" className="bg-white py-20">
+      <section id="servicios" className="bg-white py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            eyebrow="COMO TRABAJAMOS"
-            title="Un proceso simple, resultados reales"
-            align="center"
-          />
-          <div className="relative mt-12 grid gap-6 lg:grid-cols-3">
-            <div className="absolute left-[16%] right-[16%] top-16 hidden border-t border-dashed border-vk-line lg:block" />
-            {workSteps.map((step) => (
-              <WorkCard key={step.number} {...step} />
-            ))}
-          </div>
-          <div className="mx-auto mt-8 max-w-xl rounded-md border border-vk-line bg-vk-ice px-5 py-3 text-center text-sm font-bold text-vk-navy">
-            Pagas unicamente cuando estas conforme con la{' '}
-            <span className="text-vk-success">solucion.</span>
-          </div>
-        </div>
-      </section>
-
-      <section id="proyectos" className="bg-vk-ice py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            eyebrow="PROYECTOS DESTACADOS"
-            title="Soluciones que generan impacto"
-            align="center"
-          />
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {featuredProjects.map((project) => (
-              <ProjectShowcaseCard key={project.title} {...project} />
-            ))}
-          </div>
-          <div className="mt-9 flex justify-center">
-            <Link
-              className="inline-flex rounded-md border border-vk-cobalt bg-white px-8 py-3 text-sm font-extrabold text-vk-navy transition hover:bg-vk-cobalt hover:text-white"
-              href="/proyectos"
-            >
-              Ver mas proyectos -&gt;
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-white py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-xs font-black uppercase tracking-[0.16em] text-vk-cobalt">
-            POR QUE ELEGIR VEKTRIUM
-          </p>
-          <div className="mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-            {benefits.map((benefit) => (
-              <BenefitItem key={benefit.title} {...benefit} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="contacto" className="relative isolate overflow-hidden bg-vk-navy py-16 text-white">
-        <NetworkBackdrop />
-        <div className="relative mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.58fr)_minmax(260px,0.42fr)] lg:items-stretch lg:px-8">
-          <div className="flex flex-col justify-center">
-            <h2 className="font-display text-4xl font-black leading-tight text-white sm:text-5xl">
-              Listo para <span className="text-vk-lime">transformar</span> tu negocio?
-            </h2>
-            <p className="mt-5 max-w-xl text-sm leading-7 text-white/72 sm:text-base">
-              La primera consultoria es completamente GRATIS. Hablemos de tu proyecto y te
-              mostraremos como podemos ayudarte.
-            </p>
-            <div className="mt-8">
-              <LandingButton href={ctaHref}>AGENDAR CONSULTA GRATUITA -&gt;</LandingButton>
-            </div>
-          </div>
-
-          <div className="rounded-md border border-white/12 bg-white/7 p-5 shadow-vk backdrop-blur">
-            <p className="text-sm font-extrabold text-white">O contactanos por:</p>
-            <div className="mt-5 grid gap-3">
-              {contactLinks.map((item) => (
-                <a
-                  key={item.label}
-                  className="flex items-center gap-3 rounded-md border border-white/10 bg-vk-navy-2/80 p-3 transition hover:border-vk-aqua"
-                  href={item.href}
-                  rel="noopener noreferrer"
-                  target={item.href.startsWith('http') ? '_blank' : undefined}
-                >
-                  <span className={`flex h-10 w-10 items-center justify-center rounded-md text-xs font-black ${item.tone}`}>
-                    {item.label.slice(0, 2)}
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-xs font-bold text-white/62">{item.label}</span>
-                    <span className="block truncate text-sm font-extrabold text-white">{item.value}</span>
-                  </span>
-                  <span className="text-vk-aqua" aria-hidden="true">
-                    -&gt;
-                  </span>
-                </a>
+          <div className="grid gap-8 lg:grid-cols-[340px_minmax(0,1fr)] lg:items-start">
+            <SectionHeading
+              eyebrow="Que construimos"
+              title="Soluciones conectadas al proceso, no piezas sueltas."
+              copy="La pagina publica muestra el tipo de trabajo que VEKTRIUM ya viene ordenando: automatizacion, reporting, dashboards, portales internos y AI responsable."
+            />
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {focusAreas.map((service) => (
+                <article key={service.slug} className="border border-vk-line bg-vk-ice p-5">
+                  <h2 className="font-display text-xl font-black text-vk-navy">{service.title}</h2>
+                  <p className="mt-3 text-sm leading-7 text-vk-muted">{service.summary}</p>
+                </article>
               ))}
             </div>
           </div>
+        </div>
+      </section>
 
-          <div className="flex flex-col justify-between rounded-md border border-white/12 bg-white/5 p-6">
-            <LandingLogo />
-            <p className="mt-10 text-xl font-extrabold leading-snug text-white">
-              Automatizamos hoy, transformamos tu manana.
-            </p>
+      <section id="como-trabajamos" className="border-y border-vk-line bg-vk-ice py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(360px,0.55fr)] lg:items-start">
+            <SectionHeading
+              eyebrow={firstReportOffer.eyebrow}
+              title={firstReportOffer.headline}
+              copy={firstReportOffer.detail}
+            />
+            <aside className="border border-vk-line bg-white p-5 shadow-vk">
+              <h2 className="font-display text-2xl font-black text-vk-navy">Ruta del primer reporte</h2>
+              <div className="mt-5 grid gap-3">
+                {firstReportOffer.steps.map((step, index) => (
+                  <div key={step} className="grid grid-cols-[44px_minmax(0,1fr)] gap-3 border-t border-vk-line pt-3 first:border-t-0 first:pt-0">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-md bg-vk-cobalt text-sm font-black text-white">
+                      {index + 1}
+                    </span>
+                    <p className="text-sm font-bold leading-7 text-vk-ink">{step}</p>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-5 text-xs font-semibold leading-6 text-vk-muted">
+                {firstReportOffer.note}
+              </p>
+            </aside>
           </div>
         </div>
-        <div className="relative mx-auto mt-12 max-w-7xl border-t border-white/10 px-4 pt-6 text-center text-xs text-white/48 sm:px-6 lg:px-8">
-          &copy; 2026 Vektrium. Todos los derechos reservados.
+      </section>
+
+      <section id="proyectos" className="bg-white py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
+            <SectionHeading
+              eyebrow="Proyectos del portafolio"
+              title="Lo que mostramos nace de proyectos y demos ya registrados."
+              copy="Los textos se basan en el carrusel de proyectos: BUK, planillas, ReportFlow, DocLink QR, GlobalMatch y otros casos preparados para revisar con imagen y alcance."
+            />
+            <SecondaryCta href="/proyectos">Abrir carrusel completo</SecondaryCta>
+          </div>
+
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {featuredProjects.map((project) => (
+              <ProjectCard key={project.title} {...project} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-vk-line bg-vk-navy py-20 text-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-8 lg:grid-cols-[340px_minmax(0,1fr)]">
+            <div>
+              <p className="text-sm font-black uppercase tracking-[0.16em] text-vk-aqua">
+                Metodo V.E.K.T.O.R.
+              </p>
+              <h2 className="mt-3 font-display text-3xl font-black leading-tight text-white sm:text-4xl">
+                Se avanza por evidencia, responsables y decisiones.
+              </h2>
+              <p className="mt-4 text-sm leading-7 text-[#DCE7FF]">
+                El metodo actual del sitio ordena el trabajo en seis fases: ver, establecer,
+                construir, transformar, operar y revisar.
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              {methodSteps.map((step) => (
+                <article key={step.letter} className="border border-white/15 bg-white/8 p-5">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-md bg-vk-lime text-sm font-black text-vk-navy">
+                    {step.letter}
+                  </span>
+                  <h3 className="mt-5 font-display text-xl font-black text-white">{step.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-[#DCE7FF]">{step.copy}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
+            <div>
+              <SectionHeading
+                eyebrow="Criterios para clientes"
+                title="Lo importante no es prometer mas, sino dejar claro como se trabaja."
+                copy="Estos puntos ya aparecen en la estructura publica del sitio y ayudan a explicar por que VEKTRIUM no empieza por una herramienta aislada."
+              />
+              <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                {trustSignals.map((signal) => (
+                  <article key={signal.title} className="border border-vk-line bg-vk-ice p-5">
+                    <h3 className="font-display text-xl font-black text-vk-navy">{signal.title}</h3>
+                    <p className="mt-3 text-sm leading-7 text-vk-muted">{signal.copy}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+            <aside className="border border-vk-line bg-vk-ice p-6">
+              <p className="text-sm font-black uppercase tracking-[0.16em] text-vk-cobalt">
+                Paquetes
+              </p>
+              <h2 className="mt-3 font-display text-2xl font-black text-vk-navy">
+                Start, Scale y Partner
+              </h2>
+              <div className="mt-5 grid gap-4">
+                {packages.map((pack) => (
+                  <div key={pack.name} className="border-t border-vk-line pt-4 first:border-t-0 first:pt-0">
+                    <h3 className="font-black text-vk-navy">{pack.name}</h3>
+                    <p className="mt-2 text-sm leading-6 text-vk-muted">{pack.fit}</p>
+                  </div>
+                ))}
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section id="contacto" className="bg-vk-navy py-20 text-white">
+        <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-start lg:px-8">
+          <div>
+            <p className="text-sm font-black uppercase tracking-[0.16em] text-vk-aqua">
+              Siguiente paso
+            </p>
+            <h2 className="mt-3 font-display text-4xl font-black leading-tight text-white sm:text-5xl">
+              Si tienes un reporte o proceso trabado, empecemos por un alcance claro.
+            </h2>
+            <p className="mt-5 max-w-2xl text-sm leading-7 text-[#DCE7FF]">
+              Finanzas, estrategia, operaciones y producto se revisan juntos para decidir si
+              conviene construir un primer reporte, una automatizacion o un portal interno.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                className="inline-flex rounded-md bg-white px-5 py-3 text-sm font-black text-vk-navy transition hover:bg-vk-lime"
+                href="/agenda"
+              >
+                Agendar primer reporte
+              </Link>
+              <Link
+                className="inline-flex rounded-md border border-white/25 px-5 py-3 text-sm font-black text-white transition hover:border-vk-aqua hover:text-vk-aqua"
+                href="/contacto"
+              >
+                Enviar contexto
+              </Link>
+            </div>
+          </div>
+
+          <aside className="border border-white/15 bg-white/8 p-6">
+            <h2 className="font-display text-2xl font-black text-white">Canales actuales</h2>
+            <div className="mt-5 grid gap-3">
+              {contactOptions.map((option) => (
+                <Link
+                  key={option.title}
+                  className="block rounded-md border border-white/12 bg-vk-navy-2/70 p-4 transition hover:border-vk-aqua"
+                  href={option.href}
+                >
+                  <span className="block text-sm font-black text-vk-aqua">{option.title}</span>
+                  <span className="mt-2 block text-sm leading-6 text-[#DCE7FF]">{option.copy}</span>
+                </Link>
+              ))}
+            </div>
+            <div className="mt-6 border-t border-white/15 pt-5">
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-vk-aqua">
+                Fundadores
+              </p>
+              <p className="mt-3 text-sm leading-7 text-[#DCE7FF]">
+                {founders.map((founder) => founder.name).join(' y ')} trabajan la lectura comercial,
+                financiera, operativa y de producto de cada alcance.
+              </p>
+            </div>
+          </aside>
         </div>
       </section>
     </main>
@@ -285,245 +313,123 @@ export default function Home() {
 
 function LandingNav() {
   return (
-    <header className="sticky top-0 z-30 border-b border-white/10 bg-vk-navy/92 backdrop-blur">
+    <header className="relative z-20 border-b border-vk-line bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-        <Link href="/" aria-label="Inicio VEKTRIUM">
-          <LandingLogo />
+        <Link href="/" className="flex items-center gap-3" aria-label="Inicio VEKTRIUM">
+          <span className="flex h-9 w-9 items-center justify-center rounded-md bg-vk-navy font-display text-lg font-black text-vk-lime">
+            V
+          </span>
+          <span className="font-display text-xl font-black text-vk-navy">{brand.name}</span>
         </Link>
-        <nav className="hidden items-center gap-8 text-sm font-extrabold text-white/76 md:flex">
-          <Link className="transition hover:text-vk-lime" href="#proyectos">
+        <nav className="hidden items-center gap-6 text-sm font-extrabold text-vk-muted lg:flex">
+          <Link className="transition hover:text-vk-cobalt" href="#servicios">
+            Servicios
+          </Link>
+          <Link className="transition hover:text-vk-cobalt" href="#como-trabajamos">
+            Primer reporte
+          </Link>
+          <Link className="transition hover:text-vk-cobalt" href="#proyectos">
             Proyectos
           </Link>
-          <Link className="transition hover:text-vk-lime" href="#como-trabajamos">
-            Como trabajamos
-          </Link>
-          <Link className="transition hover:text-vk-lime" href="#contacto">
+          <Link className="transition hover:text-vk-cobalt" href="#contacto">
             Contacto
           </Link>
         </nav>
         <Link
-          className="rounded-md bg-vk-lime px-4 py-2 text-sm font-black text-vk-navy transition hover:bg-vk-aqua focus:outline-none focus:ring-2 focus:ring-vk-lime focus:ring-offset-2 focus:ring-offset-vk-navy"
-          href={ctaHref}
+          className="rounded-md bg-vk-cobalt px-4 py-2 text-sm font-black text-white transition hover:bg-vk-navy focus:outline-none focus:ring-2 focus:ring-vk-cobalt focus:ring-offset-2"
+          href="/agenda"
         >
-          Agendar consulta
+          Agenda gratis
         </Link>
       </div>
     </header>
   )
 }
 
-function LandingLogo() {
+function HeroEvidencePanel() {
   return (
-    <div className="flex items-center gap-3">
-      <span className="flex h-9 w-9 items-center justify-center rounded-md bg-gradient-to-br from-vk-aqua via-vk-lime to-vk-cobalt font-display text-xl font-black text-vk-navy">
-        V
-      </span>
-      <span className="font-display text-lg font-black tracking-normal text-white">{brand.name}</span>
-    </div>
-  )
-}
-
-function LandingButton({ children, href }: { children: ReactNode; href: string }) {
-  return (
-    <Link
-      className="inline-flex items-center justify-center rounded-md bg-vk-lime px-6 py-4 text-sm font-black text-vk-navy shadow-vk transition hover:bg-vk-aqua focus:outline-none focus:ring-2 focus:ring-vk-lime focus:ring-offset-2 focus:ring-offset-vk-navy"
-      href={href}
-    >
-      {children}
-    </Link>
-  )
-}
-
-function HeroBadge({ mark, title, value }: { mark: string; title: string; value: string }) {
-  return (
-    <div className="flex items-center gap-4 rounded-md border border-white/16 bg-white/6 p-4 backdrop-blur">
-      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-vk-aqua/30 text-xs font-black text-vk-lime">
-        {mark}
-      </span>
-      <span>
-        <span className="block text-sm font-semibold text-white/82">{title}</span>
-        <span className="block text-base font-black text-vk-lime">{value}</span>
-      </span>
-    </div>
-  )
-}
-
-function FinancialDashboard() {
-  const kpis = [
-    ['Ventas', 'S/ 1.234.567', '+12.5% vs anterior'],
-    ['Utilidad', 'S/ 234.567', '+8.3% vs anterior'],
-    ['Margen', '18.9%', '+2.3% vs anterior'],
-  ]
-  const processItems = ['Facturacion', 'Reportes', 'Notificaciones', 'Backup']
-
-  return (
-    <div className="relative z-10 mx-auto max-w-2xl rounded-md border border-white/12 bg-vk-navy-2/95 p-4 shadow-[0_28px_80px_rgba(0,0,0,0.36)] backdrop-blur lg:absolute lg:right-0 lg:top-12">
-      <div className="flex items-center justify-between border-b border-white/10 pb-3">
-        <h2 className="text-sm font-black text-white">Dashboard Financiero</h2>
-        <span className="text-xs font-black text-vk-aqua">[]</span>
-      </div>
-
-      <div className="mt-4 grid gap-3 sm:grid-cols-3">
-        {kpis.map(([label, value, delta]) => (
-          <article key={label} className="rounded-md border border-white/8 bg-white/6 p-4">
-            <p className="text-xs font-bold text-white/52">{label}</p>
-            <p className="mt-2 text-xl font-black text-white">{value}</p>
-            <p className="mt-1 text-xs font-bold text-vk-aqua">{delta}</p>
-          </article>
+    <aside className="border border-vk-line bg-white/90 p-5 shadow-vk backdrop-blur">
+      <p className="text-xs font-black uppercase tracking-[0.16em] text-vk-cobalt">
+        Lectura inicial
+      </p>
+      <h2 className="mt-3 font-display text-3xl font-black leading-tight text-vk-navy">
+        Proceso, datos y entregable antes de escalar.
+      </h2>
+      <p className="mt-4 text-sm leading-7 text-vk-muted">
+        El primer reporte sirve para ordenar el problema y probar si la solucion tiene sentido antes
+        de pasar a una implementacion mas grande.
+      </p>
+      <div className="mt-6 grid gap-3">
+        {[
+          ['Proceso', 'Donde nace la friccion y quien la ejecuta.'],
+          ['Datos', 'Que fuentes existen, que calidad tienen y quien responde por ellas.'],
+          ['Entregable', 'Que reporte, tablero o automatizacion inicial se puede presentar.'],
+        ].map(([title, copy]) => (
+          <div key={title} className="border-t border-vk-line pt-3 first:border-t-0 first:pt-0">
+            <p className="font-black text-vk-navy">{title}</p>
+            <p className="mt-1 text-sm leading-6 text-vk-muted">{copy}</p>
+          </div>
         ))}
       </div>
-
-      <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,1.25fr)_minmax(210px,0.8fr)]">
-        <article className="rounded-md border border-white/8 bg-white/6 p-4">
-          <div className="mb-5 flex items-center justify-between">
-            <h3 className="text-xs font-black text-white">Ventas por mes</h3>
-            <span className="text-xs font-bold text-vk-aqua">+18%</span>
-          </div>
-          <div className="relative h-40 overflow-hidden rounded-md bg-vk-navy/60">
-            <div className="absolute inset-0 grid grid-rows-4">
-              {[1, 2, 3, 4].map((line) => (
-                <span key={line} className="border-t border-white/8" />
-              ))}
-            </div>
-            <LineSegment className="left-[8%] top-[64%] w-[17%] rotate-[-12deg]" />
-            <LineSegment className="left-[22%] top-[55%] w-[18%] rotate-[-15deg]" />
-            <LineSegment className="left-[38%] top-[47%] w-[18%] rotate-[6deg]" />
-            <LineSegment className="left-[54%] top-[51%] w-[17%] rotate-[-28deg]" />
-            <LineSegment className="left-[68%] top-[34%] w-[19%] rotate-[14deg]" />
-            <LineSegment className="left-[84%] top-[32%] w-[11%] rotate-[-30deg]" />
-            {['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul'].map((month, index) => (
-              <span
-                key={month}
-                className="absolute bottom-2 text-[10px] font-bold text-white/44"
-                style={{ left: `${8 + index * 14}%` }}
-              >
-                {month}
-              </span>
-            ))}
-          </div>
-        </article>
-
-        <article className="rounded-md border border-white/8 bg-white/6 p-4">
-          <h3 className="text-xs font-black text-white">Ventas por categoria</h3>
-          <div className="mt-5 flex items-center gap-5">
-            <div
-              aria-label="Grafico de dona de ventas por categoria"
-              className="h-24 w-24 rounded-full p-4"
-              style={{
-                background:
-                  'conic-gradient(var(--color-vk-aqua) 0 45%, var(--color-vk-cobalt) 45% 75%, var(--color-vk-lime) 75% 90%, rgba(255,255,255,0.18) 90% 100%)',
-              }}
-            >
-              <div className="h-full w-full rounded-full bg-vk-navy-2" />
-            </div>
-            <div className="grid flex-1 gap-2">
-              {[
-                ['Servicios', '45%'],
-                ['Productos', '30%'],
-                ['Suscripciones', '15%'],
-                ['Otros', '10%'],
-              ].map(([label, value]) => (
-                <div key={label} className="flex justify-between gap-3 text-xs">
-                  <span className="text-white/62">{label}</span>
-                  <span className="font-black text-white">{value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </article>
+      <div className="mt-6 rounded-md bg-vk-navy px-4 py-3">
+        <p className="text-sm font-black text-white">{firstReportOffer.eyebrow}</p>
+        <p className="mt-1 text-xs leading-5 text-[#DCE7FF]">{firstReportOffer.note}</p>
       </div>
-
-      <article className="mt-4 rounded-md border border-white/8 bg-white/6 p-4">
-        <h3 className="text-xs font-black text-white">Procesos automatizados</h3>
-        <div className="mt-4 grid gap-3 sm:grid-cols-4">
-          {processItems.map((item) => (
-            <div key={item}>
-              <p className="text-xs font-bold text-white/70">{item}</p>
-              <p className="mt-1 text-xs font-black text-vk-aqua">Automatizado</p>
-            </div>
-          ))}
-        </div>
-      </article>
-    </div>
+    </aside>
   )
-}
-
-function LineSegment({ className }: { className: string }) {
-  return <span className={`absolute h-1 origin-left rounded-full bg-vk-aqua ${className}`} />
 }
 
 function SectionHeading({
   eyebrow,
   title,
-  align = 'left',
+  copy,
 }: {
   eyebrow: string
   title: string
-  align?: 'left' | 'center'
+  copy?: string
 }) {
   return (
-    <div className={align === 'center' ? 'mx-auto max-w-3xl text-center' : 'max-w-3xl'}>
-      <p className="text-xs font-black uppercase tracking-[0.16em] text-vk-cobalt">{eyebrow}</p>
+    <div className="max-w-3xl">
+      <p className="text-sm font-black uppercase tracking-[0.16em] text-vk-cobalt">{eyebrow}</p>
       <h2 className="mt-3 font-display text-3xl font-black leading-tight text-vk-navy sm:text-4xl">
         {title}
       </h2>
+      {copy ? <p className="mt-4 text-base leading-8 text-vk-muted">{copy}</p> : null}
     </div>
   )
 }
 
-function WorkCard({
-  number,
-  mark,
+function ProjectCard({
   title,
-  copy,
-  tone,
-}: {
-  number: string
-  mark: string
-  title: string
-  copy: string
-  tone: string
-}) {
-  return (
-    <article className="relative z-10 flex flex-col items-center rounded-md border border-vk-line bg-white p-6 text-center shadow-vk">
-      <span className={`flex h-16 w-16 items-center justify-center rounded-full text-lg font-black ${tone}`}>
-        {mark}
-      </span>
-      <p className="mt-5 text-sm font-black text-vk-aqua">{number}</p>
-      <h3 className="mt-3 font-display text-lg font-black text-vk-navy">{title}</h3>
-      <p className="mt-3 text-sm leading-7 text-vk-muted">{copy}</p>
-    </article>
-  )
-}
-
-function ProjectShowcaseCard({
-  title,
+  eyebrow,
   copy,
   image,
   tags,
 }: {
   title: string
+  eyebrow: string
   copy: string
   image: string
-  tags: string[]
+  tags: readonly string[]
 }) {
   return (
-    <article className="overflow-hidden rounded-md border border-vk-line bg-white shadow-[0_12px_32px_rgba(10,22,51,0.08)]">
-      <div className="relative aspect-[16/10] bg-vk-navy">
+    <article className="flex h-full flex-col overflow-hidden border border-vk-line bg-vk-ice">
+      <div className="relative aspect-[16/10] border-b border-vk-line bg-white">
         <Image
           src={image}
-          alt={`Vista de ${title}`}
+          alt={title}
           fill
           sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-          className="object-cover"
+          className="object-contain p-2"
         />
       </div>
-      <div className="p-5">
-        <h3 className="font-display text-xl font-black text-vk-navy">{title}</h3>
-        <p className="mt-3 text-sm leading-6 text-vk-muted">{copy}</p>
+      <div className="flex flex-1 flex-col p-5">
+        <p className="text-xs font-black uppercase tracking-[0.12em] text-vk-cobalt">{eyebrow}</p>
+        <h3 className="mt-3 font-display text-xl font-black leading-tight text-vk-navy">{title}</h3>
+        <p className="mt-3 flex-1 text-sm leading-7 text-vk-muted">{copy}</p>
         <div className="mt-5 flex flex-wrap gap-2">
           {tags.map((tag) => (
-            <span key={tag} className="rounded-md bg-vk-ice px-2 py-1 text-xs font-bold text-vk-navy">
+            <span key={tag} className="rounded-md bg-white px-2 py-1 text-xs font-bold text-vk-navy">
               {tag}
             </span>
           ))}
@@ -533,34 +439,24 @@ function ProjectShowcaseCard({
   )
 }
 
-function BenefitItem({
-  mark,
-  title,
-  copy,
-  color,
-}: {
-  mark: string
-  title: string
-  copy: string
-  color: string
-}) {
+function PrimaryCta({ children, href }: { children: ReactNode; href: string }) {
   return (
-    <article className="text-center">
-      <span className={`mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-vk-ice text-lg font-black ${color}`}>
-        {mark}
-      </span>
-      <h3 className="mt-4 font-display text-base font-black text-vk-navy">{title}</h3>
-      <p className="mx-auto mt-2 max-w-44 text-xs leading-5 text-vk-muted">{copy}</p>
-    </article>
+    <Link
+      className="inline-flex rounded-md bg-vk-cobalt px-5 py-3 text-sm font-black text-white shadow-vk transition hover:bg-vk-navy focus:outline-none focus:ring-2 focus:ring-vk-cobalt focus:ring-offset-2"
+      href={href}
+    >
+      {children}
+    </Link>
   )
 }
 
-function NetworkBackdrop() {
+function SecondaryCta({ children, href }: { children: ReactNode; href: string }) {
   return (
-    <>
-      <div className="absolute inset-0 opacity-25 [background-image:linear-gradient(rgba(255,255,255,0.10)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.10)_1px,transparent_1px)] [background-size:80px_80px]" />
-      <div className="absolute inset-x-0 top-24 h-px bg-gradient-to-r from-transparent via-vk-aqua/40 to-transparent" />
-      <div className="absolute bottom-20 left-0 right-0 h-px bg-gradient-to-r from-transparent via-vk-cobalt/30 to-transparent" />
-    </>
+    <Link
+      className="inline-flex rounded-md border border-vk-line bg-white px-5 py-3 text-sm font-black text-vk-navy transition hover:border-vk-cobalt hover:text-vk-cobalt focus:outline-none focus:ring-2 focus:ring-vk-cobalt focus:ring-offset-2"
+      href={href}
+    >
+      {children}
+    </Link>
   )
 }
