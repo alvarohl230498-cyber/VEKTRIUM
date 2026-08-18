@@ -159,7 +159,7 @@ export function ProjectsCarouselSection() {
           </div>
           <Link
             className="inline-flex items-center gap-2 rounded-md bg-vk-lime px-5 py-3 text-sm font-black text-vk-navy shadow-[0_18px_42px_rgba(183,243,74,0.22)] transition hover:-translate-y-0.5 hover:bg-vk-aqua focus:outline-none focus:ring-2 focus:ring-vk-lime focus:ring-offset-2"
-            href="/contacto?motivo=proyectos"
+            href="/#agenda"
           >
             Agendar primer reporte
             <ArrowRight aria-hidden="true" size={16} strokeWidth={2.6} />
@@ -314,7 +314,7 @@ export function ProjectsCarouselSection() {
                 <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
                   <Link
                     className="inline-flex items-center gap-2 rounded-md bg-vk-navy px-5 py-3 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-vk-cobalt focus:outline-none focus:ring-2 focus:ring-vk-cobalt focus:ring-offset-2"
-                    href={`/contacto?proyecto=${activeProject.id}`}
+                    href="/#agenda"
                   >
                     Agendar reporte similar
                     <ArrowRight aria-hidden="true" size={16} strokeWidth={2.6} />

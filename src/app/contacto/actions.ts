@@ -20,14 +20,14 @@ export async function submitContactRequest(formData: FormData): Promise<void> {
   })
 
   if (!parsed.success) {
-    redirect('/contacto?error=invalido#formulario')
+    redirect('/?error=invalido#agenda')
   }
 
   const result = await sendContactRequest(parsed.data)
 
   if (!result.ok) {
-    redirect('/contacto?error=envio#formulario')
+    redirect('/?error=envio#agenda')
   }
 
-  redirect('/contacto?enviado=1#formulario')
+  redirect('/?enviado=1#agenda')
 }

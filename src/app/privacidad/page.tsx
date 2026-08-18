@@ -22,7 +22,7 @@ export default function PrivacyPage() {
           copy="Como tratamos los datos que nos compartes al escribirnos o completar un formulario en este sitio."
           actions={
             <>
-              <PrimaryLink href="/contacto">Agendar primer reporte</PrimaryLink>
+              <PrimaryLink href="/#agenda">Agendar primer reporte</PrimaryLink>
               <SecondaryLink href="/terminos">Ver terminos</SecondaryLink>
             </>
           }
@@ -50,7 +50,7 @@ export default function PrivacyPage() {
           <LegalBlock title="Derechos del titular">
             El visitante puede solicitar acceso, rectificacion o eliminacion de sus datos escribiendo
             a traves de nuestro{' '}
-            <Link href="/contacto" className="font-bold text-vk-cobalt hover:text-vk-navy">
+            <Link href="/#agenda" className="font-bold text-vk-cobalt hover:text-vk-navy">
               canal de contacto
             </Link>
             .

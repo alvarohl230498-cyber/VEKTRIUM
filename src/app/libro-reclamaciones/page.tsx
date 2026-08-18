@@ -39,7 +39,7 @@ export default async function ClaimsBookPage({ searchParams }: { searchParams: S
           actions={
             <>
               <PrimaryLink href="#formulario">Registrar reclamo</PrimaryLink>
-              <SecondaryLink href="/contacto">Ir a contacto</SecondaryLink>
+              <SecondaryLink href="/#agenda">Ir a contacto</SecondaryLink>
             </>
           }
         />

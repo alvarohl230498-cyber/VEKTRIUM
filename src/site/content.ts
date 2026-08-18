@@ -27,12 +27,9 @@ export const firstReportOffer = {
 } as const
 
 export const publicNav = [
-  { href: '/servicios', label: 'Servicios' },
-  { href: '/metodo', label: 'Metodo' },
-  { href: '/proyectos', label: 'Proyectos' },
-  { href: '/fundadores', label: 'Fundadores' },
-  { href: '/paquetes', label: 'Paquetes' },
-  { href: '/recursos', label: 'Recursos' },
+  { href: '/#proyectos', label: 'Proyectos' },
+  { href: '/#como-trabajamos', label: 'Como trabajamos' },
+  { href: '/#agenda', label: 'Agenda' },
 ] as const
 
 export const legalNav = [
@@ -428,25 +425,25 @@ export const resources = [
     title: 'Demos publicas',
     type: 'Vektrium Proof',
     copy: 'Proyectos con datos ficticios y etiquetas claras cuando el resultado es ilustrativo.',
-    href: '/proyectos',
+    href: '/#proyectos',
   },
   {
     title: 'Plantilla de alcance inicial',
     type: 'Template',
     copy: 'Guia base para levantar proceso, dolor, linea base, usuarios, riesgos y primer reporte.',
-    href: '/contacto?recurso=plantilla-diagnostico',
+    href: '/#agenda',
   },
   {
     title: 'Videos y walkthroughs',
     type: 'Recurso',
     copy: 'Espacio preparado para publicar recorridos de demos cuando el contenido este validado.',
-    href: '/vek-proof',
+    href: '/#proyectos',
   },
   {
     title: 'Acceso privado',
     type: 'Members',
     copy: 'Material no publico disponible solo para miembros, clientes especificos o fundadores.',
-    href: '/vek-proof',
+    href: '/#agenda',
   },
 ] as const
 

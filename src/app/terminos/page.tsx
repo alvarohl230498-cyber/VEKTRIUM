@@ -21,7 +21,7 @@ export default function TermsPage() {
           copy="Las condiciones que aplican al usar este sitio, solicitar una consulta gratuita o iniciar un primer reporte."
           actions={
             <>
-              <PrimaryLink href="/contacto">Agendar primer reporte</PrimaryLink>
+              <PrimaryLink href="/#agenda">Agendar primer reporte</PrimaryLink>
               <SecondaryLink href="/privacidad">Ver privacidad</SecondaryLink>
             </>
           }

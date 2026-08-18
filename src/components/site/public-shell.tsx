@@ -42,14 +42,14 @@ export function PublicHeader() {
         <div className="flex items-center gap-2">
           <Link
             className="hidden items-center gap-2 rounded-md border border-white/18 bg-white/8 px-3 py-2 text-sm font-extrabold text-white transition hover:border-vk-aqua hover:text-vk-aqua sm:inline-flex"
-            href="/agenda"
+            href="/#agenda"
           >
             <CalendarDays aria-hidden="true" size={16} strokeWidth={2.4} />
-            Agenda gratis
+            Agenda
           </Link>
           <Link
             className="inline-flex items-center gap-2 rounded-md bg-vk-lime px-3 py-2 text-sm font-black text-vk-navy shadow-[0_16px_36px_rgba(183,243,74,0.20)] transition hover:-translate-y-0.5 hover:bg-vk-aqua focus:outline-none focus:ring-2 focus:ring-vk-lime focus:ring-offset-2 focus:ring-offset-vk-navy"
-            href="/contacto"
+            href="/#agenda"
           >
             Primer reporte
             <ArrowRight aria-hidden="true" size={16} strokeWidth={2.6} />
@@ -93,8 +93,6 @@ export function PublicFooter() {
                 {item.label}
               </FooterLink>
             ))}
-            <FooterLink href="/vek-proof">Vektrium Proof</FooterLink>
-            <FooterLink href="/contacto">Contacto</FooterLink>
           </FooterGroup>
           <FooterGroup title="Legal">
             {legalNav.map((item) => (
@@ -109,7 +107,7 @@ export function PublicFooter() {
           <p className="mt-2 text-sm leading-6 text-[#DCE7FF]">{firstReportOffer.detail}</p>
           <Link
             className="mt-5 inline-flex items-center gap-2 rounded-md bg-vk-lime px-4 py-3 text-sm font-black text-vk-navy transition hover:-translate-y-0.5 hover:bg-vk-aqua focus:outline-none focus:ring-2 focus:ring-vk-lime focus:ring-offset-2 focus:ring-offset-vk-navy"
-            href="/contacto"
+            href="/#agenda"
           >
             Agendar
             <ArrowRight aria-hidden="true" size={16} strokeWidth={2.6} />
@@ -269,7 +267,7 @@ export function ProjectCard({ project }: { project: Project }) {
       <p className="mt-4 flex-1 text-sm leading-7 text-vk-muted">{project.summary}</p>
       <Link
         className="mt-6 inline-flex items-center gap-2 text-sm font-black text-vk-cobalt transition hover:text-vk-navy"
-        href={`/proyectos/${project.slug}`}
+        href="/#proyectos"
       >
         Ver caso
         <ArrowRight aria-hidden="true" size={15} strokeWidth={2.6} />
@@ -299,14 +297,14 @@ export function ContactBand() {
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               className="inline-flex items-center gap-2 rounded-md bg-vk-lime px-5 py-3 text-sm font-black text-vk-navy transition hover:-translate-y-0.5 hover:bg-vk-aqua focus:outline-none focus:ring-2 focus:ring-vk-lime focus:ring-offset-2 focus:ring-offset-vk-navy"
-              href="/contacto"
+              href="/#agenda"
             >
               Agendar primer reporte
               <ArrowRight aria-hidden="true" size={16} strokeWidth={2.6} />
             </Link>
             <Link
               className="inline-flex items-center gap-2 rounded-md border border-white/20 bg-white/8 px-5 py-3 text-sm font-black text-white transition hover:-translate-y-0.5 hover:border-vk-aqua hover:text-vk-aqua focus:outline-none focus:ring-2 focus:ring-vk-aqua focus:ring-offset-2 focus:ring-offset-vk-navy"
-              href="/agenda"
+              href="/#agenda"
             >
               Ver agenda gratis
               <CalendarDays aria-hidden="true" size={16} strokeWidth={2.4} />

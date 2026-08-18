@@ -1,174 +1,19 @@
-import type { Metadata } from 'next'
-import Link from 'next/link'
-import {
-  PageHero,
-  PrimaryLink,
-  PublicShell,
-  SecondaryLink,
-  SectionIntro,
-} from '@/components/site/public-shell'
-import { firstReportOffer } from '@/site/content'
-import { submitContactRequest } from './actions'
-
-export const metadata: Metadata = {
-  title: 'Contacto',
-  description:
-    'Solicita tu primer reporte VEKTRIUM sin adelanto, con consulta y alcance inicial gratuitos.',
-}
+import { redirect } from 'next/navigation'
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
 
-const ERROR_MESSAGES: Record<string, string> = {
-  invalido: 'Revisa el formulario: falta completar algun campo.',
-  envio: 'No se pudo enviar la solicitud. Intenta nuevamente en unos minutos o escribe por WhatsApp.',
-}
-
 export default async function ContactPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams
-  const rawError = params.error
-  const errorCode = Array.isArray(rawError) ? rawError[0] : rawError
-  const errorMessage = errorCode ? (ERROR_MESSAGES[errorCode] ?? ERROR_MESSAGES.envio) : null
+  const query = new URLSearchParams()
 
-  const rawEnviado = params.enviado
-  const enviado = (Array.isArray(rawEnviado) ? rawEnviado[0] : rawEnviado) === '1'
+  for (const [key, value] of Object.entries(params)) {
+    if (Array.isArray(value)) {
+      value.forEach((item) => query.append(key, item))
+    } else if (value) {
+      query.set(key, value)
+    }
+  }
 
-  return (
-    <PublicShell>
-      <main>
-        <PageHero
-          eyebrow="Contacto"
-          title="Pide tu primer reporte sin adelanto."
-          copy="Consulta y alcance gratuitos para que pruebes nuestra eficiencia. El pago se realiza al finalizar el proceso, cuando te presentemos el reporte terminado."
-          actions={
-            <>
-              <PrimaryLink href="#formulario">Enviar mi caso</PrimaryLink>
-              <SecondaryLink href="/agenda">Ver agenda gratis</SecondaryLink>
-            </>
-          }
-        />
-
-        <section className="mx-auto grid max-w-7xl gap-6 px-4 py-12 sm:px-6 lg:grid-cols-3 lg:px-8">
-          {[
-            ['Primer reporte', 'Trabajamos sin adelanto y ves valor desde el primer entregable.', '#formulario'],
-            ['Agenda gratis', 'Consulta y alcance inicial sin costo para definir si conviene avanzar.', '/agenda'],
-            ['WhatsApp empresarial', 'Canal preparado para conectar el numero oficial.', '#whatsapp'],
-          ].map(([title, copy, href]) => (
-            <a key={title} className="border border-vk-line bg-white p-5" href={href}>
-              <h2 className="font-display text-2xl font-extrabold text-vk-navy">{title}</h2>
-              <p className="mt-3 text-sm leading-7 text-vk-muted">{copy}</p>
-            </a>
-          ))}
-        </section>
-
-        <section id="formulario" className="mx-auto grid max-w-7xl gap-8 px-4 pb-20 sm:px-6 lg:grid-cols-[minmax(0,1fr)_420px] lg:px-8">
-          <div>
-            <SectionIntro
-              eyebrow="Solicitud"
-              title="Define el alcance sin pagar por la primera conversacion."
-              copy="Cuentanos lo esencial: con eso preparamos la consulta gratuita, ubicamos el reporte inicial y validamos si el alcance es razonable."
-            />
-            <div id="solicitud-recibida" className="mt-8 border border-vk-line bg-white p-5">
-              <h2 className="font-display text-2xl font-extrabold text-vk-navy">Ruta esperada</h2>
-              <ol className="mt-4 grid gap-3 text-sm leading-7 text-vk-muted">
-                <li>1. Revisar proceso, area, urgencia y datos disponibles.</li>
-                <li>2. Definir alcance inicial gratuito y primer entregable.</li>
-                <li>3. Construir el primer reporte acordado.</li>
-                <li>4. Pagar al finalizar, cuando te lo presentemos terminado.</li>
-              </ol>
-              <p className="mt-4 text-xs font-semibold leading-6 text-vk-muted">{firstReportOffer.note}</p>
-            </div>
-          </div>
-
-          {enviado ? (
-            <div className="space-y-4 border border-vk-line bg-white p-5">
-              <h2 className="font-display text-2xl font-extrabold text-vk-navy">Solicitud enviada</h2>
-              <p role="status" className="text-sm leading-7 text-vk-muted">
-                Recibimos tu solicitud. El equipo de VEKTRIUM te contactara para coordinar la
-                consulta gratuita y revisar tu primer reporte.
-              </p>
-            </div>
-          ) : (
-            <form action={submitContactRequest} className="space-y-4 border border-vk-line bg-white p-5">
-              {errorMessage ? (
-                <p
-                  role="alert"
-                  className="rounded-md border border-vk-danger/30 bg-vk-danger/10 px-4 py-3 text-sm font-semibold text-vk-danger"
-                >
-                  {errorMessage}
-                </p>
-              ) : null}
-              <label className="block">
-                <span className="text-sm font-extrabold text-vk-navy">Nombre</span>
-                <input
-                  className="mt-2 w-full rounded-md border border-vk-line px-3 py-3 text-sm outline-none focus:border-vk-cobalt"
-                  name="nombre"
-                  required
-                />
-              </label>
-              <label className="block">
-                <span className="text-sm font-extrabold text-vk-navy">Correo o telefono</span>
-                <input
-                  className="mt-2 w-full rounded-md border border-vk-line px-3 py-3 text-sm outline-none focus:border-vk-cobalt"
-                  name="contacto"
-                  required
-                />
-              </label>
-              <label className="block">
-                <span className="text-sm font-extrabold text-vk-navy">Area</span>
-                <select
-                  className="mt-2 w-full rounded-md border border-vk-line px-3 py-3 text-sm outline-none focus:border-vk-cobalt"
-                  name="area"
-                  required
-                >
-                  <option value="">Seleccionar</option>
-                  <option>Finanzas</option>
-                  <option>Recursos Humanos</option>
-                  <option>Operaciones</option>
-                  <option>Comercial</option>
-                  <option>Direccion</option>
-                </select>
-              </label>
-              <label className="block">
-                <span className="text-sm font-extrabold text-vk-navy">Necesidad</span>
-                <textarea
-                  className="mt-2 min-h-32 w-full rounded-md border border-vk-line px-3 py-3 text-sm outline-none focus:border-vk-cobalt"
-                  name="necesidad"
-                  required
-                />
-              </label>
-              <button
-                className="w-full rounded-md bg-vk-cobalt px-4 py-3 text-sm font-extrabold text-white transition hover:bg-vk-navy"
-                type="submit"
-              >
-                Enviar solicitud
-              </button>
-              <p className="text-xs leading-5 text-vk-muted">
-                Al enviar la solicitud aceptas que el equipo use estos datos para responder el
-                caso, coordinar la consulta y definir el alcance inicial, segun nuestra{' '}
-                <Link href="/privacidad" className="font-bold text-vk-cobalt hover:text-vk-navy">
-                  politica de privacidad
-                </Link>{' '}
-                y{' '}
-                <Link href="/terminos" className="font-bold text-vk-cobalt hover:text-vk-navy">
-                  terminos de uso
-                </Link>
-                .
-              </p>
-            </form>
-          )}
-        </section>
-
-        <section id="whatsapp" className="border-y border-vk-line bg-white py-16">
-          <div className="mx-auto grid max-w-7xl gap-6 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-center lg:px-8">
-            <SectionIntro
-              eyebrow="WhatsApp empresarial"
-              title="Canal preparado para el numero oficial."
-              copy="Estamos activando WhatsApp empresarial para consultas rapidas. Mientras se confirma el numero oficial, coordina tu primer reporte por agenda o formulario."
-            />
-            <PrimaryLink href="/agenda">Usar agenda gratis</PrimaryLink>
-          </div>
-        </section>
-      </main>
-    </PublicShell>
-  )
+  const suffix = query.size > 0 ? `?${query.toString()}` : ''
+  redirect(`/${suffix}#agenda`)
 }
