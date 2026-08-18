@@ -19,50 +19,117 @@ import { AutomationNetwork } from '@/components/site/automation-network'
 import { AutomationPreviewPanel } from '@/components/site/automation-preview-panel'
 import { ProcessFlow, type ProcessStep } from '@/components/site/process-flow'
 import { Reveal, Stagger, StaggerItem } from '@/components/site/reveal'
+import rawProjects from '@/site/projects-carousel.json'
 import { firstReportOffer, founders } from '@/site/content'
 import { submitContactRequest } from './contacto/actions'
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
+
+type PortfolioProject = {
+  id: string
+  order: number
+  owner: string
+  eyebrow: string
+  title: string
+  summary: string
+  description: string
+  highlights: string[]
+  tags: string[]
+  images: Array<{
+    src: string
+    alt: string
+  }>
+  cta: string
+}
+
+type FeaturedProject = {
+  title: string
+  category: string
+  image: string
+  imageAlt: string
+  description: string
+  tags: string[]
+  href: string
+}
 
 const ERROR_MESSAGES: Record<string, string> = {
   invalido: 'Revisa el formulario: falta completar algun campo.',
   envio: 'No se pudo enviar la solicitud. Intenta nuevamente en unos minutos.',
 }
 
-const featuredProjects = [
-  {
-    title: 'Analitica de RR. HH. conectada a BUK',
-    category: 'People Analytics',
-    image: '/projects/01-buk-analytics-demografia.jpeg',
-    description:
-      'Dashboard ejecutivo y operativo para convertir datos de BUK en lectura accionable.',
-    tags: ['API BUK', 'Power BI', 'RR. HH.'],
-  },
-  {
-    title: 'Sistema integral de planillas y remuneraciones',
-    category: 'Operacion interna',
-    image: '/projects/03-sistema-remuneraciones.jpeg',
-    description:
-      'Estructura de control para calculo, validacion y seguimiento de remuneraciones.',
-    tags: ['Planillas', 'Control', 'RR. HH.'],
-  },
-  {
-    title: 'ReportFlow: reportes financieros automaticos',
-    category: 'Finanzas',
-    image: '/projects/05-reportflow.jpeg',
-    description:
-      'Flujo para transformar archivos operativos en reportes financieros listos para decision.',
-    tags: ['Reportes', 'Finanzas', 'Automatizacion'],
-  },
-  {
-    title: 'GlobalMatch: conciliacion intercompanias',
-    category: 'Conciliacion',
-    image: '/projects/07-globalmatch.jpeg',
-    description:
-      'Propuesta para cruzar operaciones entre companias y detectar diferencias pendientes.',
-    tags: ['Conciliacion', 'Control', 'Datos'],
-  },
+const portfolioProjects: PortfolioProject[] = [...rawProjects].sort(
+  (a, b) => a.order - b.order,
+)
+
+const featuredProjectIds = [
+  'buk-people-analytics',
+  'sistema-remuneraciones',
+  'reportflow',
+  'globalmatch',
 ] as const
+
+const featuredProjects: FeaturedProject[] = featuredProjectIds
+  .map((id) => portfolioProjects.find((project) => project.id === id))
+  .filter((project): project is PortfolioProject => Boolean(project))
+  .map((project) => {
+    const image = getPrimaryImage(project)
+
+    return {
+      title: project.title,
+      category: project.eyebrow,
+      image: image.src,
+      imageAlt: image.alt,
+      description: project.summary,
+      tags: project.tags.slice(0, 3),
+      href: `#detalle-${project.id}`,
+    }
+  })
+
+const portfolioImageCount = portfolioProjects.reduce(
+  (count, project) => count + project.images.length,
+  0,
+)
+
+const portfolioOwnerCounts = Array.from(
+  portfolioProjects.reduce((owners, project) => {
+    owners.set(project.owner, (owners.get(project.owner) ?? 0) + 1)
+    return owners
+  }, new Map<string, number>()),
+)
+
+const portfolioMetrics = [
+  {
+    label: 'Proyectos',
+    value: String(portfolioProjects.length),
+    helper: 'Documentados',
+  },
+  {
+    label: 'Pantallas',
+    value: String(portfolioImageCount),
+    helper: 'Imagenes publicadas',
+  },
+  {
+    label: 'Fundadores',
+    value: String(portfolioOwnerCounts.length),
+    helper: 'Responsables visibles',
+  },
+]
+
+const portfolioAreas = portfolioProjects.map((project) => ({
+  label: project.eyebrow,
+  value: project.tags.slice(0, 2).join(' + '),
+}))
+
+const portfolioOwners = portfolioOwnerCounts.map(([name, count]) => ({
+  name,
+  count: String(count),
+  helper: count === 1 ? 'solucion registrada' : 'soluciones registradas',
+}))
+
+const portfolioItems = portfolioProjects.map((project) => ({
+  label: getProjectShortName(project),
+  state: project.owner,
+}))
 
 const heroBadges = [
   {
@@ -208,10 +275,15 @@ export default async function Home({ searchParams }: { searchParams?: SearchPara
             </div>
           </Reveal>
 
-          <Reveal delay={0.12} className="hidden lg:block">
+          <Reveal delay={0.12} className="mx-auto w-full max-w-2xl lg:mx-0 lg:block">
             <AutomationPreviewPanel
-              title="Dashboard operativo"
-              subtitle="Panel preparado para conectar datos reales"
+              title="Lo que ya hemos construido"
+              subtitle="Estadistica real del portafolio VEKTRIUM"
+              badge="Portafolio real"
+              metrics={portfolioMetrics}
+              areas={portfolioAreas}
+              owners={portfolioOwners}
+              items={portfolioItems}
             />
           </Reveal>
         </div>
@@ -258,10 +330,49 @@ export default async function Home({ searchParams }: { searchParams?: SearchPara
         </Stagger>
 
         <Reveal className="mt-10 flex justify-center">
-          <DarkSecondaryCta href="#agenda">
-            Quiero un reporte similar
+          <div className="flex flex-wrap justify-center gap-3">
+            <DarkSecondaryCta href="#detalle-proyectos">
+              Ver detalle de todos los proyectos
+              <ArrowRight className="size-4" />
+            </DarkSecondaryCta>
+            <DarkSecondaryCta href="#agenda">
+              Quiero un reporte similar
+              <ArrowRight className="size-4" />
+            </DarkSecondaryCta>
+          </div>
+        </Reveal>
+      </section>
+
+      <section
+        id="detalle-proyectos"
+        className="scroll-mt-24 bg-white px-4 py-20 sm:px-6 lg:px-8"
+      >
+        <Reveal className="mx-auto max-w-4xl text-center">
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-vk-cobalt">
+            Detalle del portafolio
+          </p>
+          <h2 className="mt-3 text-3xl font-black tracking-normal text-vk-navy sm:text-4xl">
+            Lo que pueden revisar antes de agendar
+          </h2>
+          <p className="mt-4 text-base leading-8 text-vk-muted">
+            Cada proyecto muestra el contexto, el alcance trabajado, las imagenes
+            disponibles y los puntos principales documentados. Cuando no existe
+            una metrica validada, no la mostramos.
+          </p>
+        </Reveal>
+
+        <div className="mx-auto mt-12 grid max-w-7xl gap-4">
+          {portfolioProjects.map((project, index) => (
+            <ProjectDetail key={project.id} project={project} defaultOpen={index === 0} />
+          ))}
+        </div>
+
+        <Reveal className="mt-10 flex justify-center">
+          <DarkPrimaryCta href="#agenda">
+            <CalendarDays className="size-5" />
+            Agendar consulta gratuita
             <ArrowRight className="size-4" />
-          </DarkSecondaryCta>
+          </DarkPrimaryCta>
         </Reveal>
       </section>
 
@@ -510,13 +621,13 @@ function LandingNav() {
   )
 }
 
-function ProjectCard({ project }: { project: (typeof featuredProjects)[number] }) {
+function ProjectCard({ project }: { project: FeaturedProject }) {
   return (
     <article className="group h-full overflow-hidden border border-vk-border bg-white shadow-[0_18px_42px_rgba(10,20,44,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_30px_80px_rgba(10,20,44,0.14)]">
       <div className="relative aspect-[1.75] overflow-hidden bg-vk-navy">
         <Image
           src={project.image}
-          alt={project.title}
+          alt={project.imageAlt}
           fill
           className="object-cover transition duration-500 group-hover:scale-105"
           sizes="(min-width: 1280px) 25vw, (min-width: 768px) 50vw, 100vw"
@@ -542,8 +653,123 @@ function ProjectCard({ project }: { project: (typeof featuredProjects)[number] }
             </span>
           ))}
         </div>
+        <Link
+          href={project.href}
+          className="mt-5 inline-flex items-center gap-2 text-sm font-black text-vk-cobalt transition hover:text-vk-navy"
+        >
+          Ver detalle
+          <ArrowRight className="size-4" />
+        </Link>
       </div>
     </article>
+  )
+}
+
+function ProjectDetail({
+  project,
+  defaultOpen = false,
+}: {
+  project: PortfolioProject
+  defaultOpen?: boolean
+}) {
+  const primaryImage = getPrimaryImage(project)
+  const extraImages = project.images.slice(1)
+
+  return (
+    <details
+      id={`detalle-${project.id}`}
+      open={defaultOpen}
+      className="group scroll-mt-28 overflow-hidden border border-vk-border bg-white shadow-[0_18px_44px_rgba(10,20,44,0.08)] transition duration-300 open:shadow-[0_30px_86px_rgba(10,20,44,0.13)]"
+    >
+      <summary className="grid cursor-pointer list-none gap-5 p-5 marker:hidden sm:p-6 lg:grid-cols-[minmax(0,1fr)_auto] [&::-webkit-details-marker]:hidden">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="border border-vk-cobalt/25 bg-vk-ice px-3 py-1 text-xs font-black uppercase tracking-[0.12em] text-vk-cobalt">
+              {project.eyebrow}
+            </span>
+            <span className="text-xs font-black uppercase tracking-[0.12em] text-vk-muted">
+              {project.owner}
+            </span>
+          </div>
+          <h3 className="mt-3 text-2xl font-black leading-tight text-vk-navy sm:text-3xl">
+            {project.title}
+          </h3>
+          <p className="mt-3 max-w-4xl text-sm leading-7 text-vk-slate sm:text-base">
+            {project.summary}
+          </p>
+        </div>
+        <span className="inline-flex h-11 items-center justify-center gap-2 self-start border border-vk-border px-4 text-sm font-black text-vk-navy transition group-open:border-vk-cobalt group-open:text-vk-cobalt">
+          Detalle
+          <ArrowRight className="size-4 rotate-90 transition group-open:-rotate-90" />
+        </span>
+      </summary>
+
+      <div className="grid gap-6 border-t border-vk-line bg-vk-ice/70 p-5 sm:p-6 lg:grid-cols-[minmax(280px,0.72fr)_minmax(0,1fr)]">
+        <div>
+          <div className="relative aspect-[1.78] overflow-hidden border border-vk-border bg-vk-navy shadow-[0_18px_44px_rgba(10,20,44,0.12)]">
+            <Image
+              src={primaryImage.src}
+              alt={primaryImage.alt}
+              fill
+              className="object-cover"
+              sizes="(min-width: 1024px) 42vw, 100vw"
+            />
+          </div>
+          {extraImages.length > 0 ? (
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              {extraImages.map((image) => (
+                <div
+                  key={image.src}
+                  className="relative aspect-[1.9] overflow-hidden border border-vk-border bg-vk-navy"
+                >
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 1024px) 20vw, 50vw"
+                  />
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </div>
+
+        <div className="flex flex-col justify-between gap-6">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-vk-cobalt">
+              Alcance trabajado
+            </p>
+            <p className="mt-3 text-base leading-8 text-vk-slate">
+              {project.description}
+            </p>
+
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              {project.highlights.map((highlight) => (
+                <div
+                  key={highlight}
+                  className="border border-vk-border bg-white p-4 text-sm font-semibold leading-6 text-vk-slate"
+                >
+                  <CheckCircle2 className="mb-3 size-5 text-vk-aqua" />
+                  {highlight}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {project.tags.map((tag) => (
+              <span
+                key={tag}
+                className="border border-vk-border bg-white px-3 py-1.5 text-xs font-black text-vk-slate"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </details>
   )
 }
 
@@ -596,6 +822,36 @@ function ImpactBackdrop({ compact = false }: { compact?: boolean }) {
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:72px_72px] opacity-20" />
     </div>
   )
+}
+
+function getPrimaryImage(project: PortfolioProject) {
+  return (
+    project.images[0] ?? {
+      src: '/projects/01-buk-analytics-demografia.jpeg',
+      alt: project.title,
+    }
+  )
+}
+
+function getProjectShortName(project: PortfolioProject) {
+  switch (project.id) {
+    case 'buk-people-analytics':
+      return 'BUK Analytics'
+    case 'finova-ai':
+      return 'FinovaAI'
+    case 'sistema-remuneraciones':
+      return 'Planillas'
+    case 'automatizacion-buk':
+      return 'BUK Operativo'
+    case 'reportflow':
+      return 'ReportFlow'
+    case 'doclink-qr':
+      return 'DocLink QR'
+    case 'globalmatch':
+      return 'GlobalMatch'
+    default:
+      return project.title
+  }
 }
 
 function getInitials(name: string) {

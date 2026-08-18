@@ -267,7 +267,7 @@ export function ProjectCard({ project }: { project: Project }) {
       <p className="mt-4 flex-1 text-sm leading-7 text-vk-muted">{project.summary}</p>
       <Link
         className="mt-6 inline-flex items-center gap-2 text-sm font-black text-vk-cobalt transition hover:text-vk-navy"
-        href="/#proyectos"
+        href="/#detalle-proyectos"
       >
         Ver caso
         <ArrowRight aria-hidden="true" size={15} strokeWidth={2.6} />

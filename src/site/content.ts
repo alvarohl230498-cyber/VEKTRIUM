@@ -424,8 +424,8 @@ export const resources = [
   {
     title: 'Demos publicas',
     type: 'Vektrium Proof',
-    copy: 'Proyectos con datos ficticios y etiquetas claras cuando el resultado es ilustrativo.',
-    href: '/#proyectos',
+    copy: 'Portafolio visual con proyectos documentados, contexto trabajado e imagenes disponibles.',
+    href: '/#detalle-proyectos',
   },
   {
     title: 'Plantilla de alcance inicial',
@@ -437,7 +437,7 @@ export const resources = [
     title: 'Videos y walkthroughs',
     type: 'Recurso',
     copy: 'Espacio preparado para publicar recorridos de demos cuando el contenido este validado.',
-    href: '/#proyectos',
+    href: '/#detalle-proyectos',
   },
   {
     title: 'Acceso privado',
