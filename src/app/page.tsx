@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 
 import { AutomationNetwork } from '@/components/site/automation-network'
+import { BrandLogo } from '@/components/site/brand-logo'
 import { AutomationPreviewPanel } from '@/components/site/automation-preview-panel'
 import { ProcessFlow, type ProcessStep } from '@/components/site/process-flow'
 import { Reveal, Stagger, StaggerItem } from '@/components/site/reveal'
@@ -596,14 +597,7 @@ function LandingNav() {
 
   return (
     <header className="relative z-20 mx-auto flex max-w-7xl items-center justify-between px-4 py-6 sm:px-6 lg:px-8">
-      <Link href="/" className="flex items-center gap-3" aria-label="VEKTRIUM">
-        <span className="grid size-10 place-items-center bg-vk-lime text-vk-navy">
-          <span className="text-xl font-black">V</span>
-        </span>
-        <span className="text-xl font-black tracking-normal text-white">
-          VEKTRIUM
-        </span>
-      </Link>
+      <BrandLogo priority />
       <nav className="hidden items-center gap-9 text-sm font-bold text-white/76 lg:flex">
         {links.map((link) => (
           <Link key={link.href} href={link.href} className="transition hover:text-vk-lime">

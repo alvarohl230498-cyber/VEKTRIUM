@@ -16,6 +16,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/brand/vektrium-icon.png',
+  },
   openGraph: {
     title: 'VEKTRIUM',
     description: brand.description,

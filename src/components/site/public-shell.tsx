@@ -10,6 +10,7 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import { AutomationNetwork } from '@/components/site/automation-network'
+import { BrandLogo } from '@/components/site/brand-logo'
 import { PageTransition } from '@/components/site/page-transition'
 import { Reveal } from '@/components/site/reveal'
 import { brand, firstReportOffer, legalNav, publicNav, type Project } from '@/site/content'
@@ -28,7 +29,7 @@ export function PublicHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-vk-navy/95 text-white backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-        <BrandWordmark />
+        <BrandLogo priority />
         <nav
           aria-label="Navegacion publica"
           className="hidden items-center gap-5 text-sm font-extrabold text-white/70 lg:flex"
@@ -80,7 +81,7 @@ export function PublicFooter() {
       <ImpactBackdrop />
       <div className="relative mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_300px] lg:px-8">
         <div>
-          <BrandWordmark />
+          <BrandLogo />
           <p className="mt-4 max-w-md text-sm leading-7 text-[#DCE7FF]">{brand.tagline}</p>
           <p className="mt-3 max-w-md text-xs font-semibold leading-6 text-[#BFD0F4]">
             {brand.description}
@@ -340,17 +341,6 @@ export function HeroImage() {
       className="object-cover object-center"
       sizes="100vw"
     />
-  )
-}
-
-function BrandWordmark() {
-  return (
-    <Link href="/" className="flex items-center gap-3" aria-label="Inicio VEKTRIUM">
-      <span className="flex h-9 w-9 items-center justify-center rounded-md bg-vk-lime font-display text-lg font-black text-vk-navy shadow-[0_12px_28px_rgba(183,243,74,0.22)]">
-        V
-      </span>
-      <span className="font-display text-xl font-black text-white">{brand.name}</span>
-    </Link>
   )
 }
 
